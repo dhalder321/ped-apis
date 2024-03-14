@@ -1,0 +1,1 @@
+You need to provide four different types of summaries on {{TOPIC}}. Please provide a list of 4 summaries in JSON format each summary should focus on different perspectives of the topic mentioned above. Do not specify any heading of the summary and just produce the JSON and NO OTHER TEXT. JSON format is  {"1": "summary of first perspective"}
