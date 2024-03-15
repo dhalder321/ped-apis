@@ -1,5 +1,8 @@
 import json
 import logging
+from html.parser import HTMLParser
+from docx import Document
+from common.db import DBManager
 
 class Utility:
   
@@ -8,6 +11,9 @@ class Utility:
   TEXTOFTOPICOUTLINE_PROMPT_TYPE = 'TEXTOFTOPICOUTLINE'
 
   EFS_LOCATION = 'C:\openai-sdk\ped-apis'
+  ENVIRONMENT = "dev"
+  S3BUCKE_NAME = 'pedbuc'
+  S3OBJECT_NAME_FOR_USER_FILES = 'user-files'
 
   ##################################################
   #Common terms in the prompts to replace 
@@ -26,7 +32,7 @@ class Utility:
     TEXTOFTOPICOUTLINE_PROMPT_TYPE: 'TEXTOFTOPICOUTLINE.txt'
   }
 
-  ENVIRONMENT = "dev"
+  
 
   @staticmethod
   def generateResponse(responseCode, bodyJson, headers=None):
@@ -47,3 +53,34 @@ class Utility:
       except Exception as e:
         logging.error(e)
         return None
+      
+  @staticmethod
+  def logUserActivity(body, methodName):
+
+    userid = body['userid'] if 'userid' in body else None
+    tran_id = body['transactionid'] if 'transactionid' in body else None
+    requestTime = body['requesttimeinUTC'] if 'requesttimeinUTC' in body else ""
+    
+    if userid is None or tran_id is None:
+      raise ValueError("User id or transactionid not sent in request")   
+    if not userid.isdigit():
+       raise ValueError("User id sent in request is not a valid integer")
+
+    DBManager.addRecordInDynamoTable("ped-useractivity", {
+        "userid": int(userid),
+        "transactionid": tran_id,
+        "requestTimeInUTC": requestTime,
+        "methodName": methodName,
+        "requestBody": json.dumps(body)
+      })
+  
+
+class HTML2Document(HTMLParser):
+      
+  def __init__(self, doc):
+      super().__init__()
+      self.doc = doc
+      
+  def handle_data(self, data):
+      self.doc.add_paragraph(data)
+
