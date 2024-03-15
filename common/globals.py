@@ -57,18 +57,19 @@ class Utility:
   @staticmethod
   def logUserActivity(body, methodName):
 
-    userid = body['userid'] if 'userid' in body else None
-    tran_id = body['transactionid'] if 'transactionid' in body else None
+    user_id = body['userid'] if 'userid' in body else None
+    tran_id_ = body['transactionId'] if 'transactionId' in body else None
     requestTime = body['requesttimeinUTC'] if 'requesttimeinUTC' in body else ""
     
-    if userid is None or tran_id is None:
+    if user_id is None or tran_id_ is None:
       raise ValueError("User id or transactionid not sent in request")   
-    if not userid.isdigit():
+    
+    if not user_id.isdigit():
        raise ValueError("User id sent in request is not a valid integer")
 
     DBManager.addRecordInDynamoTable("ped-useractivity", {
-        "userid": int(userid),
-        "transactionid": tran_id,
+        "userid": int(user_id),
+        "transactionid": tran_id_,
         "requestTimeInUTC": requestTime,
         "methodName": methodName,
         "requestBody": json.dumps(body)
