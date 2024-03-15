@@ -18,30 +18,39 @@ class DBManager:
         
     @staticmethod
     # Function to get the highest fileid value
-    def get_highest_fileid(table_name, partitionKey, gsiName):
+    def get_highest_fileid(table_name, index_key_column, partitionKeyColumn, \
+                           index_name, index_key_value="99"):
 
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(table_name)
-        response = table.query(
-            IndexName= gsiName,
-            Limit=1,
+        client = boto3.client('dynamodb')
+
+        # Define the request parameters
+        response = client.query(
+            TableName=table_name,
+            IndexName=index_name,
+            KeyConditionExpression='#pk = :pk',
+            ExpressionAttributeValues={':pk': {'N': index_key_value}},
+            ExpressionAttributeNames={'#pk': index_key_column},
             ScanIndexForward=False,
-            ProjectionExpression=partitionKey
+            ProjectionExpression=partitionKeyColumn,
+            Limit=1
         )
-        items = response.get('Items', [])
-        max_fileid = int(items[0][partitionKey]) if items else 0
-        return max_fileid
+
+        # return the highest value
+        if 'Items' in response and len(response['Items']) > 0: 
+            return int(response['Items'][0][partitionKeyColumn]['N'])
+        return 0
+
     
 
     @staticmethod
     # Insert item with auto-incremented partition key
-    def addRecordInDynamoTableWithAutoIncrKey(tableName, partitionKey, gsiName, jsonBody):
+    def addRecordInDynamoTableWithAutoIncrKey(tableName, indexKeyCol, partitionKey, gsiName, jsonBody):
         
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table(tableName)
 
         try:
-            next_fileid = DBManager.get_highest_fileid(tableName, partitionKey, gsiName) + 1
+            next_fileid = DBManager.get_highest_fileid(tableName, indexKeyCol, partitionKey, gsiName) + 1
             jsonBody[partitionKey] = next_fileid
 
             response = table.put_item(Item=jsonBody)

@@ -61,27 +61,31 @@ def saveDocumentFile(event, context):
         print("s3filePath:" + s3filePath)
         presignedURL = uploadFile(localFilePath, Utility.S3BUCKE_NAME, s3filePath)
 
-        #add record in userfiles table
-        #TODO:
-        # retVal = DBManager.addRecordInDynamoTableWithAutoIncrKey("ped-userfiles", "fileid", "fileid-index",{
-        #     "userid": userid,
-        #     "transactionId": tran_id,
-        #     "fileName": localFileName,
-        #     "s3Filelocation": s3filePath,
-        #     "s3bucketName": Utility.S3BUCKE_NAME,
-        #     "initials3PresignedURLGenerated": presignedURL,
-        #     "fileCreationDateTime": datetimeFormattedString,
-        #     "fileType": "docx",
-        #     "fileStatus": "complete",
-        #     "user-fileName": "",
-        # })
+        # add record in userfiles table
+        #("ped-userfiles", "staticIndexColumn", "fileid", "staticIndexColumn-fileid-index"))
+        retVal = DBManager.addRecordInDynamoTableWithAutoIncrKey("ped-userfiles", \
+                                                                 "staticIndexColumn", "fileid",\
+                                                                 "staticIndexColumn-fileid-index",  \
+                                                                  {
+            "userid": int(userid),
+            "transactionId": tran_id,
+            "staticIndexColumn": 99, #for global sec. index column
+            "fileName": localFileName,
+            "s3Filelocation": s3filePath,
+            "s3bucketName": Utility.S3BUCKE_NAME,
+            "initials3PresignedURLGenerated": presignedURL,
+            "fileCreationDateTime": datetimeFormattedString,
+            "fileType": "docx",
+            "fileStatus": "complete",
+            "user-fileName": "",
+        })
 
-        # if retVal == False:
-        #     # Return a 500 server error response
-        #     return Utility.generateResponse(500, {
-        #                         'transactionId' : tran_id,
-        #                         'Error': 'Error processing your request',
-        #                     })
+        if retVal == False:
+            # Return a 500 server error response
+            return Utility.generateResponse(500, {
+                                'transactionId' : tran_id,
+                                'Error': 'Error processing your request',
+                            })
 
         #delete temporary files
         Path(localFilePath).unlink()
