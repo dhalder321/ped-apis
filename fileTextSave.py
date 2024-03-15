@@ -7,6 +7,8 @@ from common.s3File import uploadFile
 from pathlib import Path
 from datetime import datetime
 from common.db import DBManager
+from docx import Document
+from htmldocx import HtmlToDocx
 
 def saveDocumentFile(event, context):
      
@@ -51,8 +53,8 @@ def saveDocumentFile(event, context):
         if not isExist:    
             os.makedirs(localFileLocation) 
         document = Document()
-        parser = HTML2Document(document)
-        parser.feed(textInHTML)
+        parser =  HtmlToDocx()
+        parser.add_html_to_document(textInHTML, document)
         document.save(localFilePath)
 
         #upload to S3
