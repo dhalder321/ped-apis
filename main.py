@@ -8,6 +8,8 @@ from outlineOfTopic import generateOutlineFromTopic
 from textOfTopicOutline import generateTextOfTopicOutline
 from fileTextSave import saveDocumentFile
 from common.db import DBManager
+from signup import signupNewUser
+from newAccesKey import getAccessKey
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -92,5 +94,43 @@ from common.db import DBManager
 #                              "staticIndexColumn-fileid-index"))
 
 # DBManager.updateRecordInDynamoTable("ped-useractivity", "activityid", "1", "userid", "18876", {
-
 # })
+
+
+req = {
+        "firstName": "Debjit",
+        "lastName": "Halder",
+        "email": "dhalder@gmail.com",
+        "pwdEn": "^%*&$(*&!@dskjvkds)", 
+        "transactionId": "jsfhis3726423sd",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }
+data = signupNewUser({
+        "body": json.dumps(req)
+}, {})
+print(data)
+
+
+req = {
+        "userid": "3",
+        "transactionId": "23984ewfkj928r23",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }
+data = getAccessKey({
+        "body": json.dumps(req)
+}, {})
+print(data)
+
+
+# req = {
+#         "email": "cvraman1@gmail.com",
+#         "pwdEn": "^%*&$(*&!@dskjvkds)", 
+#         "transactionId": "8736423hk2j3483",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# data = signupNewUser({
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
+
+

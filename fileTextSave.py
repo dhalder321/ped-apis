@@ -87,7 +87,7 @@ def saveDocumentFile(event, context):
             "user-fileName": "",
         })
 
-        if retVal == False:
+        if retVal is None:
             # Return a 500 server error response
             response = Utility.generateResponse(500, {
                                 'transactionId' : tran_id,

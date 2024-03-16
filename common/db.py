@@ -2,6 +2,8 @@ import boto3
 import logging
 # from boto3 import TypeSerializer, TypeDeserializer
 from boto3.dynamodb.types import TypeDeserializer, TypeSerializer
+from boto3.dynamodb.conditions import Key
+
 
 class DBManager:
 
@@ -47,7 +49,7 @@ class DBManager:
 
         except Exception as e:
             logging.error("Error occured in updateRecordInDynamoTable method: " + str(e))
-            return False
+            return None
         
     @staticmethod
     # Function to get the highest fileid value
@@ -93,6 +95,41 @@ class DBManager:
             logging.error("Error occured in addRecordInDynamoTableWithAutoIncrKey method: " + str(e))
             return None
         
+
+    @staticmethod
+    def getDBItemByIndex(tableName, indexCol, indexName, indexColValue):
+        
+        try:
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table(tableName)
+
+            response = table.query(
+                            IndexName= indexName, 
+                            KeyConditionExpression=Key(indexCol).eq(indexColValue) 
+                        )
+            # print(response)
+            return response['Items'] if 'Items' in response else None
+        
+        except Exception as e:
+            logging.error("Error occured in getDBItemByIndex method: " + str(e))
+            return None
+    
+    @staticmethod
+    def getDBItemByPartitionKey(tableName, columnName, columnValue):
+        
+        try:
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table(tableName)
+
+            response = table.query(
+                            KeyConditionExpression=Key(columnName).eq(columnValue) 
+                        )
+            #print(response)
+            return response['Items'][0] if 'Items' in response and len(response['Items']) > 0 else None
+        
+        except Exception as e:
+            logging.error("Error occured in getDBItemByPartitionKey method: " + str(e))
+            return None
 
     def dynamo_to_python(dynamo_object: dict) -> dict:
         deserializer = TypeDeserializer()

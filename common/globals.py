@@ -84,12 +84,17 @@ class Utility:
     tran_id_ = body['transactionId'] if 'transactionId' in body else None
     requestTime = body['requesttimeinUTC'] if 'requesttimeinUTC' in body else ""
     
-    if user_id is None or tran_id_ is None:
-      raise ValueError("User id or transactionid not sent in request")   
-    
-    if not user_id.isdigit():
-       raise ValueError("User id sent in request is not a valid integer")
+    if user_id is None and methodName not in ("signupNewUser", "loginUser"):
+      raise ValueError("userid not sent in request")
+    elif user_id is None and methodName in ("signupNewUser", "loginUser"):
+      user_id = "-1"
+    else:
+      if not user_id.isdigit():
+        raise ValueError("User id sent in request is not a valid integer")
 
+    if tran_id_ is None:
+      raise ValueError("transactionid not sent in request")   
+    
     return DBManager.addRecordInDynamoTableWithAutoIncrKey(DBTables.UserActivity_Table_Name, \
                                                     "staticIndexColumn", "activityid", \
                                                     "staticIndexColumn-activityid-index", \
