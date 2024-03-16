@@ -1,8 +1,8 @@
 import json
 import logging
 from html.parser import HTMLParser
-from docx import Document
 from common.db import DBManager
+from datetime import datetime, timezone
 
 class Utility:
   
@@ -14,6 +14,30 @@ class Utility:
   ENVIRONMENT = "dev"
   S3BUCKE_NAME = 'pedbuc'
   S3OBJECT_NAME_FOR_USER_FILES = 'user-files'
+
+
+  ###################################################
+  #              TABLE NAMES
+  ####################################################
+  #Environment: dev
+  #Table names:
+  USER_TABLE_NAME="ped-users"
+  USERFILES_TABLE_NAME = "ped-userfiles" 
+  USERACTIVITY_TABLE_NAME = "ped-useractivity" 
+
+  #Environment: test
+  #Table names:
+  TEST_USER_TABLE_NAME="ped-users-test"
+  TEST_USERFILES_TABLE_NAME = "ped-userfiles-test" 
+  TEST_USERACTIVITY_TABLE_NAME = "ped-useractivity-test"
+
+  #Environment: prod
+  #Table names:
+  PROD_USER_TABLE_NAME="ped-users-prod"
+  PROD_USERFILES_TABLE_NAME = "ped-userfiles-prod" 
+  PROD_USERACTIVITY_TABLE_NAME = "ped-useractivity-prod"
+
+  ######################################################
 
   ##################################################
   #Common terms in the prompts to replace 
@@ -32,7 +56,6 @@ class Utility:
     TEXTOFTOPICOUTLINE_PROMPT_TYPE: 'TEXTOFTOPICOUTLINE.txt'
   }
 
-  
 
   @staticmethod
   def generateResponse(responseCode, bodyJson, headers=None):
@@ -67,21 +90,58 @@ class Utility:
     if not user_id.isdigit():
        raise ValueError("User id sent in request is not a valid integer")
 
-    DBManager.addRecordInDynamoTable("ped-useractivity", {
-        "userid": int(user_id),
-        "transactionid": tran_id_,
-        "requestTimeInUTC": requestTime,
-        "methodName": methodName,
-        "requestBody": json.dumps(body)
-      })
+    return DBManager.addRecordInDynamoTableWithAutoIncrKey(DBTables.UserActivity_Table_Name, \
+                                                    "staticIndexColumn", "activityid", \
+                                                    "staticIndexColumn-activityid-index", \
+                                                     {
+                                                        "userid": int(user_id),
+                                                        "transactionid": tran_id_,
+                                                        "staticIndexColumn": 99,
+                                                        "requestTimeInUTC": requestTime,
+                                                        "apiMethodName": methodName,
+                                                        "activityType": "APIInvoke",
+                                                        "requestBody": json.dumps(body)
+                                                      })
+  
+  @staticmethod
+  def updateUserActivity(activityId, userid, response):
+     if activityId is None or userid is None:
+        return None
+     
+     return DBManager.updateRecordInDynamoTable(DBTables.UserActivity_Table_Name, \
+                                              "activityid", activityId, \
+                                              "userid", userid, \
+                                                     {
+                                                        "responseTimeInUTC": datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S"),
+                                                        "responseStatus": "success" if response['statusCode'] == 200 else "failure", 
+                                                        "responseBody": json.dumps(response)
+                                                      })
   
 
-class HTML2Document(HTMLParser):
-      
-  def __init__(self, doc):
-      super().__init__()
-      self.doc = doc
-      
-  def handle_data(self, data):
-      self.doc.add_paragraph(data)
+class PED_Module:
+   
+   @staticmethod
+   def initiate():
+      DBTables.GetTableName()
 
+class DBTables:
+   User_Table_Name = ""
+   UserFiles_Table_Name = ""
+   UserActivity_Table_Name = ""
+
+   @staticmethod
+   def GetTableName():
+      
+      if Utility.ENVIRONMENT == "dev":
+        DBTables.User_Table_Name = Utility.USER_TABLE_NAME   
+        DBTables.UserFiles_Table_Name = Utility.USERFILES_TABLE_NAME   
+        DBTables.UserActivity_Table_Name = Utility.USERACTIVITY_TABLE_NAME
+      else:
+        if Utility.ENVIRONMENT == "test":
+          DBTables.User_Table_Name = Utility.TEST_USER_TABLE_NAME   
+          DBTables.UserFiles_Table_Name = Utility.TEST_USERFILES_TABLE_NAME   
+          DBTables.UserActivity_Table_Name = Utility.TEST_USERACTIVITY_TABLE_NAME
+        else:
+          DBTables.User_Table_Name = Utility.PROD_USER_TABLE_NAME   
+          DBTables.UserFiles_Table_Name = Utility.PROD_USERFILES_TABLE_NAME   
+          DBTables.UserActivity_Table_Name = Utility.PROD_USERACTIVITY_TABLE_NAME 

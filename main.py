@@ -86,8 +86,11 @@ from common.db import DBManager
 #         "body": json.dumps(req)
 # }, {})
 # print(data)
-#print(json.loads(data['body'])['Response']))
+# print(json.loads(data['body'])['Response']))
 
 # print(DBManager.get_highest_fileid("ped-userfiles", "staticIndexColumn", "fileid", \
 #                              "staticIndexColumn-fileid-index"))
 
+# DBManager.updateRecordInDynamoTable("ped-useractivity", "activityid", "1", "userid", "18876", {
+
+# })

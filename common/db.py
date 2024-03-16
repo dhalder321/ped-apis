@@ -1,19 +1,52 @@
 import boto3
 import logging
+# from boto3 import TypeSerializer, TypeDeserializer
+from boto3.dynamodb.types import TypeDeserializer, TypeSerializer
 
 class DBManager:
 
     @staticmethod
-    def addRecordInDynamoTable(tableName, jsonData):
+    def updateRecordInDynamoTable(tableName, partitionKeyCol, \
+                                  partitionKeyValue, sortKeyCol, sortKeyValue,  jsonData):
 
         try: 
+            client = boto3.client('dynamodb')
+            resp = client.query(
+                                TableName=tableName,
+                                KeyConditionExpression='#pk = :pk',
+                                ExpressionAttributeValues={':pk': {'N': partitionKeyValue}},
+                                ExpressionAttributeNames={'#pk': partitionKeyCol},
+                                # ScanIndexForward=False,
+                                # ProjectionExpression=partitionKeyColumn,
+                                Limit=1
+            )
+            # print(resp['Items'])
+            if 'Items' in resp and len(resp['Items']) > 0: 
+                jsonBody = DBManager.dynamo_to_python(resp['Items'][0])
+            else:
+                raise Exception("In updateRecordInDynamoTable method: No record found to be updated")
+
+            #remove the partition key and sort key and readd them
+            # if partitionKeyCol in jsonBody:
+            #     jsonBody.pop(partitionKeyCol)
+            # if sortKeyCol in jsonBody:
+            #     jsonBody.pop(sortKeyCol)
+            # jsonBody[partitionKeyCol] = int(partitionKeyValue)
+            # jsonBody[sortKeyCol] = int(sortKeyValue)
+
+            #merge rest of the json data
+            jsonBody.update(jsonData)
+            # print(jsonBody)
+
+            # do the final put
             dynamodb = boto3.resource('dynamodb')
             table = dynamodb.Table(tableName)
-            response = table.put_item(Item= jsonData)
-            return True
-        
+            response = table.put_item(Item=jsonBody)
+
+            return partitionKeyValue
+
         except Exception as e:
-            logging.error("Error occured in addRecordInDynamoTable method: " + str(e))
+            logging.error("Error occured in updateRecordInDynamoTable method: " + str(e))
             return False
         
     @staticmethod
@@ -54,8 +87,24 @@ class DBManager:
             jsonBody[partitionKey] = next_fileid
 
             response = table.put_item(Item=jsonBody)
-            return True
+            return next_fileid
         
         except Exception as e:
             logging.error("Error occured in addRecordInDynamoTableWithAutoIncrKey method: " + str(e))
-            return False
+            return None
+        
+
+    def dynamo_to_python(dynamo_object: dict) -> dict:
+        deserializer = TypeDeserializer()
+        return {
+            k: deserializer.deserialize(v) 
+            for k, v in dynamo_object.items()
+        }  
+  
+    def python_to_dynamo(python_object: dict) -> dict:
+        serializer = TypeSerializer()
+        return {
+            k: serializer.serialize(v)
+            for k, v in python_object.items()
+        }
+    

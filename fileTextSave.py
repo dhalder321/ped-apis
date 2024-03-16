@@ -1,14 +1,14 @@
 import os
 import logging
 import json, uuid
-from common.globals import Utility
-from common.globals import Document, HTML2Document
+from common.globals import Utility, DBTables
 from common.s3File import uploadFile 
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from common.db import DBManager
 from docx import Document
 from htmldocx import HtmlToDocx
+from common.globals import PED_Module
 
 def saveDocumentFile(event, context):
      
@@ -16,11 +16,14 @@ def saveDocumentFile(event, context):
 
     try:
 
+        #initiate DB modules
+        PED_Module.initiate()
+
         #check user id logged in and userid is valid
         #TODO:
 
         #log user and transaction details
-        Utility.logUserActivity(body, "saveDocumentFile")
+        activityId = Utility.logUserActivity(body, "saveDocumentFile")
 
         tran_id = body["transactionId"]
         if tran_id is None:
@@ -33,17 +36,20 @@ def saveDocumentFile(event, context):
         
         if textInHTML is None:
             # Return a 400 Bad Request response if input is missing
-            return Utility.generateResponse(400, {
+
+            response = Utility.generateResponse(400, {
                     'transactionId' : tran_id,
                     'error': 'Missing text to save in the request',
                     'AnswerRetrieved': False
                 })
+            Utility.updateUserActivity(str(activityId), userid, response)
+            return response
             
 
         #save the text from HTML in docx format
         localFileLocation = str(Path(Utility.EFS_LOCATION, userid))
-        datetimestring = datetime.now().strftime("%m%d%Y%H%M%S")
-        datetimeFormattedString = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+        datetimestring = datetime.now().replace(tzinfo=timezone.utc).strftime("%m%d%Y%H%M%S")
+        datetimeFormattedString = datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S")
         localFileName = "DocumentFile_"+ tran_id + "_" + datetimestring + ".docx"
         localFilePath = str(Path(localFileLocation, localFileName))
         #print('localFilePath: ' + localFilePath)
@@ -64,8 +70,7 @@ def saveDocumentFile(event, context):
         presignedURL = uploadFile(localFilePath, Utility.S3BUCKE_NAME, s3filePath)
 
         # add record in userfiles table
-        #("ped-userfiles", "staticIndexColumn", "fileid", "staticIndexColumn-fileid-index"))
-        retVal = DBManager.addRecordInDynamoTableWithAutoIncrKey("ped-userfiles", \
+        retVal = DBManager.addRecordInDynamoTableWithAutoIncrKey(DBTables.UserFiles_Table_Name, \
                                                                  "staticIndexColumn", "fileid",\
                                                                  "staticIndexColumn-fileid-index",  \
                                                                   {
@@ -84,20 +89,24 @@ def saveDocumentFile(event, context):
 
         if retVal == False:
             # Return a 500 server error response
-            return Utility.generateResponse(500, {
+            response = Utility.generateResponse(500, {
                                 'transactionId' : tran_id,
                                 'Error': 'Error processing your request',
                             })
+            Utility.updateUserActivity(str(activityId), userid, response)
+            return response
 
         #delete temporary files
         Path(localFilePath).unlink()
 
         # Return the response in JSON format
-        return Utility.generateResponse(200, {
+        response =  Utility.generateResponse(200, {
                                 'transactionId' : tran_id,
                                 'Response': presignedURL,
                                 'AnswerRetrieved': True
                             })
+        Utility.updateUserActivity(str(activityId), userid, response)
+        return response
 
     except Exception as e:
         # Log the error with stack trace to CloudWatch Logs
@@ -105,9 +114,10 @@ def saveDocumentFile(event, context):
         logging.error("Stack Trace:", exc_info=True)
         
         # Return a 500 server error response
-        return Utility.generateResponse(500, {
+        response = Utility.generateResponse(500, {
                                 'transactionId' : tran_id,
                                 'Error': 'Error processing your request',
                                 'AnswerRetrieved': False
                             })
-        
+        Utility.updateUserActivity(str(activityId), userid, response)
+        return response
