@@ -11,6 +11,7 @@ from common.db import DBManager
 from signup import signupNewUser
 from newAccesKey import getAccessKey
 from login import loginUserWithemail
+from loginWithAccessKey import loginUserWithAccessKey
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -135,16 +136,16 @@ from login import loginUserWithemail
 # print(data)
 
 
-req = {
-        "email": "dhalder@gmail.com",
-        "pwdEn": "^%*&$(*&!@dskjvkds)", 
-        "transactionId": "8736423hk2j3483",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
-data = loginUserWithemail({
-        "body": json.dumps(req)
-}, {})
-print(data)
+# req = {
+#         "email": "dhalder@gmail.com",
+#         "pwdEn": "^%*&$(*&!@dskjvkds)", 
+#         "transactionId": "8736423hk2j3483",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# data = loginUserWithemail({
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 
 # response = DBManager.getDBItems(
@@ -158,6 +159,16 @@ print(data)
 #         projection_expression='userid, firstName, lastName',
 #         index_name="email-index"
 #     )
-
 # print (response)
+
+
+req = {
+        "asseccKey": "VWBPUS",
+        "transactionId": "8736423hk2j3483",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }
+data = loginUserWithAccessKey({
+        "body": json.dumps(req)
+}, {})
+print(data)
 

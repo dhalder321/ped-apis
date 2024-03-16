@@ -7,8 +7,7 @@ from datetime import datetime, timezone
 from common.db import DBManager
 from common.globals import PED_Module
 
-# "loginUserWithemail", "loginUserWithKey"
-def loginUserWithemail(event, context):
+def loginUserWithAccessKey(event, context):
 
     body = json.loads(event['body'])
 
@@ -18,49 +17,33 @@ def loginUserWithemail(event, context):
         PED_Module.initiate()
 
         #log user and transaction details
-        activityId = Utility.logUserActivity(body, "loginUserWithemail")
+        activityId = Utility.logUserActivity(body, "loginUserWithAccessKey")
 
         tran_id = body["transactionId"]
         if tran_id is None:
             tran_id = str(uuid.uuid1())
     
         # Parse the incoming JSON payload
-        # "email": "cvraman1@gmail.com",
-        # "pwdEn": "^%*&$(*&!@dskjvkds)", 
+        # "asseccKey": "dhalder@gmail.com",
         # "transactionId": "8736423hk2j3483",
-        # "requesttimeinUTC": "3/14/2024 21:18"  
+        # "requesttimeinUTC": "3/14/2024 21:18" 
 
-        email = body["email"] if 'email' in body else None
-        pwdEn = body["pwdEn"] if 'pwdEn' in body else None
+        asseccKey = body["asseccKey"] if 'asseccKey' in body else None
         requesttimeinUTC = body["requesttimeinUTC"] if 'requesttimeinUTC' in body else None
         
-        if email is None or pwdEn is None:
+        if asseccKey is None or len(asseccKey) != 6:
             # Return a 400 Bad Request response if input is missing
             response = Utility.generateResponse(400, {
                     'transactionId' : tran_id,
-                    'error': 'Missing email or password in the login request',
+                    'error': 'invalid access key provided',
                     'AnswerRetrieved': False
                 })
             Utility.updateUserActivity(str(activityId), "-1", response)
             return response
 
         # check for signedup user
-        #TO DO:        table_name='ped-users',
-        # partition_key_name="userid",
-        # partition_key_value="3",
-        # sort_key_name="email",
-        # sort_key_value="dhalder@gmail.com",
-        # filter_expression='pwdEn = :value',
-        # value="^%*&$(*&!@dskjvkds)", 
-        # projection_expression='userid, firstName, lastName',
-        # index_name="email-index")
-    
-        userRecord = DBManager.getDBItems(table_name=DBTables.User_Table_Name, \
-                                          sort_key_name="email", sort_key_value=email, \
-                                          filter_expression= "pwdEn = :value", \
-                                          value = pwdEn, \
-                                          projection_expression="userid, firstName, lastName", \
-                                          index_name="email-index")
+        userRecord = DBManager.getDBItemByIndex(DBTables.User_Table_Name, \
+                                                "accessKey", "accessKey-index", asseccKey)
         
         if userRecord is not None:
             if len(userRecord) > 1:
@@ -83,13 +66,14 @@ def loginUserWithemail(event, context):
                 return response
         
         userid = str(userRecord[0]['userid'])
+        email = userRecord[0]['email']
 
         # update record in user table for last login
         retVal = DBManager.updateRecordInDynamoTable(DBTables.User_Table_Name, \
-                                                                  "userid",userid,
+                                                                  "userid",userid, \
                                                                   "email", email, \
                                                                   {
-            "accessBy": "email+password",
+            "accessBy": "accesskey",
             "lastLoginTimeUTC": datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S"),
         })
 
@@ -109,6 +93,7 @@ def loginUserWithemail(event, context):
                                 'userid': userid,
                                 'firstName': userRecord[0]['firstName'],
                                 'lastName': userRecord[0]['lastName'],
+                                'email': email,
                                 'AnswerRetrieved': True
                             })
         Utility.updateUserActivity(str(activityId), "-1", response)
@@ -116,7 +101,7 @@ def loginUserWithemail(event, context):
 
     except Exception as e:
         # Log the error with stack trace to CloudWatch Logs
-        logging.error(f"Error in loginUserWithemail Function: {str(e)}")
+        logging.error(f"Error in loginUserWithAccessKey Function: {str(e)}")
         logging.error("Stack Trace:", exc_info=True)
         
         # Return a 500 server error response
