@@ -84,7 +84,7 @@ class Utility:
     tran_id_ = body['transactionId'] if 'transactionId' in body else None
     requestTime = body['requesttimeinUTC'] if 'requesttimeinUTC' in body else ""
     
-    if user_id is None and methodName not in ("signupNewUser", "loginUser"):
+    if user_id is None and methodName not in ("signupNewUser", "loginUserWithemail", "loginUserWithKey"):
       raise ValueError("userid not sent in request")
     elif user_id is None and methodName in ("signupNewUser", "loginUserWithemail", "loginUserWithKey"):
       user_id = "-1"

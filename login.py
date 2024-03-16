@@ -45,43 +45,70 @@ def loginUserWithemail(event, context):
             return response
 
         # check for signedup user
-        #TO DO:
-        userRecord = DBManager.getDBItemByIndex(DBTables.User_Table_Name, "email", "email-index", email)
-        if userRecord is not None and len(userRecord) > 0:
-            # Return a 400 Bad Request response if email is already present
-            response = Utility.generateResponse(400, {
-                    'transactionId' : tran_id,
-                    'error': 'Email is already present',
-                    'AnswerRetrieved': False
-                })
-            Utility.updateUserActivity(str(activityId), "-1", response)
-            return response
+        #TO DO:        table_name='ped-users',
+        # partition_key_name="userid",
+        # partition_key_value="3",
+        # sort_key_name="email",
+        # sort_key_value="dhalder@gmail.com",
+        # filter_expression='pwdEn = :value',
+        # value="^%*&$(*&!@dskjvkds)", 
+        # projection_expression='userid, firstName, lastName',
+        # index_name="email-index")
+    
+        userRecord = DBManager.getDBItems(table_name=DBTables.User_Table_Name, \
+                                          sort_key_name="email", sort_key_value=email, \
+                                          filter_expression= "pwdEn = :value", \
+                                          value = pwdEn, \
+                                          projection_expression="userid, firstName, lastName", \
+                                          index_name="email-index")
+        
+        if userRecord is not None:
+            if len(userRecord) > 1:
+                # Return a 400 Bad Request response if email is already present
+                response = Utility.generateResponse(400, {
+                        'transactionId' : tran_id,
+                        'error': 'More than one users found',
+                        'AnswerRetrieved': False
+                    })
+                Utility.updateUserActivity(str(activityId), "-1", response)
+                return response
+            elif len(userRecord) <= 0:
+                 # Return a 400 Bad Request response if email is already present
+                response = Utility.generateResponse(400, {
+                        'transactionId' : tran_id,
+                        'error': 'no user found',
+                        'AnswerRetrieved': False
+                    })
+                Utility.updateUserActivity(str(activityId), "-1", response)
+                return response
+        
+        userid = str(userRecord[0]['userid'])
 
-        # add record in user table
-        retVal = DBManager.addRecordInDynamoTableWithAutoIncrKey(DBTables.User_Table_Name, \
-                                                                 "staticIndexColumn", "userid",\
-                                                                 "staticIndexColumn-userid-index",  \
+        # update record in user table for last login
+        retVal = DBManager.updateRecordInDynamoTable(DBTables.User_Table_Name, \
+                                                                  "userid",userid,
+                                                                  "email", email, \
                                                                   {
-            "staticIndexColumn": 99, #for global sec. index column
-            "firstName": firstName,
-            "lastName": lastName,
-            "email": email,
-            "userCreationDateTime": requesttimeinUTC,
+            "accessBy": "email+password",
+            "lastLoginTimeUTC": datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S"),
         })
 
-        if retVal is None:
-            # Return a 500 server error response
-            response = Utility.generateResponse(500, {
-                                'transactionId' : tran_id,
-                                'Error': 'Error processing your request',
-                            })
-            Utility.updateUserActivity(str(activityId), "-1", response)
-            return response
+        #IGNORE THE ERROR TO LOG LASTLOGIN TIME
+        # if retVal is None:
+        #     # Return a 500 server error response
+        #     response = Utility.generateResponse(500, {
+        #                         'transactionId' : tran_id,
+        #                         'Error': 'Error processing your request',
+        #                     })
+        #     Utility.updateUserActivity(str(activityId), "-1", response)
+        #     return response
 
         # Return the response in JSON format
         response =  Utility.generateResponse(200, {
                                 'transactionId' : tran_id,
-                                'userid': retVal,
+                                'userid': userid,
+                                'firstName': userRecord[0]['firstName'],
+                                'lastName': userRecord[0]['lastName'],
                                 'AnswerRetrieved': True
                             })
         Utility.updateUserActivity(str(activityId), "-1", response)
@@ -89,7 +116,7 @@ def loginUserWithemail(event, context):
 
     except Exception as e:
         # Log the error with stack trace to CloudWatch Logs
-        logging.error(f"Error in signupNewUser Function: {str(e)}")
+        logging.error(f"Error in loginUserWithemail Function: {str(e)}")
         logging.error("Stack Trace:", exc_info=True)
         
         # Return a 500 server error response

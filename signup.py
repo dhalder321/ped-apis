@@ -68,6 +68,7 @@ def signupNewUser(event, context):
             "firstName": firstName,
             "lastName": lastName,
             "email": email,
+            "pwdEn": pwdEn,
             "userCreationDateTime": requesttimeinUTC,
         })
 

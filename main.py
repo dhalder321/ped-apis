@@ -10,6 +10,7 @@ from fileTextSave import saveDocumentFile
 from common.db import DBManager
 from signup import signupNewUser
 from newAccesKey import getAccessKey
+from login import loginUserWithemail
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -112,7 +113,7 @@ from newAccesKey import getAccessKey
 
 
 # req = {
-#         "userid": "3",
+#         "userid": "1",
 #         "transactionId": "23984ewfkj928r23",
 #         "requesttimeinUTC": "3/14/2024 21:18"
 #     }
@@ -135,13 +136,28 @@ from newAccesKey import getAccessKey
 
 
 req = {
-        "email": "cvraman1@gmail.com",
+        "email": "dhalder@gmail.com",
         "pwdEn": "^%*&$(*&!@dskjvkds)", 
         "transactionId": "8736423hk2j3483",
         "requesttimeinUTC": "3/14/2024 21:18"
     }
-# data = signupNewUser({
-#         "body": json.dumps(req)
-# }, {})
-# print(data)
+data = loginUserWithemail({
+        "body": json.dumps(req)
+}, {})
+print(data)
+
+
+# response = DBManager.getDBItems(
+#         table_name='ped-users',
+#         # partition_key_name="userid",
+#         # partition_key_value="3",
+#         sort_key_name="email",
+#         sort_key_value="dhalder@gmail.com",
+#         filter_expression='pwdEn = :value',
+#         value="^%*&$(*&!@dskjvkds)", 
+#         projection_expression='userid, firstName, lastName',
+#         index_name="email-index"
+#     )
+
+# print (response)
 
