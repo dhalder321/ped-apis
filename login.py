@@ -3,14 +3,12 @@ import logging
 import json, uuid
 from common.globals import Utility, DBTables
 from common.s3File import uploadFile 
-from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
-from docx import Document
-from htmldocx import HtmlToDocx
 from common.globals import PED_Module
 
-def loginUser(event, context):
+# "loginUserWithemail", "loginUserWithKey"
+def loginUserWithemail(event, context):
 
     body = json.loads(event['body'])
 
@@ -20,22 +18,18 @@ def loginUser(event, context):
         PED_Module.initiate()
 
         #log user and transaction details
-        activityId = Utility.logUserActivity(body, "signupNewUser")
+        activityId = Utility.logUserActivity(body, "loginUserWithemail")
 
         tran_id = body["transactionId"]
         if tran_id is None:
             tran_id = str(uuid.uuid1())
     
         # Parse the incoming JSON payload
-        # "firstName": "Chandrasekhar",
-        # "lastName": "Raman",
-        # "email": "cvraman@gmail.com",
+        # "email": "cvraman1@gmail.com",
         # "pwdEn": "^%*&$(*&!@dskjvkds)", 
         # "transactionId": "8736423hk2j3483",
-        # "requesttimeinUTC": "3/14/2024 21:18"    
+        # "requesttimeinUTC": "3/14/2024 21:18"  
 
-        firstName = body["firstName"] if 'firstName' in body else ""
-        lastName = body["lastName"] if 'lastName' in body else ""
         email = body["email"] if 'email' in body else None
         pwdEn = body["pwdEn"] if 'pwdEn' in body else None
         requesttimeinUTC = body["requesttimeinUTC"] if 'requesttimeinUTC' in body else None
@@ -44,14 +38,15 @@ def loginUser(event, context):
             # Return a 400 Bad Request response if input is missing
             response = Utility.generateResponse(400, {
                     'transactionId' : tran_id,
-                    'error': 'Missing email in the signup request',
+                    'error': 'Missing email or password in the login request',
                     'AnswerRetrieved': False
                 })
             Utility.updateUserActivity(str(activityId), "-1", response)
             return response
 
-        # check for avaialble email
-        userRecord = DBManager.getDBItem(DBTables.User_Table_Name, "email", "email-index", email)
+        # check for signedup user
+        #TO DO:
+        userRecord = DBManager.getDBItemByIndex(DBTables.User_Table_Name, "email", "email-index", email)
         if userRecord is not None and len(userRecord) > 0:
             # Return a 400 Bad Request response if email is already present
             response = Utility.generateResponse(400, {
@@ -105,3 +100,5 @@ def loginUser(event, context):
                             })
         Utility.updateUserActivity(str(activityId), "-1", response)
         return response
+
+       

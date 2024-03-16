@@ -86,7 +86,7 @@ class Utility:
     
     if user_id is None and methodName not in ("signupNewUser", "loginUser"):
       raise ValueError("userid not sent in request")
-    elif user_id is None and methodName in ("signupNewUser", "loginUser"):
+    elif user_id is None and methodName in ("signupNewUser", "loginUserWithemail", "loginUserWithKey"):
       user_id = "-1"
     else:
       if not user_id.isdigit():

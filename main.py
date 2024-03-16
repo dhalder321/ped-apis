@@ -97,29 +97,29 @@ from newAccesKey import getAccessKey
 # })
 
 
-req = {
-        "firstName": "Debjit",
-        "lastName": "Halder",
-        "email": "dhalder@gmail.com",
-        "pwdEn": "^%*&$(*&!@dskjvkds)", 
-        "transactionId": "jsfhis3726423sd",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
-data = signupNewUser({
-        "body": json.dumps(req)
-}, {})
-print(data)
+# req = {
+#         "firstName": "Debjit",
+#         "lastName": "Halder",
+#         "email": "dhalder@gmail.com",
+#         "pwdEn": "^%*&$(*&!@dskjvkds)", 
+#         "transactionId": "jsfhis3726423sd",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# data = signupNewUser({
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 
-req = {
-        "userid": "3",
-        "transactionId": "23984ewfkj928r23",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
-data = getAccessKey({
-        "body": json.dumps(req)
-}, {})
-print(data)
+# req = {
+#         "userid": "3",
+#         "transactionId": "23984ewfkj928r23",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# data = getAccessKey({
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 
 # req = {
@@ -133,4 +133,15 @@ print(data)
 # }, {})
 # print(data)
 
+
+req = {
+        "email": "cvraman1@gmail.com",
+        "pwdEn": "^%*&$(*&!@dskjvkds)", 
+        "transactionId": "8736423hk2j3483",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }
+# data = signupNewUser({
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 

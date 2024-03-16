@@ -3,11 +3,8 @@ import logging
 import json, uuid
 from common.globals import Utility, DBTables
 from common.s3File import uploadFile 
-from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
-from docx import Document
-from htmldocx import HtmlToDocx
 from common.globals import PED_Module
 
 def signupNewUser(event, context):
