@@ -7,13 +7,18 @@ from boto3.dynamodb.conditions import Key
 
 class DBManager:
 
+    dbSession = boto3.Session()
+    dynamodb = dbSession.resource('dynamodb')
+
+    dbClient = boto3.client('dynamodb')
+
     @staticmethod
     def updateRecordInDynamoTable(tableName, partitionKeyCol, \
                                   partitionKeyValue, sortKeyCol, sortKeyValue,  jsonData):
 
         try: 
-            client = boto3.client('dynamodb')
-            resp = client.query(
+             
+            resp = DBManager.dbClient.query(
                                 TableName=tableName,
                                 KeyConditionExpression='#pk = :pk',
                                 ExpressionAttributeValues={':pk': {'N': partitionKeyValue}},
@@ -41,8 +46,7 @@ class DBManager:
             # print(jsonBody)
 
             # do the final put
-            dynamodb = boto3.resource('dynamodb')
-            table = dynamodb.Table(tableName)
+            table = DBManager.dynamodb.Table(tableName)
             response = table.put_item(Item=jsonBody)
 
             return partitionKeyValue
@@ -56,10 +60,10 @@ class DBManager:
     def get_highest_fileid(table_name, index_key_column, partitionKeyColumn, \
                            index_name, index_key_value="99"):
 
-        client = boto3.client('dynamodb')
+        
 
         # Define the request parameters
-        response = client.query(
+        response = DBManager.dbClient.query(
             TableName=table_name,
             IndexName=index_name,
             KeyConditionExpression='#pk = :pk',
@@ -81,8 +85,8 @@ class DBManager:
     # Insert item with auto-incremented partition key
     def addRecordInDynamoTableWithAutoIncrKey(tableName, indexKeyCol, partitionKey, gsiName, jsonBody):
         
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(tableName)
+        
+        table = DBManager.dynamodb.Table(tableName)
 
         try:
             next_fileid = DBManager.get_highest_fileid(tableName, indexKeyCol, partitionKey, gsiName) + 1
@@ -100,8 +104,8 @@ class DBManager:
     def getDBItemByIndex(tableName, indexCol, indexName, indexColValue):
         
         try:
-            dynamodb = boto3.resource('dynamodb')
-            table = dynamodb.Table(tableName)
+            
+            table = DBManager.dynamodb.Table(tableName)
 
             response = table.query(
                             IndexName= indexName, 
@@ -136,8 +140,8 @@ class DBManager:
                             sort_key_name=None, sort_key_value=None, 
                             **filter_expression_values):
         # Initialize DynamoDB resource
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(table_name)
+        
+        table = DBManager.dynamodb.Table(table_name)
 
         # Initialize expression attribute values dictionary
         expression_attribute_values = {}
@@ -191,8 +195,8 @@ class DBManager:
     def getDBItemByPartitionKey(tableName, columnName, columnValue):
         
         try:
-            dynamodb = boto3.resource('dynamodb')
-            table = dynamodb.Table(tableName)
+            
+            table = DBManager.dynamodb.Table(tableName)
 
             response = table.query(
                             KeyConditionExpression=Key(columnName).eq(columnValue) 

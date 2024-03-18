@@ -100,12 +100,12 @@ from loginWithAccessKey import loginUserWithAccessKey
 
 
 # req = {
-#         "firstName": "Debjit",
-#         "lastName": "Halder",
-#         "email": "dhalder@gmail.com",
-#         "pwdEn": "^%*&$(*&!@dskjvkds)", 
-#         "transactionId": "jsfhis3726423sd",
-#         "requesttimeinUTC": "3/14/2024 21:18"
+#         "firstName": "Thomas",
+#         "lastName": "Linder",
+#         "email": "tlinder@gmail.com",
+#         "pwdEn": "*!^@&*^$kjhsdf9873r", 
+#         "transactionId": "91849184714o31rij3984",
+#         "requesttimeinUTC": "3/17/2024 21:18"
 #     }
 # data = signupNewUser({
 #         "body": json.dumps(req)
@@ -162,13 +162,13 @@ from loginWithAccessKey import loginUserWithAccessKey
 # print (response)
 
 
-req = {
-        "asseccKey": "VWBPUS",
-        "transactionId": "8736423hk2j3483",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
-data = loginUserWithAccessKey({
-        "body": json.dumps(req)
-}, {})
-print(data)
+# req = {
+#         "asseccKey": "VWBPUS",
+#         "transactionId": "8736423hk2j3483",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# data = loginUserWithAccessKey({
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
