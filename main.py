@@ -163,7 +163,7 @@ from loginWithAccessKey import loginUserWithAccessKey
 
 
 # req = {
-#         "asseccKey": "VWBPUS",
+#         "asseccKey": "VW2PUS",
 #         "transactionId": "8736423hk2j3483",
 #         "requesttimeinUTC": "3/14/2024 21:18"
 #     }

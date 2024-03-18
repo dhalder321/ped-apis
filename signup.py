@@ -7,6 +7,14 @@ from datetime import datetime, timezone
 from common.db import DBManager
 from common.globals import PED_Module
 
+############################################################
+############################################################
+#return error codes:
+# 1001 - missing input in the request
+# 2001 - Email is already present
+# 2002 - error adding new user in db 
+# 5001 - Method level error
+############################################################
 def signupNewUser(event, context):
 
     body = json.loads(event['body'])
@@ -41,6 +49,7 @@ def signupNewUser(event, context):
             # Return a 400 Bad Request response if input is missing
             response = Utility.generateResponse(400, {
                     'transactionId' : tran_id,
+                    'errorCode': "1001",
                     'error': 'Missing email in the signup request',
                     'AnswerRetrieved': False
                 })
@@ -53,6 +62,7 @@ def signupNewUser(event, context):
             # Return a 400 Bad Request response if email is already present
             response = Utility.generateResponse(400, {
                     'transactionId' : tran_id,
+                    'errorCode': "2001",
                     'error': 'Email is already present',
                     'AnswerRetrieved': False
                 })
@@ -76,7 +86,8 @@ def signupNewUser(event, context):
             # Return a 500 server error response
             response = Utility.generateResponse(500, {
                                 'transactionId' : tran_id,
-                                'Error': 'Error processing your request',
+                                'errorCode': "2002",
+                                'error': 'Error processing your request',
                             })
             Utility.updateUserActivity(str(activityId), "-1", response)
             return response
@@ -98,7 +109,8 @@ def signupNewUser(event, context):
         # Return a 500 server error response
         response = Utility.generateResponse(500, {
                                 'transactionId' : tran_id,
-                                'Error': 'Error processing your request',
+                                'errorCode': "5001",
+                                'error': 'Error processing your request',
                                 'AnswerRetrieved': False
                             })
         Utility.updateUserActivity(str(activityId), "-1", response)

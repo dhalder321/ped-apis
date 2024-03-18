@@ -10,6 +10,15 @@ from docx import Document
 from htmldocx import HtmlToDocx
 from common.globals import PED_Module
 
+############################################################
+############################################################
+#return error codes:
+# 1001 - missing text to save in the request
+# 2001 - user file entry addition failed
+# 5001 - Method level error
+############################################################
+
+
 def saveDocumentFile(event, context):
      
     body = json.loads(event['body'])
@@ -36,9 +45,9 @@ def saveDocumentFile(event, context):
         
         if textInHTML is None:
             # Return a 400 Bad Request response if input is missing
-
             response = Utility.generateResponse(400, {
                     'transactionId' : tran_id,
+                    'errorCode': "1001",
                     'error': 'Missing text to save in the request',
                     'AnswerRetrieved': False
                 })
@@ -91,7 +100,8 @@ def saveDocumentFile(event, context):
             # Return a 500 server error response
             response = Utility.generateResponse(500, {
                                 'transactionId' : tran_id,
-                                'Error': 'Error processing your request',
+                                'errorCode': "2001",
+                                'error': 'Error processing your request',
                             })
             Utility.updateUserActivity(str(activityId), userid, response)
             return response
@@ -116,7 +126,8 @@ def saveDocumentFile(event, context):
         # Return a 500 server error response
         response = Utility.generateResponse(500, {
                                 'transactionId' : tran_id,
-                                'Error': 'Error processing your request',
+                                'errorCode': "5001",
+                                'error': 'Error processing your request',
                                 'AnswerRetrieved': False
                             })
         Utility.updateUserActivity(str(activityId), userid, response)

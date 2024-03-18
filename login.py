@@ -7,7 +7,15 @@ from datetime import datetime, timezone
 from common.db import DBManager
 from common.globals import PED_Module
 
-# "loginUserWithemail", "loginUserWithKey"
+############################################################
+############################################################
+#return error codes:
+# 1001 - missing input in the request
+# 2001 - more than one user found
+# 2002 - no user found
+# 2003 - login status update to db failed
+# 5001 - Method level error
+############################################################
 def loginUserWithemail(event, context):
 
     body = json.loads(event['body'])
@@ -38,6 +46,7 @@ def loginUserWithemail(event, context):
             # Return a 400 Bad Request response if input is missing
             response = Utility.generateResponse(400, {
                     'transactionId' : tran_id,
+                    'errorCode': "1001",
                     'error': 'Missing email or password in the login request',
                     'AnswerRetrieved': False
                 })
@@ -67,6 +76,7 @@ def loginUserWithemail(event, context):
                 # Return a 400 Bad Request response if email is already present
                 response = Utility.generateResponse(400, {
                         'transactionId' : tran_id,
+                        'errorCode': "2001",
                         'error': 'More than one user found',
                         'AnswerRetrieved': False
                     })
@@ -76,6 +86,7 @@ def loginUserWithemail(event, context):
                  # Return a 400 Bad Request response if email is already present
                 response = Utility.generateResponse(400, {
                         'transactionId' : tran_id,
+                        'errorCode': "2002",
                         'error': 'no user found',
                         'AnswerRetrieved': False
                     })
@@ -86,22 +97,23 @@ def loginUserWithemail(event, context):
 
         # update record in user table for last login
         retVal = DBManager.updateRecordInDynamoTable(DBTables.User_Table_Name, \
-                                                                  "userid",userid,
+                                                                  "userid",userid, \
                                                                   "email", email, \
                                                                   {
             "accessBy": "email+password",
+            "loginStatus": "loggedin",
             "lastLoginTimeUTC": datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S"),
         })
 
-        #IGNORE THE ERROR TO LOG LASTLOGIN TIME
-        # if retVal is None:
-        #     # Return a 500 server error response
-        #     response = Utility.generateResponse(500, {
-        #                         'transactionId' : tran_id,
-        #                         'Error': 'Error processing your request',
-        #                     })
-        #     Utility.updateUserActivity(str(activityId), "-1", response)
-        #     return response
+        if retVal is None:
+            # Return a 500 server error response
+            response = Utility.generateResponse(500, {
+                                'transactionId' : tran_id,
+                                'errorCode': "2003",
+                                'error': 'Error processing your request',
+                            })
+            Utility.updateUserActivity(str(activityId), "-1", response)
+            return response
 
         # Return the response in JSON format
         response =  Utility.generateResponse(200, {
@@ -122,7 +134,8 @@ def loginUserWithemail(event, context):
         # Return a 500 server error response
         response = Utility.generateResponse(500, {
                                 'transactionId' : tran_id,
-                                'Error': 'Error processing your request',
+                                'errorCode': "5001",
+                                'error': 'Error processing your request',
                                 'AnswerRetrieved': False
                             })
         Utility.updateUserActivity(str(activityId), "-1", response)

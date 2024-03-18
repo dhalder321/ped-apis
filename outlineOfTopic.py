@@ -4,7 +4,12 @@ from common.prompts import Prompt
 from common.globals import Utility
 from common.model import getModelResponse
 
-
+############################################################
+############################################################
+#return error codes:
+# 1001 - missing input in the request
+# 5001 - Method level error
+############################################################
 def generateOutlineFromTopic(event, context):
      
     body = json.loads(event['body'])
@@ -23,6 +28,7 @@ def generateOutlineFromTopic(event, context):
             # Return a 400 Bad Request response if input is missing
             return Utility.generateResponse(400, {
                     'transactionId' : tran_id,
+                    'errorCode': "1001",
                     'error': 'Missing system role or topic in the request',
                     'AnswerRetrieved': False
                 })
@@ -59,7 +65,8 @@ def generateOutlineFromTopic(event, context):
         # Return a 500 server error response
         return Utility.generateResponse(500, {
                                 'transactionId' : tran_id,
-                                'Error': 'Error processing your request',
+                                'errorCode': "5001",
+                                'error': 'Error processing your request',
                                 'AnswerRetrieved': False
                             })
         

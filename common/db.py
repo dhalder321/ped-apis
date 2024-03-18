@@ -33,14 +33,6 @@ class DBManager:
             else:
                 raise Exception("In updateRecordInDynamoTable method: No record found to be updated")
 
-            #remove the partition key and sort key and readd them
-            # if partitionKeyCol in jsonBody:
-            #     jsonBody.pop(partitionKeyCol)
-            # if sortKeyCol in jsonBody:
-            #     jsonBody.pop(sortKeyCol)
-            # jsonBody[partitionKeyCol] = int(partitionKeyValue)
-            # jsonBody[sortKeyCol] = int(sortKeyValue)
-
             #merge rest of the json data
             jsonBody.update(jsonData)
             # print(jsonBody)

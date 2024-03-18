@@ -4,12 +4,12 @@ import logging
 import traceback
 from openai import OpenAI
 
+#client = OpenAI(os.environ["OPENAI_API_KEY"])
+client = OpenAI(api_key="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")
+
 def getModelResponse(system_role, user_prompt, llm = "gpt-3.5-turbo", max_tokens=800):
     
     try:
-
-        #client = OpenAI(os.environ["OPENAI_API_KEY"])
-        client = OpenAI(api_key="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")
 
         #validate inputs
         if system_role is None or user_prompt is None or llm is None:

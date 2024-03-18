@@ -12,6 +12,15 @@ from docx import Document
 from htmldocx import HtmlToDocx
 from common.globals import PED_Module
 
+############################################################
+############################################################
+#return error codes:
+# 1001 - missing input in the request
+# 2001 - user has not signed up
+# 2002 - unique access key cound not be generated 
+# 2003 - access key generation status update to db failed
+# 5001 - Method level error
+############################################################
 
 def getAccessKey(event, context):
 
@@ -40,6 +49,7 @@ def getAccessKey(event, context):
             # Return a 400 Bad Request response if input is missing
             response = Utility.generateResponse(400, {
                     'transactionId' : tran_id,
+                    'errorCode': "1001",
                     'error': 'Missing userid in the access key request',
                     'AnswerRetrieved': False
                 })
@@ -53,6 +63,7 @@ def getAccessKey(event, context):
             # Return a 400 Bad Request response if email is already present
             response = Utility.generateResponse(400, {
                     'transactionId' : tran_id,
+                    'errorCode': "2001",
                     'error': 'user has not signed up',
                     'AnswerRetrieved': False
                 })
@@ -74,6 +85,17 @@ def getAccessKey(event, context):
         # create a new and unique access key
         accesskey = generateAccessCode()
 
+        if accesskey is None:
+            # Return a 500 server error response
+            response = Utility.generateResponse(500, {
+                                'transactionId' : tran_id,
+                                'errorCode': "2002",
+                                'error': 'unique access key cound not be generated',
+                                'AnswerRetrieved': True
+                            })
+            Utility.updateUserActivity(str(activityId), userid, response)
+            return response
+
         # update record in user table
         retVal = DBManager.updateRecordInDynamoTable(DBTables.User_Table_Name, \
                                                                  "userid", userid,\
@@ -87,7 +109,8 @@ def getAccessKey(event, context):
             # Return a 500 server error response
             response = Utility.generateResponse(500, {
                                 'transactionId' : tran_id,
-                                'Error': 'Error processing your request',
+                                'errorCode': "2003",
+                                'error': 'Error processing your request',
                                 'AnswerRetrieved': True
                             })
             Utility.updateUserActivity(str(activityId), userid, response)
@@ -110,7 +133,8 @@ def getAccessKey(event, context):
         # Return a 500 server error response
         response = Utility.generateResponse(500, {
                                 'transactionId' : tran_id,
-                                'Error': 'Error processing your request',
+                                'errorCode': "5001",
+                                'error': 'Error processing your request',
                                 'AnswerRetrieved': False
                             })
         Utility.updateUserActivity(str(activityId), userid, response)
@@ -119,11 +143,13 @@ def getAccessKey(event, context):
 
 def generateAccessCode():
     characters = string.ascii_uppercase + string.digits
-    while True:
+    for i in range(1, 10, 1):
         unique_code = ''.join(random.choices(characters, k=6))
         # Check if the generated code is unique 
         if isCodeUnique(unique_code):
             return unique_code
+    
+    return None
 
 def isCodeUnique(code):
     
