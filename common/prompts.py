@@ -1,9 +1,10 @@
 import logging
 from pathlib import Path
 from common.globals import Utility
+from common.s3File import readFile
 
 # s3BucketObjectName = 'prompts/'
-efsLocation = Utility.EFS_LOCATION + '/prompts'
+
 
 class Prompt:
 
@@ -12,24 +13,33 @@ class Prompt:
         raise NotImplementedError()
 
     @staticmethod
-    def getPrompt(promptType, env=None):
-
-        # #environment name in the s3 object name
-        # s3BucketObjectName += '/' + env
+    def getPrompt(promptType, promp_location='s3', env=None):
 
         #get the file name based on prompt type
         fileName = Utility.PROMPT_TYPE2FILE_NAME[promptType]
-        fileName = Path(efsLocation, fileName)
 
-        try:
+        if promp_location == 's3':
 
-            #read the file from EFS location and return the text
-            data = Path(fileName).read_text()
-            return data
+            # #environment name in the s3 object name
+            # s3BucketObjectName += '/' + env
+            s3PromptLocation = Utility.S3OBJECT_NAME_FOR_PROMPT_FILES + "/" + Utility.ENVIRONMENT
+            s3_object_name = s3PromptLocation + "/" + fileName
 
-        except Exception as e:
-            logging.error(e)
-            return None
+            return readFile(Utility.S3BUCKE_NAME, s3_object_name)
+
+        elif promp_location == 'local':
+            
+            efsLocation = Utility.EFS_LOCATION + '/prompts'
+            fileName = Path(efsLocation, fileName)
+            try:
+
+                #read the file from EFS location and return the text
+                data = Path(fileName).read_text()
+                return data
+
+            except Exception as e:
+                logging.error(e)
+                return None
 
     @staticmethod
     def processPrompts(prompt, dic):

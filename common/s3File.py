@@ -17,6 +17,25 @@ def downloadFile(targetFileName, bucket, object_name=None):
     except ClientError as e:
         logging.error(e)
         return None
+    
+
+def readFile(bucket, object_name=None):
+
+    if bucket is None:
+        raise ClientError("Error in readFile method: bucket name not provided.")
+
+    try:
+        s3 = boto3.client('s3')
+        # Read an object from the bucket
+        response = s3.get_object(Bucket=bucket, Key=object_name)
+        if 'Body' in response:
+            object_content = response['Body'].read().decode('utf-8')
+            return object_content
+        
+        return None
+    except ClientError as e:
+        logging.error(e)
+        return None
 
 def uploadFile(file_name, bucket, object_name=None):
     

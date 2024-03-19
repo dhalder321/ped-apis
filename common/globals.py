@@ -10,10 +10,22 @@ class Utility:
   TEXT2TOPICOUTLINE_PROMPT_TYPE = 'TEXT2TOPICOUTLINE'
   TEXTOFTOPICOUTLINE_PROMPT_TYPE = 'TEXTOFTOPICOUTLINE'
 
-  EFS_LOCATION = 'C:\openai-sdk\ped-apis'
-  ENVIRONMENT = "dev"
+  # Local_Location = 'C:\openai-sdk\ped-apis'
+  Local_Location = './'
+  Efs_Path = '/mnt/ped'
+  EFS_LOCATION = Local_Location
+
   S3BUCKE_NAME = 'pedbuc'
   S3OBJECT_NAME_FOR_USER_FILES = 'user-files'
+  S3OBJECT_NAME_FOR_PROMPT_FILES = 'prompts'
+
+  ###################################################
+  #              ENvironment variables
+  ####################################################
+  ENVIRONMENT = "dev"
+  PROMPT_LOCATION = "s3"  # or local
+
+  ###################################################
 
 
   ###################################################
@@ -56,6 +68,10 @@ class Utility:
     TEXTOFTOPICOUTLINE_PROMPT_TYPE: 'TEXTOFTOPICOUTLINE.txt'
   }
 
+  @staticmethod
+  def initiate():
+    #if Utility.ENVIRONMENT != 'dev':
+    Utility.EFS_LOCATION = Utility.Local_Location
 
   @staticmethod
   def generateResponse(responseCode, bodyJson, headers=None):
@@ -128,6 +144,7 @@ class PED_Module:
    @staticmethod
    def initiate():
       DBTables.GetTableName()
+      Utility.initiate()
 
 class DBTables:
    User_Table_Name = ""

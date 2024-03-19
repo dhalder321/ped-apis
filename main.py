@@ -1,6 +1,6 @@
 import json
 from common.model import getModelResponse
-from common.s3File import uploadFile, downloadFile, deleteFile
+from common.s3File import uploadFile, downloadFile, deleteFile, readFile
 from common.prompts import Prompt
 from common.globals import Utility
 from topic2summaries import generateSummariesFromTopic
@@ -22,6 +22,7 @@ from loginWithAccessKey import loginUserWithAccessKey
 
 # downloadFile('dashboardV2.png', 'pedbuc', 'prompts/dev/dashboard-edited.png')
 
+# print(readFile('pedbuc', 'prompts/dev/TEXT2TOPICOUTLINE.txt'))
 # deleteFile('pedbuc', 'prompts/dev/dashboard-edited.png')
 
 # prmpt = getPrompt(TOPIC2SUMMARY_PROMPT_TYPE)
@@ -38,15 +39,17 @@ from loginWithAccessKey import loginUserWithAccessKey
 # print(json.loads(json.loads(data['body'])['Response']))
 
 
-# data = generateOutlineFromTopic({
-#         "body": """{
-#         "transactionId": "6932874iruwe764283",
-#         "role": "Economics professor",
-#         "topic": "recent research on globalization",
-#         "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape."
-#     }"""
-# }, {})
-# #print(data)
+req = {
+        "body": """{
+        "transactionId": "6932874iruwe764283",
+        "userid": "2",
+        "role": "Economics professor",
+        "topic": "recent research on globalization",
+        "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape.",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }"""}
+data = generateOutlineFromTopic(req, {})
+print(data)
 # print(json.loads(data['body'])['Response'])
 
 
@@ -107,6 +110,9 @@ from loginWithAccessKey import loginUserWithAccessKey
 #         "transactionId": "91849184714o31rij3984",
 #         "requesttimeinUTC": "3/17/2024 21:18"
 #     }
+# req = {
+#         "body": json.dumps(req)
+# }
 # data = signupNewUser({
 #         "body": json.dumps(req)
 # }, {})
