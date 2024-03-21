@@ -18,7 +18,7 @@ def generateOutlineFromTopic(event, context):
     body = json.loads(event['body'])
     try:
 
-         #initiate DB modules
+        #initiate DB modules
         PED_Module.initiate()
 
         #log user and transaction details

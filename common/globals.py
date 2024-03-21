@@ -20,7 +20,7 @@ class Utility:
   S3OBJECT_NAME_FOR_PROMPT_FILES = 'prompts'
 
   ###################################################
-  #              ENvironment variables
+  #              Environment variables
   ####################################################
   ENVIRONMENT = "dev"
   PROMPT_LOCATION = "s3"  # or local
@@ -82,11 +82,11 @@ class Utility:
             headers= {}
 
         headers['Content-Type'] = 'application/json'
-        headers['Access-Control-Allow-Origin'] = '*'
+        # headers['Access-Control-Allow-Origin'] = '*'
 
         return {
                     'statusCode': responseCode,
-                    'body': json.dumps(bodyJson),
+                    'body': bodyJson,
                     'headers': headers
                 }
       except Exception as e:
