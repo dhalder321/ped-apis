@@ -25,6 +25,9 @@ class Utility:
   ENVIRONMENT = "dev"
   PROMPT_LOCATION = "s3"  # or local
 
+  # CORS allowed origin
+  CORS_ALLOWED_ORIGIN = "http://localhost:3000" 
+
   ###################################################
 
 
@@ -73,6 +76,7 @@ class Utility:
     #if Utility.ENVIRONMENT != 'dev':
     Utility.EFS_LOCATION = Utility.Local_Location
 
+
   @staticmethod
   def generateResponse(responseCode, bodyJson, headers=None):
       
@@ -82,11 +86,14 @@ class Utility:
             headers= {}
 
         headers['Content-Type'] = 'application/json'
-        # headers['Access-Control-Allow-Origin'] = '*'
+        #add CORS headers
+        headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        headers['Access-Control-Allow-Origin'] = Utility.CORS_ALLOWED_ORIGIN
+        headers['Access-Control-Allow-Methods'] = 'OPTIONS,POST,GET'
 
         return {
                     'statusCode': responseCode,
-                    'body': bodyJson,
+                    'body': json.dumps(bodyJson),
                     'headers': headers
                 }
       except Exception as e:

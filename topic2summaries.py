@@ -7,100 +7,118 @@ from common.model import getModelResponse
 ############################################################
 ############################################################
 #return error codes:
+#  999 - No request object found
 # 1001 - missing user id in the request
 # 1002 - missing input in the request
 # 1003 - prompt could not be retrieved
 # 5001 - Method level error
 ############################################################
 def generateSummariesFromTopic(event, context):
-     
-    body = json.loads(event['body'])
-    try:
 
-        #initiate DB modules
-        PED_Module.initiate()
+    print(event)
+    logging.debug(event)
 
-        #log user and transaction details
-        activityId = Utility.logUserActivity(body, "generateSummariesFromTopic")
+    #process OPTIONS method
+    if 'httpMethod' in event and event['httpMethod'] == 'OPTIONS':
+      return Utility.generateResponse(200, {})
 
-        tran_id = body["transactionId"]
-        if tran_id is None:
-            tran_id = str(uuid.uuid1())
-    
-        # Parse the incoming JSON payload
-        system_role = "system" 
-        sl_role = body["role"] if 'role' in body else None
-        sl_question = body["topic"] if 'topic' in body else None
-        userid = body["userid"]  if "userid" in body else None
 
-        if userid is None:
-            # Return a 400 Bad Request response if input is missing
-            response = Utility.generateResponse(400, {
-                    'transactionId' : tran_id,
-                    'errorCode': "1001",
-                    'error': 'Missing userid in the request',
-                    'AnswerRetrieved': False
-                })
-            Utility.updateUserActivity(str(activityId), "-1", response)
-            return response
+    #process only POST methods
+    if 'httpMethod' in event and event['httpMethod'] == 'POST':
 
-        # check for valid and logged in user
-        # CheckLoggedinUser(userid)
+        if 'body' not in event or event['body'] is None:
+            return Utility.generateResponse(400, {
+                        'errorCode': "999",
+                        'error': 'No request object found',
+                    })
         
-        if sl_role is None or sl_question is None:
-            # Return a 400 Bad Request response if input is missing
-            response = Utility.generateResponse(400, {
-                    'transactionId' : tran_id,
-                    'errorCode': "1002",
-                    'error': 'Missing system role or topic in the request',
-                    'AnswerRetrieved': False
-                })
-            Utility.updateUserActivity(str(activityId), userid, response)
-            return response
+        body = json.loads(event['body'])
+        try:
+
+            #initiate DB modules
+            PED_Module.initiate()
+
+            #log user and transaction details
+            activityId = Utility.logUserActivity(body, "generateSummariesFromTopic")
+
+            tran_id = body["transactionId"]
+            if tran_id is None:
+                tran_id = str(uuid.uuid1())
+        
+            # Parse the incoming JSON payload
+            system_role = "system" 
+            sl_role = body["role"] if 'role' in body else None
+            sl_question = body["topic"] if 'topic' in body else None
+            userid = body["userid"]  if "userid" in body else None
+
+            if userid is None:
+                # Return a 400 Bad Request response if input is missing
+                response = Utility.generateResponse(400, {
+                        'transactionId' : tran_id,
+                        'errorCode': "1001",
+                        'error': 'Missing userid in the request',
+                        'AnswerRetrieved': False
+                    })
+                Utility.updateUserActivity(str(activityId), "-1", response)
+                return response
+
+            # check for valid and logged in user
+            # CheckLoggedinUser(userid)
             
+            if sl_role is None or sl_question is None:
+                # Return a 400 Bad Request response if input is missing
+                response = Utility.generateResponse(400, {
+                        'transactionId' : tran_id,
+                        'errorCode': "1002",
+                        'error': 'Missing system role or topic in the request',
+                        'AnswerRetrieved': False
+                    })
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
+                
 
-        # Construct the chat messages with roles
-        prompt = Prompt.getPrompt(Utility.TOPIC2SUMMARY_PROMPT_TYPE)
-        if prompt is None:
-            # Return a 400 Bad Request response if input is missing
-            response = Utility.generateResponse(400, {
-                    'transactionId' : tran_id,
-                    'errorCode': "1003",
-                    'error': 'prompt could not be retrieved',
-                    'AnswerRetrieved': False
-                })
+            # Construct the chat messages with roles
+            prompt = Prompt.getPrompt(Utility.TOPIC2SUMMARY_PROMPT_TYPE)
+            if prompt is None:
+                # Return a 400 Bad Request response if input is missing
+                response = Utility.generateResponse(400, {
+                        'transactionId' : tran_id,
+                        'errorCode': "1003",
+                        'error': 'prompt could not be retrieved',
+                        'AnswerRetrieved': False
+                    })
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
+            
+            prompt = Prompt.processPrompts(prompt, {"TOPIC": sl_question})
+            
+            # Create the chat completion
+            modelResponse = getModelResponse("You are a seasonsed " + sl_role, \
+                            prompt, 'gpt-4', 1500)
+
+            # Return the response in JSON format
+            response = Utility.generateResponse(200, {
+                                    'transactionId' : tran_id,
+                                    'Response': modelResponse,
+                                    'AnswerRetrieved': True
+                                })
             Utility.updateUserActivity(str(activityId), userid, response)
             return response
-        
-        prompt = Prompt.processPrompts(prompt, {"TOPIC": sl_question})
-        
-        # Create the chat completion
-        modelResponse = getModelResponse("You are a seasonsed " + sl_role, \
-                         prompt, 'gpt-4', 1500)
 
-        # Return the response in JSON format
-        response = Utility.generateResponse(200, {
-                                'transactionId' : tran_id,
-                                'Response': modelResponse,
-                                'AnswerRetrieved': True
-                            })
-        Utility.updateUserActivity(str(activityId), userid, response)
-        return response
-
-    except Exception as e:
-        # Log the error with stack trace to CloudWatch Logs
-        logging.error(f"Error in generateSummariesFromTopic Function: {str(e)}")
-        logging.error("Stack Trace:", exc_info=True)
-        
-        # Return a 500 server error response
-        response = Utility.generateResponse(500, {
-                                'transactionId' : tran_id,
-                                'errorCode': "5001",
-                                'error': 'Error processing your request',
-                                'AnswerRetrieved': False
-                            })
-        Utility.updateUserActivity(str(activityId), -1, response)
-        return response
+        except Exception as e:
+            # Log the error with stack trace to CloudWatch Logs
+            logging.error(f"Error in generateSummariesFromTopic Function: {str(e)}")
+            logging.error("Stack Trace:", exc_info=True)
+            
+            # Return a 500 server error response
+            response = Utility.generateResponse(500, {
+                                    'transactionId' : tran_id,
+                                    'errorCode': "5001",
+                                    'error': 'Error processing your request',
+                                    'AnswerRetrieved': False
+                                })
+            Utility.updateUserActivity(str(activityId), -1, response)
+            return response
         
         
 

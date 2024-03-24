@@ -29,6 +29,7 @@ from loginWithAccessKey import loginUserWithAccessKey
 # print(prmpt)
 
 data = generateSummariesFromTopic({
+    "httpMethod" : "OPTIONS",
     "body": """{
         "transactionId": "6932874iruwe764283",
         "userid": "2",
