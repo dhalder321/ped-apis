@@ -23,7 +23,7 @@ class Utility:
   #              Environment variables
   ####################################################
   ENVIRONMENT = "dev"
-  PROMPT_LOCATION = "s3"  # or local
+  PROMPT_LOCATION = "local"  # or s3
 
   # CORS allowed origin
   CORS_ALLOWED_ORIGIN = "http://localhost:3000" 
@@ -73,8 +73,8 @@ class Utility:
 
   @staticmethod
   def initiate():
-    #if Utility.ENVIRONMENT != 'dev':
-    Utility.EFS_LOCATION = Utility.Local_Location
+    #if Utility.PROMPT_LOCATION != 'dev':
+    Utility.EFS_LOCATION = Utility.Efs_Path
 
 
   @staticmethod

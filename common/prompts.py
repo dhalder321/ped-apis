@@ -13,7 +13,7 @@ class Prompt:
         raise NotImplementedError()
 
     @staticmethod
-    def getPrompt(promptType, promp_location='s3', env=None):
+    def getPrompt(promptType, promp_location='local', env=None):
 
         #get the file name based on prompt type
         fileName = Utility.PROMPT_TYPE2FILE_NAME[promptType]
