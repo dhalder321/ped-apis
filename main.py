@@ -1,5 +1,5 @@
 import json
-from common.model import getModelResponse
+from common.model import getModelResponse, retryModelForOutputType
 from common.s3File import uploadFile, downloadFile, deleteFile, readFile
 from common.prompts import Prompt
 from common.globals import Utility
@@ -16,6 +16,16 @@ from loginWithAccessKey import loginUserWithAccessKey
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
 
+# text = retryModelForOutputType("You are a biology professor", \
+#                                'write top 5 points on tigers in JSON format {"1": "point 1"}', "json")
+# print(text)
+
+# text = retryModelForOutputType("You are a biology professor", \
+#                                '''write 600 lines on tigers. convert the text into HTML.
+#                                HTML output should have at minimum Doctype, HTML, 
+#                                head, body tags. Only emit the HTML and no other text''', "html")
+# print(text)
+
 # fileURL = uploadFile('dashboard-edited.png', 'pedbuc', 'prompts/dev/dashboard-edited.png')
 # print(fileURL)
 
@@ -28,35 +38,37 @@ from loginWithAccessKey import loginUserWithAccessKey
 # prmpt = getPrompt(TOPIC2SUMMARY_PROMPT_TYPE)
 # print(prmpt)
 
-data = generateSummariesFromTopic({
-    "httpMethod" : "OPTIONS",
-    "body": """{
+# data = generateSummariesFromTopic({
+#     "httpMethod" : "POST",
+#     "body": """{
+#         "transactionId": "6932874iruwe764283",
+#         "userid": "223",
+#         "role": "Economics professor",
+#         "topic": "recent research on globalization",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }"""
+#     }, {})
+# print(data)
+# print(json.loads(json.loads(data['body'])['Response']))
+
+
+req = {
+        "httpMethod" : "POST",
+        "body": """{
         "transactionId": "6932874iruwe764283",
         "userid": "2",
         "role": "Economics professor",
         "topic": "recent research on globalization",
+        "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape.",
         "requesttimeinUTC": "3/14/2024 21:18"
-    }"""
-    }, {})
+    }"""}
+data = generateOutlineFromTopic(req, {})
 print(data)
-# print(json.loads(json.loads(data['body'])['Response']))
-
-
-# req = {
-#         "body": """{
-#         "transactionId": "6932874iruwe764283",
-#         "userid": "2",
-#         "role": "Economics professor",
-#         "topic": "recent research on globalization",
-#         "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape.",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }"""}
-# data = generateOutlineFromTopic(req, {})
-# print(data)
 # print(json.loads(data['body'])['Response'])
 
 
 # data = generateTextOfTopicOutline({
+#         "httpMethod" : "POST",
 #         "body": """{
 #         "transactionId": "6932874iruwe764283",
 #         "userid": "2",

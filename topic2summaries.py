@@ -2,7 +2,7 @@ import logging
 import json, uuid
 from common.prompts import Prompt
 from common.globals import Utility, PED_Module
-from common.model import getModelResponse
+from common.model import retryModelForOutputType
 
 ############################################################
 ############################################################
@@ -93,8 +93,8 @@ def generateSummariesFromTopic(event, context):
             prompt = Prompt.processPrompts(prompt, {"TOPIC": sl_question})
             
             # Create the chat completion
-            modelResponse = getModelResponse("You are a seasonsed " + sl_role, \
-                            prompt, 'gpt-4', 1500)
+            modelResponse = retryModelForOutputType("You are a seasonsed " + sl_role, \
+                                    prompt, 'json', 'gpt-4', 1500, 2)
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {

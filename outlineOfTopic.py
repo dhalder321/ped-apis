@@ -2,7 +2,7 @@ import logging
 import json, uuid
 from common.prompts import Prompt
 from common.globals import Utility, PED_Module
-from common.model import getModelResponse
+from common.model import retryModelForOutputType
 
 
 ############################################################
@@ -45,7 +45,6 @@ def generateOutlineFromTopic(event, context):
             if tran_id is None:
                 tran_id = str(uuid.uuid1())
         
-            # Parse the incoming JSON payload
             system_role = "system" 
             sl_role = body["role"] if "role" in body else None
             sl_question = body["topic"]  if "topic" in body else None
@@ -103,8 +102,8 @@ def generateOutlineFromTopic(event, context):
             prompt = Prompt.processPrompts(prompt, dict)
             
             # Create the chat completion
-            modelResponse = getModelResponse("You are a seasonsed " + sl_role, \
-                            prompt)
+            modelResponse = retryModelForOutputType("You are a seasonsed " + sl_role, \
+                            prompt, "html", maxRetry=2)
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {

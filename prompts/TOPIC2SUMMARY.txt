@@ -1,1 +1,5 @@
-How many different way you can write essays on topic : {{TOPIC}}. Please provide different snippets or summaries for each of these types of essays. Please provide a list of these snippets in JSON format. each snippet should focus on different perspectives or viewpoints of the topic mentioned above. specify a compeling heading for each snippet (do not put any  snippet number) and a broad description on the essay (do not put any snippet number or description number) in JSON. Just produce the JSON and NO OTHER TEXT. JSON format is  {"Heading of snippet": "Description of the essay "}
+How many different way you can write essays on topic : {{TOPIC}}. Please provide different snippets or summaries for each of these types of essays. Please provide a list of maximum 6 of such popular snippets in JSON format. Each snippet should focus on different perspectives or viewpoints of the topic mentioned above. specify a compeling heading for each snippet (do not put any  snippet number) and a broad description on the essay (do not put any snippet number or description number) in JSON. Just produce the JSON and NO OTHER TEXT. JSON format is  
+    {
+        "Heading of snippet 1": "Detailed description of the snippet 1",
+        "Heading of snippet 2": "Detailed description of the snippet 2",
+    }
