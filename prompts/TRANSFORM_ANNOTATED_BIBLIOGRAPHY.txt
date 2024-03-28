@@ -1,0 +1,47 @@
+Given the text provided below, generate a comprehensive annotated bibliography that encompasses the following steps and components:
+
+Introduction to the Annotated Bibliography:
+
+Start with a brief introduction that explains the purpose of the annotated bibliography. Clarify that it should serve to extend the understanding and context of the provided text through related scholarly sources.
+
+Summary of the Original Text:
+
+Summarize the provided text, highlighting its main thesis, arguments, and any specific themes or questions it addresses. This summary will set the context for the selection of related scholarly works.
+
+Identification of Key Themes and Questions:
+
+List the key themes, concepts, and research questions identified in the text. Explain why these are significant and how they contribute to the field of study the text belongs to. This section have to contain more than 250 words. 
+
+Search for Scholarly Sources:
+
+Based on the key themes and questions, outline a strategy for searching relevant scholarly sources. Include suggestions for keywords, databases, and journals that could be used to find literature that either supports, contradicts, or expands upon the text’s content. This section have to contain more than 500 words.
+
+Selection Criteria for Sources:
+
+Define criteria for selecting sources to include in the bibliography. Criteria might include relevance to the key themes, publication within a recent timeframe, citation count, or the academic credentials of the authors. This section have to contain more than 150 words.
+
+Annotated Bibliography Entries:
+
+For each selected source, create an annotated bibliography entry that includes:
+Citation: Provide a full citation for the source in an appropriate academic style (e.g., APA, MLA, Chicago).
+
+Annotation: Write an annotation that covers:
+A brief summary of the source’s content.
+
+An analysis of how it relates to the themes or questions of the original text.
+
+A critical evaluation of the source's arguments, methodology, and conclusions.
+Reflections on the source’s contribution to the broader field of study.
+
+Conclusion:
+
+Conclude the bibliography with a summary of how the selected sources collectively broaden the understanding of the original text’s themes and questions. Mention any gaps in the literature that emerged from this exercise and suggest directions for future research. This section have to contain more than 100 words.
+
+Reflection on the Process:
+
+Reflect on the process of creating the annotated bibliography. Discuss the challenges of selecting sources, the insights gained, and how this task has contributed to a deeper understanding of the original text.
+
+{{INSTRUCTION}}
+
+Text for Analysis:
+{{TEXT}}

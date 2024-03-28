@@ -52,5 +52,14 @@ class Prompt:
 
         return prompt
 
+    @staticmethod
+    def getPromptAfterProcessing(promptType, dic, promp_location='local', env=None):
+
+        prompt = Prompt.getPrompt(promptType, promp_location, env)
+
+        if prompt is None:
+            return prompt
+        
+        return Prompt.processPrompts(prompt, dic)
 
 

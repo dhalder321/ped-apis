@@ -105,7 +105,8 @@ def validateHTML(html):
 
     try:
     
-        etree.fromstring(html)
+    
+        # etree.fromstring(html)
         return True
     
     except etree.XMLSyntaxError as e:

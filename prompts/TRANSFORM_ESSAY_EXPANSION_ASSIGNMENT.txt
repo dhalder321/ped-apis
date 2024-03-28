@@ -1,0 +1,48 @@
+Given the text provided below, generate a set of essay expansion assignments aimed at graduate students. These assignments should encourage advanced analysis, critical thinking, and further research. Ensure each assignment includes the following components:
+
+Introduction to the Assignment Series:
+
+Provide a brief overview of the purpose behind these essay expansion assignments, emphasizing the development of critical analysis, research skills, and scholarly writing.
+
+Comprehensive Summary of the Original Text:
+
+Offer a detailed summary of the provided text, including its main thesis, key arguments, evidence used, and conclusions. Highlight any particular themes, theories, or methodologies employed by the text.
+
+Expansion Assignment Topics:
+
+Create several distinct topics for essay expansion assignments. Each topic should focus on a specific aspect of the original text that can be further explored or critiqued. Suggested topics should include:
+Deep Dive into a Key Theme: Encourage exploration beyond the text’s discussion, incorporating relevant theories, case studies, or contemporary examples.
+
+Counter-Argument Essay: Assign a critical analysis that challenges the text's arguments by presenting alternative perspectives, supported by scholarly evidence.
+Methodological Evaluation: Focus on the methodologies used in the original text, asking students to assess their effectiveness and suggest alternative approaches.
+Theoretical Application: Propose the application of a different theoretical framework to the text’s subject matter and explore the potential outcomes of this approach.
+Comparative Analysis: Recommend comparing the text with another piece of scholarly work on a similar topic, focusing on differences in perspectives, findings, and implications.
+
+Assignment Structure Guidelines:
+
+For each topic, outline a recommended structure for the essay, including an introduction that presents the research question or thesis statement, a literature review section, an analysis or discussion section, and a conclusion that summarizes the findings and suggests areas for future research.
+
+Research and Evidence Requirements:
+
+Specify the expectations for research and evidence in these assignments. Indicate the minimum number of scholarly sources students should consult, the types of sources considered appropriate, and any requirements for primary data collection or analysis.
+
+Critical Thinking and Analysis Criteria:
+
+Detail the criteria for critical thinking and analysis within the essays. Encourage students to not only present information but to engage with it critically, evaluating the strengths and weaknesses of arguments, the applicability of theories, and the validity of evidence.
+
+Writing and Formatting Standards:
+
+Remind students of the importance of scholarly writing standards, including clarity, coherence, and adherence to a specific citation style (e.g., APA, MLA, Chicago). Include requirements for essay length, formatting, and submission guidelines.
+
+Assessment Rubric:
+
+Provide a rubric that outlines how the essays will be assessed. Criteria should include understanding of the original text, depth of research, quality of argumentation, critical analysis, and adherence to academic writing standards.
+
+Conclusion:
+
+Conclude with encouragement for students to embrace these assignments as opportunities to deepen their understanding of the subject matter, enhance their research skills, and contribute to scholarly discourse.
+
+{{INSTRUCTION}}
+
+Text for Analysis:
+{{TEXT}}

@@ -1,0 +1,46 @@
+Given the text provided below, generate a comprehensive study guide that includes the following sections and details:
+
+Introduction to the Study Guide:
+
+Briefly introduce the purpose of the study guide and how it can be used by students to enhance their understanding of the text.
+
+Summary of the Text:
+
+Provide a concise summary that captures the main thesis, key arguments, and overall narrative of the text. Highlight the text's purpose and its significance within its field of study.
+
+Analysis of Key Concepts and Themes:
+
+Identify and explain the major concepts and themes presented in the text. For each concept/theme, offer a detailed explanation, including its relevance to the text's main arguments and its implications for the broader subject area.
+
+Critical Thinking Questions:
+
+Develop a series of questions that encourage deeper engagement with the text. These questions should prompt analysis, synthesis, and evaluation of the text's content. Include a mix of comprehension questions (to ensure understanding of the text), analysis questions (to interpret the text), and evaluative questions (to assess the text's arguments and conclusions).
+
+Glossary of Terms:
+
+Compile a list of important terms and phrases used in the text, along with their definitions. Ensure that these terms are explained in a manner accessible to someone with a basic understanding of the subject area.
+
+Important Quotations:
+
+Select several significant quotations from the text. For each quotation, provide an explanation of its importance and how it contributes to the text's main arguments or themes.
+
+Suggestions for Further Reading:
+
+Recommend additional resources (books, articles, videos) that expand on the text's topics or themes. Provide a brief description of each resource and its relevance to the topics covered in the text.
+
+Study Tips:
+
+Offer advice on how to effectively study the text, including strategies for note-taking, summarization, and the application of concepts to practical examples or case studies.
+
+Discussion Prompts for Group Study:
+
+Include prompts designed to facilitate discussion among students studying the text in a group setting. These prompts should encourage collaborative analysis and exploration of the text's content.
+
+Conclusion of the Study Guide:
+
+Conclude the study guide with a brief recap of its key components and encourage students to actively engage with the material as they study.
+
+{{INSTRUCTION}}
+
+Text for Analysis:
+{{TEXT}}

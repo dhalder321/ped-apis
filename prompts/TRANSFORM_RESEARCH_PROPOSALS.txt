@@ -1,0 +1,51 @@
+Given the text provided below, generate a comprehensive research proposal that addresses the following components and instructions:
+
+Introduction to the Research Proposal:
+
+Briefly introduce the objective of creating a research proposal based on the provided text. Mention the importance of extending the knowledge or addressing the gaps identified in the text.
+
+Summary of the Original Text:
+
+Provide a succinct summary of the provided text, highlighting its main thesis, key arguments, methodologies used (if applicable), and its conclusions. Emphasize any specific areas where the text suggests further research is needed or poses unresolved questions.
+
+Identification of Research Gaps or Questions:
+
+Analyze the text to identify gaps in the research or emerging questions that warrant further investigation. List these gaps/questions, explaining why they are significant and how addressing them could contribute to the field of study.
+
+Research Objectives:
+
+Define clear and focused research objectives based on the identified gaps or questions. These objectives should outline what the proposed research aims to achieve or uncover.
+
+Literature Review:
+
+Conduct a preliminary literature review related to the identified research gaps/questions. Summarize key findings from existing research and explain how the proposed study will build on or diverge from these findings.
+
+Proposed Methodology:
+
+Detail the methodology for the proposed research, including research design, data collection methods, and analysis strategies. Justify why these methods are suitable for addressing the research objectives.
+
+Expected Outcomes:
+
+Discuss the potential outcomes and implications of the research. Include how the research might fill the identified gaps, answer the research questions, and contribute to the broader field.
+
+Timeline and Work Plan:
+
+Provide an estimated timeline and work plan for completing the research. Break down the research process into stages (e.g., literature review, data collection, analysis) and allocate time frames for each stage.
+
+Budget Estimate (Optional):
+
+If applicable, give a rough estimate of the budget required for the research, including costs for materials, data access, and any necessary travel or equipment.
+
+Ethical Considerations:
+
+Highlight any ethical considerations relevant to the proposed research, including how participants' privacy will be protected (if human subjects are involved) and how data integrity will be maintained.
+
+Conclusion of the Research Proposal:
+
+Conclude the proposal by reiterating the significance of the research, its potential contributions to the field, and a call to action for funding bodies or institutional review boards to support the research.
+
+{{INSTRUCTION}}
+
+Text for Analysis:
+
+{{TEXT}}

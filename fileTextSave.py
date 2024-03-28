@@ -2,12 +2,9 @@ import os
 import logging
 import json, uuid
 from common.globals import Utility, DBTables
-from common.s3File import uploadFile 
 from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
-from docx import Document
-from htmldocx import HtmlToDocx
 from common.globals import PED_Module
 
 ############################################################
@@ -81,21 +78,11 @@ def saveDocumentFile(event, context):
             localFilePath = str(Path(localFileLocation, localFileName))
             #print('localFilePath: ' + localFilePath)
             
-            # Create the local directory if it does not exist
-            isExist = os.path.exists(localFileLocation)
-            if not isExist:    
-                os.makedirs(localFileLocation) 
-            document = Document()
-            parser =  HtmlToDocx()
-            parser.add_html_to_document(textInHTML, document)
-            document.save(localFilePath)
-
-            #upload to S3
-            s3fileLocation = Utility.S3OBJECT_NAME_FOR_USER_FILES + "/" + Utility.ENVIRONMENT
-            s3filePath = s3fileLocation + "/" + userid + "/" + localFileName
-            print("s3filePath:" + s3filePath)
-            presignedURL = uploadFile(localFilePath, Utility.S3BUCKE_NAME, s3filePath)
-
+            # upload the document in s3
+            s3filePath = "/" + userid + "/" + localFileName
+            presignedURL = Utility.uploadDocumentinHTMLtoS3(textInHTML, localFileName, \
+                                                            localFileLocation, s3filePath)
+            
             # add record in userfiles table
             retVal = DBManager.addRecordInDynamoTableWithAutoIncrKey(DBTables.UserFiles_Table_Name, \
                                                                     "staticIndexColumn", "fileid",\

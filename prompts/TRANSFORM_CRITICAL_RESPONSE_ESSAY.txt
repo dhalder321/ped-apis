@@ -1,0 +1,45 @@
+Based on the text provided below, generate a Critical Response Essay that adheres to the following guidelines and sections:
+
+Introduction:
+
+Briefly introduce the text you are responding to, including its title, author, and the main thesis or argument. Provide context about why this text is significant within its field of study.
+State your own thesis for the response essay, outlining the stance you will take in your critique or analysis of the original text.
+
+Summary of the Original Text:
+
+Provide a concise summary of the key points, arguments, and findings of the original text. Highlight the methodology used (if applicable) and the conclusions drawn by the author.
+
+This summary should be objective, aiming to give readers a clear understanding of the text's content without your personal bias.
+
+Critical Analysis:
+
+Engage in a detailed analysis of the text, focusing on aspects such as its arguments, evidence, theoretical framework, and methodology.
+
+Identify strengths and weaknesses in the text's approach and argumentation. Discuss the adequacy of the evidence provided, the robustness of the arguments, and the validity of the conclusions drawn.
+Consider the text's contributions to its field, its originality, and its impact on ongoing debates or research areas.
+
+Your Perspective:
+
+Offer your perspective on the text, building on the critical analysis. This might include agreeing or disagreeing with the author's arguments, suggesting alternative interpretations, or highlighting overlooked aspects.
+
+Support your perspective with evidence from the text itself, other scholarly sources, or your own research. This section should demonstrate your ability to engage critically and constructively with the text.
+
+Broader Implications:
+
+Discuss the broader implications of the text's arguments and findings. Consider how it fits within the wider academic discourse, its relevance to real-world issues, and its potential to influence future research or policy.
+
+Suggest areas for further research or exploration that emerge from your critique of the text.
+Conclusion:
+
+Summarize the main points of your response essay, reinforcing your thesis and the critical stance you've taken.
+
+Reflect on the importance of engaging with texts critically, especially at the graduate level, and the value of academic discourse in advancing knowledge and understanding within your field.
+
+References:
+
+Include a list of references cited in your essay, formatted according to the appropriate academic style (e.g., APA, MLA, Chicago).
+
+{{INSTRUCTION}}
+
+Text for Analysis:
+{{TEXT}}

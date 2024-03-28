@@ -1,0 +1,50 @@
+You are to write a critical response essay to the following provided essay. Your response should engage deeply with the essay's arguments, methods, and conclusions, applying critical thinking and academic writing skills to construct a well-reasoned critique. Follow the instructions below to structure your critical response essay:
+
+Introduction to the Response Essay:
+
+Start with an introduction that includes a brief overview of the provided essay, mentioning its title, author, and the main premise. State the purpose of your critical response essay and what it aims to achieve.
+
+Summary of the Provided Essay:
+
+Summarize the provided essay succinctly, highlighting the key arguments and points made by the author. This summary should serve as a foundation for your critique, enabling readers unfamiliar with the original work to understand your response context.
+
+Critical Analysis of the Essay’s Arguments:
+
+Examine the core arguments presented in the essay. Discuss their strengths and weaknesses, considering the logic, coherence, and persuasiveness of the author’s reasoning. Highlight any assumptions the author makes and evaluate their validity.
+
+Evaluation of the Essay’s Methodologies:
+
+Critically assess the methodologies used in the essay, if applicable. Consider whether the methods are appropriate for the essay's goals and whether they are executed effectively. Discuss any limitations or biases in the methodology that could impact the essay's conclusions.
+
+Assessment of the Essay’s Conclusions:
+
+Evaluate the conclusions drawn by the author in the provided essay. Consider whether these conclusions are supported by the evidence and arguments presented. Discuss the implications of the essay's conclusions and their significance to the field of study.
+
+Personal Reflection and Position:
+
+Reflect on your personal reaction to the essay. Discuss your agreement or disagreement with the author’s viewpoints, citing specific examples from the essay and your reasoning. Consider how your own experiences, knowledge, or research interests influence your perspective.
+
+Suggestions for Improvement or Further Exploration:
+
+Offer constructive criticism and suggestions for how the essay could be improved. This might include areas where additional evidence is needed, alternative arguments or perspectives that could be considered, or suggestions for further research on the topic.
+
+Conclusion of Your Critical Response Essay:
+
+Conclude your essay by summarizing your main critiques and reflections. Reiterate the significance of critically engaging with academic texts and how this exercise contributes to a deeper understanding of the subject matter.
+
+References and Citations:
+
+Include a list of any sources you refer to in your response, following the appropriate academic citation style. Ensure that your essay adheres to academic integrity standards.
+
+Guidelines for Writing:
+
+Ensure your critical response essay is structured logically, with clear arguments and evidence to support your critiques.
+
+Maintain an academic tone throughout your essay, focusing on constructive criticism and scholarly analysis.
+
+Be specific in your critiques and suggestions, providing examples from the provided essay to illustrate your points.
+
+{{INSTRUCTION}}
+
+Provided Essay:
+{{TEXT}}

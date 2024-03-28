@@ -1,14 +1,59 @@
-import json
+import json, os
+import base64
 import logging
+from pathlib import Path
 from html.parser import HTMLParser
 from common.db import DBManager
 from datetime import datetime, timezone
+from docx import Document
+from htmldocx import HtmlToDocx
+from common.s3File import uploadFile 
+
 
 class Utility:
   
+
+  ##################################################
+  #Common terms in the prompts to replace 
+  ###
+
+  # System role: {{SYSTEM_ROLE}}
+  # Topic: {{TOPIC}}
+  # Summary: {{SUMMARY}}
+  # Outline: {{OUTLINE}}
+  
+  ##################################################
+
   TOPIC2SUMMARY_PROMPT_TYPE = 'TOPIC2SUMMARY'
   TEXT2TOPICOUTLINE_PROMPT_TYPE = 'TEXT2TOPICOUTLINE'
   TEXTOFTOPICOUTLINE_PROMPT_TYPE = 'TEXTOFTOPICOUTLINE'
+
+  TRANSFORM_ANNOTATED_BIBLIOGRAPHY_PROMPT_TYPE =  "TRANSFORM_ANNOTATED_BIBLIOGRAPHY"         
+  TRANSFORM_CRITICAL_RESPONSE_ESSAY_PROMPT_TYPE =  "TRANSFORM_CRITICAL_RESPONSE_ESSAY"        
+  TRANSFORM_CRITICAL_RESPONSE_ESSAY_INSTRUCTION_PROMPT_TYPE =   "TRANSFORM_CRITICAL_RESPONSE_ESSAY_INSTRUCTION"                                        
+  TRANSFORM_ESSAY_EXPANSION_ASSIGNMENT_PROMPT_TYPE =    "TRANSFORM_ESSAY_EXPANSION_ASSIGNMENT"   
+  TRANSFORM_REFLECTION_PAPER_PROMPT_TYPE =    "TRANSFORM_REFLECTION_PAPER"             
+  TRANSFORM_REFLECTION_PAPER_INSTRUCTION_PROMPT_TYPE =  "TRANSFORM_REFLECTION_PAPER_INSTRUCTION"   
+  TRANSFORM_RESEARCH_PROPOSALS_PROMPT_TYPE =   "TRANSFORM_RESEARCH_PROPOSALS"            
+  TRANSFORM_SEMINAR_DISCUSSION_POINTS_PROMPT_TYPE =  "TRANSFORM_SEMINAR_DISCUSSION_POINTS"      
+  TRANSFORM_STUDY_GUIDE_PROMPT_TYPE =   "TRANSFORM_STUDY_GUIDE"               
+
+
+  PROMPT_TYPE2FILE_NAME = {
+         TOPIC2SUMMARY_PROMPT_TYPE: "TOPIC2SUMMARY.txt",
+    TEXT2TOPICOUTLINE_PROMPT_TYPE: "TEXT2TOPICOUTLINE.txt",
+    TEXTOFTOPICOUTLINE_PROMPT_TYPE: "TEXTOFTOPICOUTLINE.txt",
+    
+    TRANSFORM_ANNOTATED_BIBLIOGRAPHY_PROMPT_TYPE  :   "TRANSFORM_ANNOTATED_BIBLIOGRAPHY.txt",        
+    TRANSFORM_CRITICAL_RESPONSE_ESSAY_PROMPT_TYPE  :   "TRANSFORM_CRITICAL_RESPONSE_ESSAY.txt",       
+    TRANSFORM_CRITICAL_RESPONSE_ESSAY_INSTRUCTION_PROMPT_TYPE  :    "TRANSFORM_CRITICAL_RESPONSE_ESSAY_INSTRUCTION.txt",                                       
+    TRANSFORM_ESSAY_EXPANSION_ASSIGNMENT_PROMPT_TYPE  :     "TRANSFORM_ESSAY_EXPANSION_ASSIGNMENT.txt",  
+    TRANSFORM_REFLECTION_PAPER_PROMPT_TYPE  :     "TRANSFORM_REFLECTION_PAPER.txt",            
+    TRANSFORM_REFLECTION_PAPER_INSTRUCTION_PROMPT_TYPE  :   "TRANSFORM_REFLECTION_PAPER_INSTRUCTION.txt",  
+    TRANSFORM_RESEARCH_PROPOSALS_PROMPT_TYPE  :    "TRANSFORM_RESEARCH_PROPOSALS.txt",           
+    TRANSFORM_SEMINAR_DISCUSSION_POINTS_PROMPT_TYPE  :   "TRANSFORM_SEMINAR_DISCUSSION_POINTS.txt",     
+    TRANSFORM_STUDY_GUIDE_PROMPT_TYPE  :    "TRANSFORM_STUDY_GUIDE.txt",              
+  }
 
   # Local_Location = 'C:\openai-sdk\ped-apis'
   Local_Location = './'
@@ -18,6 +63,9 @@ class Utility:
   S3BUCKE_NAME = 'pedbuc'
   S3OBJECT_NAME_FOR_USER_FILES = 'user-files'
   S3OBJECT_NAME_FOR_PROMPT_FILES = 'prompts'
+
+  TRASFORMATION_USER_ROLE = "You are a seasoned and experienced academician"
+  PROMPT_EXTENSION_4_HTML_OUTPUT = "Generate the output strictly and strictly in HTML format with at minimum doctype, html, head and body tags and other basic HTML tags. Do NOT add any meta tags."
 
   ###################################################
   #              Environment variables
@@ -54,22 +102,7 @@ class Utility:
 
   ######################################################
 
-  ##################################################
-  #Common terms in the prompts to replace 
-  ###
-
-  # System role: {{SYSTEM_ROLE}}
-  # Topic: {{TOPIC}}
-  # Summary: {{SUMMARY}}
-  # Outline: {{OUTLINE}}
-  
-  ##################################################
-
-  PROMPT_TYPE2FILE_NAME = {
-    TOPIC2SUMMARY_PROMPT_TYPE: "TOPIC2SUMMARY.txt",
-    TEXT2TOPICOUTLINE_PROMPT_TYPE: "TEXT2TOPICOUTLINE.txt",
-    TEXTOFTOPICOUTLINE_PROMPT_TYPE: 'TEXTOFTOPICOUTLINE.txt'
-  }
+ 
 
   @staticmethod
   def initiate():
@@ -99,6 +132,53 @@ class Utility:
       except Exception as e:
         logging.error(e)
         return None
+  
+  @staticmethod
+  def saveBase64FileInLocal(filePath, fileContentBase64):
+    try:
+
+      # check if folder exists, create it if not present
+      path = Path(filePath)
+      fileLocation = str(path.parent)
+      isExist = os.path.exists(fileLocation)
+      if not isExist:    
+          os.makedirs(fileLocation)  
+
+      #write the file
+      with open(filePath,"wb") as f:
+            f.write(base64.b64decode(fileContentBase64.encode("utf-8")))
+      return True
+    
+    except Exception as e:
+      logging.error(e)
+      return False
+
+  @staticmethod
+  def uploadDocumentinHTMLtoS3(htmlContent, fileName, localFileLocation, s3FfilePath):
+
+    #check for valid filename and file location
+    if fileName is None or localFileLocation is None:
+      return None
+       
+    #check for file location existance
+    isExist = os.path.exists(localFileLocation)
+    if not isExist:    
+      os.makedirs(localFileLocation)
+
+    localFilePath = str(Path(localFileLocation, fileName))
+
+    document = Document()
+    parser =  HtmlToDocx()
+    parser.add_html_to_document(htmlContent, document)
+    document.save(localFilePath)
+
+    #upload to S3
+    s3fileLocation = Utility.S3OBJECT_NAME_FOR_USER_FILES + "/" + Utility.ENVIRONMENT
+    s3filePath = s3fileLocation + s3FfilePath
+    print("s3filePath:" + s3filePath)
+    presignedURL = uploadFile(localFilePath, Utility.S3BUCKE_NAME, s3filePath)
+    
+    return presignedURL
       
   @staticmethod
   def logUserActivity(body, methodName):
