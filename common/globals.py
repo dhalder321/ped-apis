@@ -190,6 +190,16 @@ class Utility:
     presignedURL = uploadFile(localFilePath, Utility.S3BUCKE_NAME, s3filePath)
     
     return presignedURL
+  
+  @staticmethod
+  def curtailObject4Logging(body, field):
+     
+    bodyCurtailed = body.copy()
+    if field in bodyCurtailed:
+      # bodyCurtailed.pop(field, None)
+      bodyCurtailed[field] = "..."
+
+    return bodyCurtailed 
       
   @staticmethod
   def logUserActivity(body, methodName):

@@ -112,6 +112,7 @@ def generateDocumentFromWebContent(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
+            print(str(len(retVal)) + "::" + retVal)
             # check for minimum length of the text- min 400 chars
             if len(retVal) < 400:
                 
@@ -119,6 +120,18 @@ def generateDocumentFromWebContent(event, context):
                         'transactionId' : tran_id,
                         'errorCode': "2003",
                         'error': 'text is too short for any transformation',
+                        'AnswerRetrieved': False
+                    })
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
+            
+            # check for max length of the text- max 10500 chars
+            if len(retVal) > 10500:
+                
+                response = Utility.generateResponse(500, {
+                        'transactionId' : tran_id,
+                        'errorCode': "2004",
+                        'error': 'text is too large for processing',
                         'AnswerRetrieved': False
                     })
                 Utility.updateUserActivity(str(activityId), userid, response)
@@ -137,7 +150,7 @@ def generateDocumentFromWebContent(event, context):
             if trmsText is None:
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
-                        'errorCode': "2004",
+                        'errorCode': "2005",
                         'error': 'model response could not be obtained',
                         'AnswerRetrieved': False
                     })
@@ -148,7 +161,7 @@ def generateDocumentFromWebContent(event, context):
                 
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
-                        'errorCode': "2005",
+                        'errorCode': "2006",
                         'error': 'prompt could not be retrieved',
                         'AnswerRetrieved': False
                     })
@@ -171,7 +184,7 @@ def generateDocumentFromWebContent(event, context):
                 # Return a 500 server error response
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
-                                    'errorCode': "2006",
+                                    'errorCode': "2007",
                                     'error': 'document could not be stored',
                                 })
                 Utility.updateUserActivity(str(activityId), userid, response)
@@ -199,7 +212,7 @@ def generateDocumentFromWebContent(event, context):
                 # Return a 500 server error response
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
-                                    'errorCode': "2007",
+                                    'errorCode': "2008",
                                     'error': 'document record could not be updated in database',
                                 })
                 Utility.updateUserActivity(str(activityId), userid, response)

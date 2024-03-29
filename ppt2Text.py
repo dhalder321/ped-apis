@@ -55,6 +55,7 @@ def generateDocumentFromPresentation(event, context):
             PED_Module.initiate()
 
             #log user and transaction details
+            bodyCurtailed = Utility.curtailObject4Logging(body, "fileContentBase64")
             activityId = Utility.logUserActivity(body, "generateDocumentFromPresentation")
 
             tran_id = body["transactionId"]

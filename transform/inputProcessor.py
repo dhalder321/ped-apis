@@ -78,8 +78,8 @@ class inputProcessor:
 
                 return "INVALID_FILE_CONTENT"
             
-            if  'pptFilename' not in inputValue or \
-                inputValue["pptFilename"] is None:
+            if  'pdfFilename' not in inputValue or \
+                inputValue["pdfFilename"] is None:
 
                 return "INVALID_FILE_NAME"
             
@@ -94,7 +94,7 @@ class inputProcessor:
                 return "INVALID_TRAN_ID"
             
             #process the ppt file
-            return inputProcessor.processPPTFileContentBase64(inputValue["fileContentBase64"], \
+            return inputProcessor.processPDFFileContentBase64(inputValue["fileContentBase64"], \
                     inputValue["pdfFilename"], inputValue["userid"], inputValue["tran_id"])    
         
         
@@ -167,7 +167,7 @@ class inputProcessor:
         localFileLocation = str(Path(Utility.EFS_LOCATION, userid))
         datetimestring = datetime.now().replace(tzinfo=timezone.utc).strftime("%m%d%Y%H%M%S")
         # datetimeFormattedString = datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S")
-        localFileName = "Uploaded-DOC_"+ tran_id + "_" + datetimestring + ".pdf"
+        localFileName = "Uploaded-PDF_"+ tran_id + "_" + datetimestring + ".pdf"
         localFilePath = str(Path(localFileLocation, localFileName))
         #print('localFilePath: ' + localFilePath)
         
@@ -189,10 +189,8 @@ class inputProcessor:
 
     def processWebContent(url):
 
-        response = requests.get(url)
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, "html.parser")
+        t = " ".join(soup.text.split())
 
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        text = soup.get_text()
-
-        return text
+        return t

@@ -82,6 +82,7 @@ class DBManager:
 
         try:
             next_fileid = DBManager.get_highest_fileid(tableName, indexKeyCol, partitionKey, gsiName) + 1
+            print(next_fileid)
             jsonBody[partitionKey] = next_fileid
 
             response = table.put_item(Item=jsonBody)

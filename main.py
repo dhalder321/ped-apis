@@ -14,6 +14,10 @@ from newAccesKey import getAccessKey
 from login import loginUserWithemail
 from loginWithAccessKey import loginUserWithAccessKey
 from ppt2Text import generateDocumentFromPresentation
+from doc2Text import generateDocumentFromDocument
+from text2text import generateDocumentFromText
+from pdf2text import generateDocumentFromPDF
+from web2text import generateDocumentFromWebContent
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -69,19 +73,19 @@ from ppt2Text import generateDocumentFromPresentation
 # print(json.loads(data['body'])['Response'])
 
 
-data = generateTextOfTopicOutline({
-        "httpMethod" : "POST",
-        "body": """{
-        "transactionId": "6932874iruwe764283",
-        "userid": "2",
-        "role": "Political science professor",
-        "topic": "Modi govt's contribution in Indian politics",
-        "summary": "",
-        "outline": "",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }"""
-}, {})
-print(data)
+# data = generateTextOfTopicOutline({
+#         "httpMethod" : "POST",
+#         "body": """{
+#         "transactionId": "6932874iruwe764283",
+#         "userid": "2",
+#         "role": "Political science professor",
+#         "topic": "Modi govt's contribution in Indian politics",
+#         "summary": "",
+#         "outline": "",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }"""
+# }, {})
+# print(data)
 
 # print(json.loads(data['body'])['Response'])
 
@@ -200,21 +204,38 @@ print(data)
 # print(data)
 
 # read  file ppt file in base64 format
-# with open("c:\\users\\halde\\Understanding Pregnancy.pptx", "rb") as f:
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\The Modi Phenomenon and the Re making of India.pdf", \
+#             "rb") as f:
 #     bytes = f.read()
 # req = {
 #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-#         "fileName": "pitch.pptx", 
-#         "renderingType": "Annotated bibliography",
+#         "fileName": "humanrights.pdf", 
+#         "renderingType": "Critical analysis instruction",
 #         "instruction": "generate it for first year college students.",
-#         "userid": "54431",
+#         "userid": "12289",
 #         "transactionId": "8736423hk2j3483",
 #         "requesttimeinUTC": "3/14/2024 21:18"
 #     }
 # # print (req)
-# data = generateDocumentFromPresentation({
+# data = generateDocumentFromPDF({
 #         "httpMethod": "POST",
 #         "body": json.dumps(req)
 # }, {})
 # print(data)
+
+
+req = {
+        "url": "https://www.cdc.gov/disasters/volcanoes/facts.html", 
+        "renderingType": "Critical analysis",
+        "instruction": "generate it for first year college students.",
+        "userid": "23322",
+        "transactionId": "aksfjnar832764832",
+        "requesttimeinUTC": "3/29/2024 21:18"
+    }
+# print (req)
+data = generateDocumentFromWebContent({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)
  

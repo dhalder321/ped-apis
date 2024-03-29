@@ -31,7 +31,7 @@ from transform.outputGenerator import outputGenerator
 ############################################################
 def generateDocumentFromPDF(event, context):
 
-    print(event)
+    #print(event)
     logging.debug(event)
 
     #process OPTIONS method
@@ -55,7 +55,8 @@ def generateDocumentFromPDF(event, context):
             PED_Module.initiate()
 
             #log user and transaction details
-            activityId = Utility.logUserActivity(body, "generateDocumentFromPDF")
+            bodyCurtailed = Utility.curtailObject4Logging(body, "fileContentBase64")
+            activityId = Utility.logUserActivity(bodyCurtailed, "generateDocumentFromPDF")
 
             tran_id = body["transactionId"]
             if tran_id is None:
@@ -96,7 +97,7 @@ def generateDocumentFromPDF(event, context):
             # get the text from the ppt content
             inputValues = {
                             "fileContentBase64": fileContent,
-                            "docFilename": fileName,
+                            "pdfFilename": fileName,
                             "userid": userid,
                             "tran_id": tran_id
                             }
@@ -125,6 +126,10 @@ def generateDocumentFromPDF(event, context):
                     })
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
+            
+            print("text:::*********************************************")
+            print(retVal)
+            print("*********************************************")
             
             # check for minimum length of the text- min 400 chars
             if len(retVal) < 400:
