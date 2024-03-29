@@ -20,7 +20,7 @@ from transform.outputGenerator import outputGenerator
 #  999 - No request object found
 # 1001 - missing user id in the request
 # 1002 - missing input in the request
-# 2001 - text could not be retrieved from provided presentation file
+# 2001 - text could not be retrieved from provided  file
 # 2002 - provided file content could not be saved locally
 # 2003 - text is too short for any transformation
 # 2004 - model response could not be obtained
@@ -29,7 +29,7 @@ from transform.outputGenerator import outputGenerator
 # 2007 - document record could not be updated in database
 # 5001 - Method level error
 ############################################################
-def generateDocumentFromPresentation(event, context):
+def generateDocumentFromDocument(event, context):
 
     print(event)
     logging.debug(event)
@@ -55,7 +55,7 @@ def generateDocumentFromPresentation(event, context):
             PED_Module.initiate()
 
             #log user and transaction details
-            activityId = Utility.logUserActivity(body, "generateDocumentFromPresentation")
+            activityId = Utility.logUserActivity(body, "generateDocumentFromDocument")
 
             tran_id = body["transactionId"]
             if tran_id is None:
@@ -96,11 +96,11 @@ def generateDocumentFromPresentation(event, context):
             # get the text from the ppt content
             inputValues = {
                             "fileContentBase64": fileContent,
-                            "pptFilename": fileName,
+                            "docFilename": fileName,
                             "userid": userid,
                             "tran_id": tran_id
                             }
-            retVal = inputProcessor.processInput("pptContentBase64", \
+            retVal = inputProcessor.processInput("docContentBase64", \
                                                         **inputValues)
             
             # get the text from ppt file
@@ -108,7 +108,7 @@ def generateDocumentFromPresentation(event, context):
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
                         'errorCode': "2001",
-                        'error': 'text could not be retrieved from provided presentation file',
+                        'error': 'text could not be retrieved from provided document file',
                         'AnswerRetrieved': False
                     })
                 Utility.updateUserActivity(str(activityId), userid, response)
@@ -236,7 +236,7 @@ def generateDocumentFromPresentation(event, context):
 
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
-            logging.error(f"Error in generateDocumentFromPresentation Function: {str(e)}")
+            logging.error(f"Error in generateDocumentFromDocument Function: {str(e)}")
             logging.error("Stack Trace:", exc_info=True)
             
             # Return a 500 server error response

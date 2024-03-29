@@ -3,6 +3,7 @@ import json, uuid
 from datetime import datetime, timezone
 from common.prompts import Prompt
 from common.model import retryModelForOutputType
+from common.essayModel import generateLargeEssayWithMultipleInvokes
 from common.globals import Utility
 
 
@@ -18,14 +19,18 @@ class transformationHandler:
             promptType = Utility.TRANSFORM_STUDY_GUIDE_PROMPT_TYPE
         elif transformType == "Seminar discussion":
             promptType = Utility.TRANSFORM_SEMINAR_DISCUSSION_POINTS_PROMPT_TYPE
+            
         elif transformType == "Research proposals":
             promptType = Utility.TRANSFORM_RESEARCH_PROPOSALS_PROMPT_TYPE
+            
         elif transformType == "Reflection paper":
             promptType = Utility.TRANSFORM_REFLECTION_PAPER_PROMPT_TYPE
+            
         elif transformType == "Reflection paper instruction":
             promptType = Utility.TRANSFORM_REFLECTION_PAPER_INSTRUCTION_PROMPT_TYPE
         elif transformType == "Essay expansion assignment":
             promptType = Utility.TRANSFORM_ESSAY_EXPANSION_ASSIGNMENT_PROMPT_TYPE
+            
         elif transformType == "Critical analysis":
             promptType = Utility.TRANSFORM_CRITICAL_RESPONSE_ESSAY_PROMPT_TYPE
         elif transformType == "Critical analysis instruction":

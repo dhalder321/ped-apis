@@ -1,0 +1,1 @@
+ESSAY number: {{ESSAY_NUNBER}} - This is part of the large essay that you are generating. This is a heading. Write short 150 words and strictly within 150 words description about heading {{SUBHEADING}} without repeating anything previously generated for the same essay number. You will be generating paragraphs for other sub heading of this essay with same essay number shortly.

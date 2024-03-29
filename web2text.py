@@ -29,7 +29,7 @@ from transform.outputGenerator import outputGenerator
 # 2007 - document record could not be updated in database
 # 5001 - Method level error
 ############################################################
-def generateDocumentFromPresentation(event, context):
+def generateDocumentFromWebContent(event, context):
 
     print(event)
     logging.debug(event)
@@ -62,8 +62,7 @@ def generateDocumentFromPresentation(event, context):
                 tran_id = str(uuid.uuid1())
         
             # Parse the incoming JSON payload
-            fileContent = body["fileContentBase64"] if 'fileContentBase64' in body else None
-            fileName = body["fileName"] if 'fileName' in body else None
+            url = body["url"] if 'url' in body else None
             renderingType = body["renderingType"]  if "renderingType" in body else None
             instruction = body["instruction"]  if "instruction" in body else None
             userid = body["userid"]  if "userid" in body else None
@@ -82,26 +81,13 @@ def generateDocumentFromPresentation(event, context):
             # check for valid and logged in user
             # CheckLoggedinUser(userid)
             
-            if fileName is None or fileContent is None:
-                # Return a 400 Bad Request response if input is missing
-                response = Utility.generateResponse(400, {
-                        'transactionId' : tran_id,
-                        'errorCode': "1002",
-                        'error': 'Missing file name or file content in the request',
-                        'AnswerRetrieved': False
-                    })
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
+            
 
             # get the text from the ppt content
             inputValues = {
-                            "fileContentBase64": fileContent,
-                            "pptFilename": fileName,
-                            "userid": userid,
-                            "tran_id": tran_id
+                            "url": url
                             }
-            retVal = inputProcessor.processInput("pptContentBase64", \
-                                                        **inputValues)
+            retVal = inputProcessor.processInput("webURL", **inputValues)
             
             # get the text from ppt file
             if retVal is None:
@@ -115,12 +101,12 @@ def generateDocumentFromPresentation(event, context):
                 return response
             
             # Create the local directory if it does not exist
-            if retVal == "LOCAL_FILE_SAVE_FAILED":
+            if retVal == "INVALID_URL":
 
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
                         'errorCode': "2002",
-                        'error': 'provided file content could not be saved locally',
+                        'error': 'Invalid URL provided',
                         'AnswerRetrieved': False
                     })
                 Utility.updateUserActivity(str(activityId), userid, response)

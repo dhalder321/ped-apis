@@ -2,7 +2,7 @@ import logging
 import json, uuid
 from common.prompts import Prompt
 from common.globals import Utility, PED_Module
-from common.model import retryModelForOutputType
+from common.essayModel import generateLargeEssayWithMultipleInvokes, generateShortEssayWithMultipleInvokes
 
 ############################################################
 ############################################################
@@ -109,8 +109,8 @@ def generateTextOfTopicOutline(event, context):
             #print(prompt)
 
             # Create the chat completion
-            modelResponse = retryModelForOutputType("You are a seasonsed " + sl_role, \
-                            prompt, 'html', 'gpt-3.5-turbo', 3000, 2)
+            modelResponse = generateShortEssayWithMultipleInvokes \
+                            ("You are a seasonsed " + sl_role, prompt, 'html', 'gpt-3.5-turbo', 3000, 2)
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {

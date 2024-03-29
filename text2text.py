@@ -20,16 +20,14 @@ from transform.outputGenerator import outputGenerator
 #  999 - No request object found
 # 1001 - missing user id in the request
 # 1002 - missing input in the request
-# 2001 - text could not be retrieved from provided presentation file
-# 2002 - provided file content could not be saved locally
-# 2003 - text is too short for any transformation
-# 2004 - model response could not be obtained
-# 2005 - prompt could not be retrieved
-# 2006 - document could not be stored
-# 2007 - document record could not be updated in database
+# 2001 - text could not be retrieved from provided  file
+# 2002 - model response could not be obtained
+# 2003 - prompt could not be retrieved
+# 2004 - document could not be stored
+# 2005 - document record could not be updated in database
 # 5001 - Method level error
 ############################################################
-def generateDocumentFromPresentation(event, context):
+def generateDocumentFromText(event, context):
 
     print(event)
     logging.debug(event)
@@ -55,15 +53,14 @@ def generateDocumentFromPresentation(event, context):
             PED_Module.initiate()
 
             #log user and transaction details
-            activityId = Utility.logUserActivity(body, "generateDocumentFromPresentation")
+            activityId = Utility.logUserActivity(body, "generateDocumentFromDocument")
 
             tran_id = body["transactionId"]
             if tran_id is None:
                 tran_id = str(uuid.uuid1())
         
             # Parse the incoming JSON payload
-            fileContent = body["fileContentBase64"] if 'fileContentBase64' in body else None
-            fileName = body["fileName"] if 'fileName' in body else None
+            text = body["text"] if 'text' in body else None
             renderingType = body["renderingType"]  if "renderingType" in body else None
             instruction = body["instruction"]  if "instruction" in body else None
             userid = body["userid"]  if "userid" in body else None
@@ -82,56 +79,23 @@ def generateDocumentFromPresentation(event, context):
             # check for valid and logged in user
             # CheckLoggedinUser(userid)
             
-            if fileName is None or fileContent is None:
+            if text is None or renderingType is None:
                 # Return a 400 Bad Request response if input is missing
                 response = Utility.generateResponse(400, {
                         'transactionId' : tran_id,
                         'errorCode': "1002",
-                        'error': 'Missing file name or file content in the request',
+                        'error': 'Missing text or rendering type in the request',
                         'AnswerRetrieved': False
                     })
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
-            # get the text from the ppt content
-            inputValues = {
-                            "fileContentBase64": fileContent,
-                            "pptFilename": fileName,
-                            "userid": userid,
-                            "tran_id": tran_id
-                            }
-            retVal = inputProcessor.processInput("pptContentBase64", \
-                                                        **inputValues)
-            
-            # get the text from ppt file
-            if retVal is None:
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2001",
-                        'error': 'text could not be retrieved from provided presentation file',
-                        'AnswerRetrieved': False
-                    })
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
-            
-            # Create the local directory if it does not exist
-            if retVal == "LOCAL_FILE_SAVE_FAILED":
-
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2002",
-                        'error': 'provided file content could not be saved locally',
-                        'AnswerRetrieved': False
-                    })
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
-            
             # check for minimum length of the text- min 400 chars
-            if len(retVal) < 400:
+            if len(text) < 400:
                 
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
-                        'errorCode': "2003",
+                        'errorCode': "2001",
                         'error': 'text is too short for any transformation',
                         'AnswerRetrieved': False
                     })
@@ -151,7 +115,7 @@ def generateDocumentFromPresentation(event, context):
             if trmsText is None:
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
-                        'errorCode': "2004",
+                        'errorCode': "2002",
                         'error': 'model response could not be obtained',
                         'AnswerRetrieved': False
                     })
@@ -162,7 +126,7 @@ def generateDocumentFromPresentation(event, context):
                 
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
-                        'errorCode': "2005",
+                        'errorCode': "2003",
                         'error': 'prompt could not be retrieved',
                         'AnswerRetrieved': False
                     })
@@ -185,7 +149,7 @@ def generateDocumentFromPresentation(event, context):
                 # Return a 500 server error response
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
-                                    'errorCode': "2006",
+                                    'errorCode': "2004",
                                     'error': 'document could not be stored',
                                 })
                 Utility.updateUserActivity(str(activityId), userid, response)
@@ -213,7 +177,7 @@ def generateDocumentFromPresentation(event, context):
                 # Return a 500 server error response
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
-                                    'errorCode': "2007",
+                                    'errorCode': "2005",
                                     'error': 'document record could not be updated in database',
                                 })
                 Utility.updateUserActivity(str(activityId), userid, response)
@@ -236,7 +200,7 @@ def generateDocumentFromPresentation(event, context):
 
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
-            logging.error(f"Error in generateDocumentFromPresentation Function: {str(e)}")
+            logging.error(f"Error in generateDocumentFromDocument Function: {str(e)}")
             logging.error("Stack Trace:", exc_info=True)
             
             # Return a 500 server error response

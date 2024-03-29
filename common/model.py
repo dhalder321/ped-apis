@@ -64,8 +64,8 @@ def retryModelForOutputType(system_role, user_prompt, outputType = "text", llm= 
         maxRetry = 3
 
     response = getModelResponse(system_role, user_prompt, llm, max_tokens)
-    print(response)
-    logging.debug(response)
+    # print(response)
+    # logging.debug(response)
 
     #for output type = text, do not validate
     if outputType == "text":
@@ -81,6 +81,8 @@ def retryModelForOutputType(system_role, user_prompt, outputType = "text", llm= 
 
             #check for JSON payload
             if outputType == "json":
+                response = response.replace("```json", "")
+                response = response.replace("```", "")
                 jsonval = json.loads(response)
                 return response
             

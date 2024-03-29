@@ -1,0 +1,1 @@
+ESSAY number: {{ESSAY_NUNBER}} - This is part of the large essay that you are generating. Write two paragrapgs strictly within 200 words on {{SUBHEADING}} without repeating any of the previous content of the same essay number. Definitely add examples, theories, math formulas, case studies, and so on

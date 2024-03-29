@@ -1,0 +1,18 @@
+
+  ESSAY number: {{ESSAY_NUNBER}} -
+  You need to generate an long essay based on the given prompt below. But first, Please generate a outline in JSON and JSON only format for 2000 word essay on following topic mentioined in the given prompt. The JSON format will be as 
+        {
+          "heading of first topic": [
+                "point 1",
+                "point 2",
+                ...
+          ],
+          "heading of second topic": [
+                "point 1",
+                "point 2",
+                ...
+          ]
+        }
+
+HERE IS THE PROMPT till the end-----------
+

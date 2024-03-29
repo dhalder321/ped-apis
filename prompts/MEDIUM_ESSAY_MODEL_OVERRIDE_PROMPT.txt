@@ -1,0 +1,14 @@
+
+  ESSAY number: {{ESSAY_NUNBER}} -
+  You need to generate an short essay based on the given prompt below. But first, Please generate a outline in JSON and JSON only format for 1500 word essay on following topic mentioined in the given prompt. Generate between 7 and 10 headings for sub topics in the following JSON. The JSON format will be as 
+        {
+          "main heading":[
+              "heading of first sub topic", 
+              "heading of second sub topic",
+              "heading of third sub topic",
+              ...
+            ]
+        }
+        
+  HERE IS THE PROMPT till the end-----------
+

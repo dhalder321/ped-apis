@@ -69,18 +69,19 @@ from ppt2Text import generateDocumentFromPresentation
 # print(json.loads(data['body'])['Response'])
 
 
-# data = generateTextOfTopicOutline({
-#         "httpMethod" : "POST",
-#         "body": """{
-#         "transactionId": "6932874iruwe764283",
-#         "userid": "2",
-#         "role": "Economics professor",
-#         "topic": "recent research on globalization",
-#         "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape.",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }"""
-# }, {})
-# print(data)
+data = generateTextOfTopicOutline({
+        "httpMethod" : "POST",
+        "body": """{
+        "transactionId": "6932874iruwe764283",
+        "userid": "2",
+        "role": "Political science professor",
+        "topic": "Modi govt's contribution in Indian politics",
+        "summary": "",
+        "outline": "",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }"""
+}, {})
+print(data)
 
 # print(json.loads(data['body'])['Response'])
 
@@ -199,21 +200,21 @@ from ppt2Text import generateDocumentFromPresentation
 # print(data)
 
 # read  file ppt file in base64 format
-with open("c:\\users\\halde\\Understanding Pregnancy.pptx", "rb") as f:
-    bytes = f.read()
-req = {
-        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-        "fileName": "pitch.pptx", 
-        "renderingType": "Study guide",
-        "instruction": "generate it for first year college students.",
-        "userid": "2334",
-        "transactionId": "8736423hk2j3483",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
-# print (req)
-data = generateDocumentFromPresentation({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# with open("c:\\users\\halde\\Understanding Pregnancy.pptx", "rb") as f:
+#     bytes = f.read()
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "pitch.pptx", 
+#         "renderingType": "Annotated bibliography",
+#         "instruction": "generate it for first year college students.",
+#         "userid": "54431",
+#         "transactionId": "8736423hk2j3483",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# # print (req)
+# data = generateDocumentFromPresentation({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
  
