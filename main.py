@@ -13,11 +13,12 @@ from signup import signupNewUser
 from newAccesKey import getAccessKey
 from login import loginUserWithemail
 from loginWithAccessKey import loginUserWithAccessKey
-from ppt2Text import generateDocumentFromPresentation
+from ppt2text import generateDocumentFromPresentation
 from doc2Text import generateDocumentFromDocument
 from text2text import generateDocumentFromText
 from pdf2text import generateDocumentFromPDF
 from web2text import generateDocumentFromWebContent
+from ppt2video import generateVideoFromPresentation
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -224,18 +225,36 @@ from web2text import generateDocumentFromWebContent
 # print(data)
 
 
+# req = {
+#         "url": "https://www.cdc.gov/disasters/volcanoes/facts.html", 
+#         "renderingType": "Critical analysis",
+#         "instruction": "generate it for first year college students.",
+#         "userid": "23322",
+#         "transactionId": "aksfjnar832764832",
+#         "requesttimeinUTC": "3/29/2024 21:18"
+#     }
+# # print (req)
+# data = generateDocumentFromWebContent({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
+ 
+
+#  read  file ppt file in base64 format
+with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
+            "rb") as f:
+    bytes = f.read()
 req = {
-        "url": "https://www.cdc.gov/disasters/volcanoes/facts.html", 
-        "renderingType": "Critical analysis",
-        "instruction": "generate it for first year college students.",
-        "userid": "23322",
-        "transactionId": "aksfjnar832764832",
-        "requesttimeinUTC": "3/29/2024 21:18"
+        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+        "fileName": "humanrights.pdf", 
+        "userid": "56642",
+        "transactionId": "8736423hk2j3483",
+        "requesttimeinUTC": "3/14/2024 21:18"
     }
 # print (req)
-data = generateDocumentFromWebContent({
+data = generateVideoFromPresentation({
         "httpMethod": "POST",
         "body": json.dumps(req)
 }, {})
 print(data)
- 

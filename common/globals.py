@@ -45,6 +45,8 @@ class Utility:
   TRANSFORM_SEMINAR_DISCUSSION_POINTS_PROMPT_TYPE =  "TRANSFORM_SEMINAR_DISCUSSION_POINTS"      
   TRANSFORM_STUDY_GUIDE_PROMPT_TYPE =   "TRANSFORM_STUDY_GUIDE"    
 
+  SLIDE_NOTE_FOR_VIDEO_PROMPT_TYPE = "SLIDE_NOTE_FOR_VIDEO" 
+
   PROMPT_TYPE2FILE_NAME = {
          TOPIC2SUMMARY_PROMPT_TYPE: "TOPIC2SUMMARY.txt",
     TEXT2TOPICOUTLINE_PROMPT_TYPE: "TEXT2TOPICOUTLINE.txt",
@@ -65,7 +67,9 @@ class Utility:
     TRANSFORM_REFLECTION_PAPER_INSTRUCTION_PROMPT_TYPE  :   "TRANSFORM_REFLECTION_PAPER_INSTRUCTION.txt",  
     TRANSFORM_RESEARCH_PROPOSALS_PROMPT_TYPE  :    "TRANSFORM_RESEARCH_PROPOSALS.txt",           
     TRANSFORM_SEMINAR_DISCUSSION_POINTS_PROMPT_TYPE  :   "TRANSFORM_SEMINAR_DISCUSSION_POINTS.txt",     
-    TRANSFORM_STUDY_GUIDE_PROMPT_TYPE  :    "TRANSFORM_STUDY_GUIDE.txt",              
+    TRANSFORM_STUDY_GUIDE_PROMPT_TYPE  :    "TRANSFORM_STUDY_GUIDE.txt",
+
+    SLIDE_NOTE_FOR_VIDEO_PROMPT_TYPE : "SLIDE_NOTE_FOR_VIDEO.txt"               
   }
 
   # Local_Location = 'C:\openai-sdk\ped-apis'
@@ -80,6 +84,7 @@ class Utility:
   TRASFORMATION_USER_ROLE = "You are a seasoned and experienced academician"
   PROMPT_EXTENSION_4_HTML_OUTPUT = "Generate the output strictly and strictly in HTML format with at minimum doctype, html, head and body tags and other basic HTML tags. Do NOT add any meta tags."
 
+  VIDEO_GENERATION_BACKGROUND_MUSIC_FILE_NAME = "learning-video-background-music.mp3"
   ###################################################
   #              Environment variables
   ####################################################
@@ -88,6 +93,9 @@ class Utility:
 
   # CORS allowed origin
   CORS_ALLOWED_ORIGIN = "http://localhost:3000" 
+
+  # Windows PPT to Image generation API URL
+  PPT_2_IMAGE_GENERATION_API_URL = ""
 
   ###################################################
 

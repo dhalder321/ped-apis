@@ -1,4 +1,5 @@
 from common.model import retryModelForOutputType
+from common.prompts import Prompt
 from common.globals import Utility
 import json
 import random
@@ -11,7 +12,7 @@ def generateLargeEssayWithMultipleInvokes(system_role, user_prompt, outputType =
 
     essayNo = str(random.randrange(10**(7-1), 10**7))
     # set up parent prompt with override prompt encapsulating the user prompt
-    parentPrompt = Utility.ESSAY_MODEL_OVERRIDE_PROMPT.replace('{{ESSAY_NUNBER}}', essayNo) \
+    parentPrompt = Prompt.getPrompt(Utility.ESSAY_MODEL_OVERRIDE_PROMPT).replace('{{ESSAY_NUNBER}}', essayNo) \
                     + user_prompt   
 
     # get a outline of the essay in JSON
@@ -42,7 +43,7 @@ def generateLargeEssayWithMultipleInvokes(system_role, user_prompt, outputType =
             #generate text for sub heading
             text += subHeading + '\n'
             #generate text for heading
-            t = retryModelForOutputType(system_role, Utility.ESSAY_MODEL_SUBHEADING_PROMPT \
+            t = retryModelForOutputType(system_role, Prompt.getPrompt(Utility.ESSAY_MODEL_SUBHEADING_PROMPT) \
                                         .replace('{{SUBHEADING}}',subHeading).replace('{{ESSAY_NUNBER}}', essayNo)\
                                         ,'text', max_tokens=1500, maxRetry=2)
             if t is not None:
@@ -67,7 +68,7 @@ def generateMediumEssayWithMultipleInvokes(system_role, user_prompt, outputType 
 
     essayNo = str(random.randrange(10**(7-1), 10**7))
     # set up parent prompt with override prompt encapsulating the user prompt
-    parentPrompt = Utility.MEDIUM_ESSAY_MODEL_OVERRIDE_PROMPT.replace('{{ESSAY_NUNBER}}', essayNo) \
+    parentPrompt = Prompt.getPrompt(Utility.MEDIUM_ESSAY_MODEL_OVERRIDE_PROMPT).replace('{{ESSAY_NUNBER}}', essayNo) \
                     + user_prompt   
 
     # get a outline of the essay in JSON
@@ -89,7 +90,7 @@ def generateMediumEssayWithMultipleInvokes(system_role, user_prompt, outputType 
             #generate text for sub heading
             text += subHeading + '\n'
             #generate text for heading
-            t = retryModelForOutputType(system_role, Utility.MEDIUM_ESSAY_MODEL_SUBHEADING_PROMPT \
+            t = retryModelForOutputType(system_role, Prompt.getPrompt(Utility.MEDIUM_ESSAY_MODEL_SUBHEADING_PROMPT) \
                                         .replace('{{SUBHEADING}}',subHeading).replace('{{ESSAY_NUNBER}}', essayNo)\
                                         ,'text', max_tokens=1500, maxRetry=2)
             if t is not None:
@@ -116,7 +117,7 @@ def generateShortEssayWithMultipleInvokes(system_role, user_prompt, outputType =
 
     essayNo = str(random.randrange(10**(7-1), 10**7))
     # set up parent prompt with override prompt encapsulating the user prompt
-    parentPrompt = Utility.SHORT_ESSAY_MODEL_OVERRIDE_PROMPT.replace('{{ESSAY_NUNBER}}', essayNo) \
+    parentPrompt = Prompt.getPrompt(Utility.SHORT_ESSAY_MODEL_OVERRIDE_PROMPT).replace('{{ESSAY_NUNBER}}', essayNo) \
                     + user_prompt   
 
     # get a outline of the essay in JSON
@@ -138,7 +139,7 @@ def generateShortEssayWithMultipleInvokes(system_role, user_prompt, outputType =
             #generate text for sub heading
             text += subHeading + '\n'
             #generate text for heading
-            t = retryModelForOutputType(system_role, Utility.SHORT_ESSAY_MODEL_SUBHEADING_PROMPT \
+            t = retryModelForOutputType(system_role, Prompt.getPrompt(Utility.SHORT_ESSAY_MODEL_SUBHEADING_PROMPT) \
                                         .replace('{{SUBHEADING}}',subHeading).replace('{{ESSAY_NUNBER}}', essayNo)\
                                         ,'text', max_tokens=1500, maxRetry=2)
             if t is not None:
