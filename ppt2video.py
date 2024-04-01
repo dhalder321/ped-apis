@@ -138,7 +138,7 @@ def generateVideoFromPresentation(event, context):
             
             # STEP 2: invoke the generateImagesFromPPT API to get the images created
             # pass the local ppt file path
-            imageFilePath = getImagesFromPPT(pptFilePath)
+            # imageFilePath = getImagesFromPPT(pptFilePath)
             # response = requests.post(Utility.PPT_2_IMAGE_GENERATION_API_URL, 
             #     headers=
             #     {
@@ -153,16 +153,16 @@ def generateVideoFromPresentation(event, context):
             
             # if 'imageFilePath' in data and data['imageFilePath'] != '':
             #     imageFilePath = data['imageFilePath']
-            if imageFilePath is None:
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2004",
-                        'error': 'image files could not be generated',
-                        'AnswerRetrieved': False
-                    })
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
-            print("***************image files generated successfully**************************")
+            # if imageFilePath is None:
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2004",
+            #             'error': 'image files could not be generated',
+            #             'AnswerRetrieved': False
+            #         })
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
+            # print("***************image files generated successfully**************************")
             
             # STEP 3: generate the voice over
             audioFilePath = str(Path(Path(pptFilePath).parent, "audio"))
@@ -180,9 +180,10 @@ def generateVideoFromPresentation(event, context):
 
             # STEP 4: generate the video
             backgroundMusicPath = workingDir / Utility.VIDEO_GENERATION_BACKGROUND_MUSIC_FILE_NAME
-            videoFilePath = generateVideo(imageFilePath, audioFilePath, \
-                                          str(backgroundMusicPath), str(workingDir))
+            # videoFilePath = generateVideo(imageFilePath, audioFilePath, \
+            #                               str(backgroundMusicPath), str(workingDir))
             
+            videoFilePath = None
             if videoFilePath is None or videoFilePath == '':
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,

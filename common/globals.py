@@ -80,6 +80,7 @@ class Utility:
   S3BUCKE_NAME = 'pedbuc'
   S3OBJECT_NAME_FOR_USER_FILES = 'user-files'
   S3OBJECT_NAME_FOR_PROMPT_FILES = 'prompts'
+  S3OBJECT_NAME_FOR_TEMPORARY_FILES = 'temp'
 
   TRASFORMATION_USER_ROLE = "You are a seasoned and experienced academician"
   PROMPT_EXTENSION_4_HTML_OUTPUT = "Generate the output strictly and strictly in HTML format with at minimum doctype, html, head and body tags and other basic HTML tags. Do NOT add any meta tags."
@@ -126,7 +127,7 @@ class Utility:
   @staticmethod
   def initiate():
     #if Utility.PROMPT_LOCATION != 'dev':
-    Utility.EFS_LOCATION = Utility.Local_Location
+    Utility.EFS_LOCATION = Utility.Efs_Path
 
 
   @staticmethod
@@ -199,6 +200,59 @@ class Utility:
     
     return presignedURL
   
+  @staticmethod
+  def uploadDocumentinBase64toS3(fileContent, fileName, localFileLocation, s3FfilePath):
+    
+    #check for valid filename and file location
+    if fileName is None or localFileLocation is None:
+      return None
+       
+    #check for file location existance
+    isExist = os.path.exists(localFileLocation)
+    if not isExist:    
+      os.makedirs(localFileLocation)
+
+    localFilePath = str(Path(localFileLocation, fileName))
+
+    if Utility.saveBase64FileInLocal(localFilePath, fileContent) == False:
+      return None
+    
+    #upload to S3
+    s3fileLocation = Utility.S3OBJECT_NAME_FOR_USER_FILES + "/" + Utility.ENVIRONMENT
+    s3filePath = s3fileLocation + s3FfilePath
+    print("s3filePath:" + s3filePath)
+    presignedURL = uploadFile(localFilePath, Utility.S3BUCKE_NAME, s3filePath)
+    
+    return presignedURL
+  
+
+  @staticmethod
+  def uploadDocumentinTexttoS3(textContent, fileName, localFileLocation, s3FfilePath):
+
+    #check for valid filename and file location
+    if fileName is None or localFileLocation is None:
+      return None
+       
+    #check for file location existance
+    isExist = os.path.exists(localFileLocation)
+    if not isExist:    
+      os.makedirs(localFileLocation)
+
+    localFilePath = str(Path(localFileLocation, fileName))
+
+    document = Document()
+    document.add_paragraph(textContent)
+    document.save(localFilePath)
+
+    #upload to S3
+    s3fileLocation = Utility.S3OBJECT_NAME_FOR_USER_FILES + "/" + Utility.ENVIRONMENT
+    s3filePath = s3fileLocation + s3FfilePath
+    print("s3filePath:" + s3filePath)
+    presignedURL = uploadFile(localFilePath, Utility.S3BUCKE_NAME, s3filePath)
+    
+    return presignedURL
+  
+
   @staticmethod
   def curtailObject4Logging(body, field):
      

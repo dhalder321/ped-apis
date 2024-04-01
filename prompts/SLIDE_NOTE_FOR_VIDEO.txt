@@ -1,0 +1,5 @@
+You need to generate audio script or notes in two or three full english sentences for the presentation slides. You will be given the slide text and you have to generate notes that will be used as audio script for that slide. Audio script need to be 30 seconds to 1 minute long. Just generate the notes and only notes. DO not generate any other text such as slide number etc.
+
+If it is a title slide with the slide title, please generate note as " Welcome to the learning session on <title from the slide>". do not generate any other note or text. 
+
+Slide text given below:

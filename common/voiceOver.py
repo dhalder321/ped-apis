@@ -24,13 +24,15 @@ def generateVoiceOverFiles(scriptFilePath, audioFilePath):
                     text = file.read()
 
                 # Convert text to speech
-                tts = gTTS(text=text, lang='en-in', slow=False)
+                # tts = gTTS(text=text, lang='en-in', slow=False)
                 
-                # Save the audio file in the output directory with the same name as the text file, but with .mp3 extension
+                # # Save the audio file in the output directory with the same name as the text file, but with .mp3 extension
                 mp3_filename = os.path.splitext(filename)[0] + '.mp3'
                 output_path = os.path.join(audioFilePath, mp3_filename)
                 
-                tts.save(output_path)
+                # tts.save(output_path)
+                synthesizeAudio(text, 'en-us', '', 'f', str(output_path))
+
                 print(f"Generated voice-over for {filename} and saved as {mp3_filename}")
 
         print("Voice-over generation complete.")
@@ -41,7 +43,7 @@ def generateVoiceOverFiles(scriptFilePath, audioFilePath):
         return "ERROR_DURING_VOICE_OVER_GENERATION"
     
 
-def synthesize_text(text, lang, voiceName, maleorFemale, outputFile):
+def synthesizeAudio(text, lang, voiceName, maleorFemale, outputFile):
 
     #"""Synthesizes speech from the input string of text."""
     from google.cloud import texttospeech
@@ -55,7 +57,7 @@ def synthesize_text(text, lang, voiceName, maleorFemale, outputFile):
     # Names of voices can be retrieved with client.list_voices().
     voice = texttospeech.VoiceSelectionParams(
         language_code=lang,
-        name=voiceName,
+        # name=voiceName,
         ssml_gender=texttospeech.SsmlVoiceGender.MALE if maleorFemale == 'm' else texttospeech.SsmlVoiceGender.FEMALE,
     )
 
@@ -70,4 +72,4 @@ def synthesize_text(text, lang, voiceName, maleorFemale, outputFile):
     # The response's audio_content is binary.
     with open(outputFile, "wb") as out:
         out.write(response.audio_content)
-        print('Audio content written to file "output.mp3"')
+        # print('Audio content written to file "output.mp3"')

@@ -100,6 +100,7 @@ def getAudioScripts(pptFilePath):
         # save the notes as audio script in the ./script folder
 
         scriptFileLocation = str(Path(Path(pptFilePath).parent, "script"))
+        Path(scriptFileLocation).mkdir(parents=True, exist_ok=True)
         prs = Presentation(pptFilePath)
         slideCount = 1
         for slide in prs.slides:
@@ -134,13 +135,13 @@ def getAudioScripts(pptFilePath):
             # save the node text in script folder
             scriptFileName = str(slideCount) + ".txt"
             scriptFilePath = Path(scriptFileLocation, scriptFileName)
-            Path(scriptFilePath).mkdir(parents=True, exist_ok=True)
+            Path(scriptFilePath).touch(exist_ok=True)
             with scriptFilePath.open("w", encoding ="utf-8") as f:
                 f.write(slideNote)
 
             slideCount += 1    
 
-        prs.save()
+        # prs.Close()
     
         return str(scriptFilePath)
     

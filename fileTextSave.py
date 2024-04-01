@@ -12,7 +12,8 @@ from common.globals import PED_Module
 #return error codes:
 #  999 - No request object found
 # 1001 - missing text to save in the request
-# 2001 - user file entry addition failed
+# 2001 - file content could not be saved locally
+# 2002 - user file entry addition failed
 # 5001 - Method level error
 ############################################################
 
@@ -55,20 +56,21 @@ def saveDocumentFile(event, context):
         
             # Parse the incoming JSON payload
             textInHTML = body["text"] if 'text' in body else None
+            fileContentInBase64 = body["fileContentInBase64"] if 'fileContentInBase64' in body else None
+
             userid = body["userid"] if 'userid' in body else None
             lang = body["lang"] if 'lang' in body else None
             
-            if textInHTML is None:
+            if textInHTML is None and fileContentInBase64 is None:
                 # Return a 400 Bad Request response if input is missing
                 response = Utility.generateResponse(400, {
                         'transactionId' : tran_id,
                         'errorCode': "1001",
-                        'error': 'Missing text to save in the request',
+                        'error': 'Missing file content and text to save in the request',
                         'AnswerRetrieved': False
                     })
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
-                
 
             #save the text from HTML in docx format
             localFileLocation = str(Path(Utility.EFS_LOCATION, userid))
@@ -80,9 +82,27 @@ def saveDocumentFile(event, context):
             
             # upload the document in s3
             s3filePath = "/" + userid + "/" + localFileName
-            presignedURL = Utility.uploadDocumentinHTMLtoS3(textInHTML, localFileName, \
+            presignedURL = ''
+            
+            # for html content
+            if textInHTML is not None:
+                presignedURL = Utility.uploadDocumentinHTMLtoS3(textInHTML, localFileName, \
+                                                            localFileLocation, s3filePath)
+            # for base64 content    
+            elif fileContentInBase64 is not None:
+                presignedURL = Utility.uploadDocumentinBase64toS3(textInHTML, localFileName, \
                                                             localFileLocation, s3filePath)
             
+            if presignedURL is None:
+                # Return a 400 Bad Request response if input is missing
+                response = Utility.generateResponse(500, {
+                        'transactionId' : tran_id,
+                        'errorCode': "2001",
+                        'error': 'File content could not be saved locally',
+                        'AnswerRetrieved': False
+                    })
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
             # add record in userfiles table
             retVal = DBManager.addRecordInDynamoTableWithAutoIncrKey(DBTables.UserFiles_Table_Name, \
                                                                     "staticIndexColumn", "fileid",\
@@ -105,8 +125,8 @@ def saveDocumentFile(event, context):
                 # Return a 500 server error response
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
-                                    'errorCode': "2001",
-                                    'error': 'Error processing your request',
+                                    'errorCode': "2002",
+                                    'error': 'file record could not be saved in db',
                                 })
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response

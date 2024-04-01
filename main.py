@@ -19,6 +19,8 @@ from text2text import generateDocumentFromText
 from pdf2text import generateDocumentFromPDF
 from web2text import generateDocumentFromWebContent
 from ppt2video import generateVideoFromPresentation
+from ppt2image import getImagesFromPPT
+from docOfTopicOutline import generateDocOfTopicOutline
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -87,6 +89,21 @@ from ppt2video import generateVideoFromPresentation
 #     }"""
 # }, {})
 # print(data)
+
+
+data = generateDocOfTopicOutline({
+        "httpMethod" : "POST",
+        "body": """{
+        "transactionId": "KHIHo4y29852c24c24c2",
+        "userid": "2",
+        "role": "Political science professor",
+        "topic": "Modi govt's contribution in Indian politics",
+        "summary": "",
+        "outline": "",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }"""
+}, {})
+print(data)
 
 # print(json.loads(data['body'])['Response'])
 
@@ -242,19 +259,21 @@ from ppt2video import generateVideoFromPresentation
  
 
 #  read  file ppt file in base64 format
-with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
-            "rb") as f:
-    bytes = f.read()
-req = {
-        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-        "fileName": "humanrights.pdf", 
-        "userid": "56642",
-        "transactionId": "8736423hk2j3483",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
-# print (req)
-data = generateVideoFromPresentation({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
+#             "rb") as f:
+#     bytes = f.read()
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "humanrights.pdf", 
+#         "userid": "90034",
+#         "transactionId": "8736423hk2j3483",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# # print (req)
+# data = generateVideoFromPresentation({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
+
+# getImagesFromPPT("c:\\users\\dhalde\\Brazil's Top Tourist Destinations.pptx")

@@ -1,5 +1,7 @@
 import logging
 import json, uuid
+from datetime import datetime, timezone
+from pathlib import Path
 from common.prompts import Prompt
 from common.globals import Utility, PED_Module
 from common.essayModel import generateShortEssayWithMultipleInvokes
@@ -12,7 +14,7 @@ from common.essayModel import generateShortEssayWithMultipleInvokes
 # 1003 - prompt could not be retrieved
 # 5001 - Method level error
 ############################################################
-def generateTextOfTopicOutline(event, context):
+def generateDocOfTopicOutline(event, context):
      
     print(event)
     logging.debug(event)
@@ -112,10 +114,47 @@ def generateTextOfTopicOutline(event, context):
             modelResponse = generateShortEssayWithMultipleInvokes \
                             ("You are a seasonsed " + sl_role, prompt, 'html', 'gpt-3.5-turbo', 3000, 2)
 
+
+            # check for model response
+            if modelResponse is None or modelResponse == '':
+                # Return a 500 Bad Request response if input is missing
+                response = Utility.generateResponse(500, {
+                        'transactionId' : tran_id,
+                        'errorCode': "2001",
+                        'error': 'model response could not be retrieved',
+                        'AnswerRetrieved': False
+                    })
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
+
+            # save text in doc and upload to s3
+            localFileLocation = str(Path(Utility.EFS_LOCATION, "temp"))
+            datetimestring = datetime.now().replace(tzinfo=timezone.utc).strftime("%m%d%Y%H%M%S")
+            datetimeFormattedString = datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S")
+            localFileName = "DocumentFile_"+ tran_id + "_" + datetimestring + ".docx"
+            localFilePath = str(Path(localFileLocation, localFileName))
+            #print('localFilePath: ' + localFilePath)
+            
+            # upload the document in s3
+            s3filePath = "/" + Utility.S3OBJECT_NAME_FOR_TEMPORARY_FILES + "/" + localFileName
+            presignedURL = Utility.uploadDocumentinTexttoS3(modelResponse, localFileName, \
+                                                            localFileLocation, s3filePath)
+            
+            if presignedURL is None:
+                # Return a 400 Bad Request response if input is missing
+                response = Utility.generateResponse(500, {
+                        'transactionId' : tran_id,
+                        'errorCode': "2001",
+                        'error': 'File content could not be uploaded in s3',
+                        'AnswerRetrieved': False
+                    })
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
+
             # Return the response in JSON format
             response = Utility.generateResponse(200, {
                                     'transactionId' : tran_id,
-                                    'Response': modelResponse,
+                                    'Response': presignedURL,
                                     'AnswerRetrieved': True
                                 })
             Utility.updateUserActivity(str(activityId), userid, response)

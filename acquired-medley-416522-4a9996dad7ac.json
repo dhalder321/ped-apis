@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "acquired-medley-416522",
+  "private_key_id": "4a9996dad7ac2310d9175ad56888ea74705fc255",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCulH/cBjYQM23Q\n6dDdnFWc+KXguDCvglvLi3KnWfGLv/VbOZS+J4h6XE1bkpb1f0SmNPTXLP+fsYAg\nswbaP3ZMmfvC5YIpUGNqI0QjCTqzneyXi4BM4dsArR3sW3CEfjHEr0ATfQdTK/Op\nim80U6CKxzo62BhEPzl1BGeEYHv1fJAP7l8GKxIT1m1lZgDvJMI+c+0tnu4nG1jS\nGG5swKYNOzKckXHaBl8nuTfE2JXYMlWGy13F+kFxmN/MA1s5Elg78x/hvmuzJMHv\noOKBwZw8/e+rxumpZ03Edxy6iUg+74RwX/Pv9nGf7Dm3Wil79bIOXhkNF7A77d5o\nuoAxsRWvAgMBAAECggEAIHQcnLNO444b8QU2PawtQiP6+h5jdoz+MYV3x+Jxg7Ao\nlU/L9dl1hoGYI9jJVVPWWCtqBIIp9u7RScLeGD5J6I2LfryZiMKX6Igrx3OUxQUr\nkTRuolwuER8de+23qfmnmM+XUsggT3bRMgg5Cfot0v6cNYosYKt8K+OotrQU9xpk\neJBeVit6JiDVw1ouyptaSAMY6sa4BTKBleslaO3qlFdkoWXxio3We2ZvJgruFkQJ\nyrJhqREkbnQstKnTTjXk6pOHzlXNSCq6PFf7zFYqW8vCas3RZcihf3NumGGY00q8\nf2EO+m6rtY9szTiwkiBf1QNHJR2SRNapRYGR+fcCsQKBgQDypNW0Xd9VlWlS3T0E\nDzTo59/Hrf84Lht//Nv1wzyk1hpXs4E3oH/gZLp3IN8aOdu/QUNBgTmq8y6/SRFm\nKRe1chQdWbfHPzIYihIkvEBG0rxJJdB6/C65s58go9m+bmlt86uIpU5iVCTLUE7S\nwBDyW+PT3YIwduGy38CtFmxX+QKBgQC4MI7NnI21xyxSvMcLMF8Hz6BAWwxPSND4\nyN2B19z7z0MgstaMX+hvevb3WRqeE1XZr7+I8BMS8MvFQYVXohPT4sMTYvJJ+Nqt\nc2Ej7e9M7TovucEjsKVASSOBCoPj5i0fqtZeUP0d7+hp9IjlKcVmAYv7Fg8tOPTC\nZ3FQlZBU5wKBgASK94FP/J1yla06fSj1S+1MYhEv/cZEfrlPt6KLTDhd1dJshu/O\nrnY6DI+sauDn0mhrRWIVlEnSEb79FDlQbaQ1BZFjG6C8WyjAdQSBDccFrQbFkXir\n/gf2B/Wpe6soEAtB86U0SxpmLuYrk744YFjZRZOy4vwbTbB2pfnXoKGpAoGACzsK\nuga9rUPDtBfGmywL31INl1711S+/bivxNaWP19q/YRMGefCvH30D6fkI4nKTXX6V\n0yewQgtkoVZpZvp+8wB0nI3/7/q4erL6TVKIsMwWLCrLV/3BVbYf8BJQEGlMfw3P\nnFib1mN2bF94qWBupNWbT2f87Oj4I5JjGmLENikCgYATFzZaLyBgnRGx+QPf4fzl\ncYX9xvJoUrLyOOqvw7SBpZ+MDdN4tcNm+RZWLY1Ad1szbiKTmHwixdx/jR67ilcn\nq9gpW47diDVJfRwWeW+qFrmfuG0vAoZNMDW/FMpLpK6Ciyc+ljUW/BNzyPQPIEXF\njhxyFe0os0bBfuYGUX3iRw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "google-cloud-tts-serv-account@acquired-medley-416522.iam.gserviceaccount.com",
+  "client_id": "103772804001098967035",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/google-cloud-tts-serv-account%40acquired-medley-416522.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

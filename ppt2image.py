@@ -1,10 +1,14 @@
 import win32com.client
+import win32api
 import os
 
-# Create a PowerPoint application object
-Application = win32com.client.Dispatch("PowerPoint.Application")
+
 
 def getImagesFromPPT(pptFilePath):
+
+    # Create a PowerPoint application object
+    Application = win32com.client.Dispatch("PowerPoint.Application")
+
     try:
         # Open the presentation without making it visible
         Presentation = Application.Presentations.Open(pptFilePath, WithWindow=False)
@@ -26,8 +30,9 @@ def getImagesFromPPT(pptFilePath):
         return imageFilePath
     
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print("An error occurred: " + str(e))
+        print (win32api.FormatMessage(-2147352567))
         return None
-    #finally:
+    finally:
         # Quit the PowerPoint application
-        #Application.Quit()
+        Application.Quit()
