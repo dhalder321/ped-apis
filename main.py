@@ -91,20 +91,19 @@ from docOfTopicOutline import generateDocOfTopicOutline
 # print(data)
 
 
-data = generateDocOfTopicOutline({
-        "httpMethod" : "POST",
-        "body": """{
-        "transactionId": "KHIHo4y29852c24c24c2",
-        "userid": "2",
-        "role": "Political science professor",
-        "topic": "Modi govt's contribution in Indian politics",
-        "summary": "",
-        "outline": "",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }"""
-}, {})
-print(data)
-
+# data = generateDocOfTopicOutline({
+#         "httpMethod" : "POST",
+#         "body": """{
+#         "transactionId": "KHIHo4y29852c24c24c2",
+#         "userid": "2",
+#         "role": "Political science professor",
+#         "topic": "Modi govt's contribution in Indian politics",
+#         "summary": "",
+#         "outline": "",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }"""
+# }, {})
+# print(data)
 # print(json.loads(data['body'])['Response'])
 
 
@@ -137,6 +136,28 @@ print(data)
 # }, {})
 # print(data)
 # print(json.loads(data['body'])['Response']))
+
+
+# read  file ppt file in base64 format
+with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\IndianPolitics.docx", \
+            "rb") as f:
+    bytes = f.read()
+req = {
+        "userid": "34454",
+        "transactionId": "6932874iruwe764283",
+        "text": "",
+        "fileContentInBase64": base64.b64encode(bytes).decode('utf-8'),
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }
+
+data = saveDocumentFile({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)
+# print(json.loads(data['body'])['Response']))
+
+
 
 # print(DBManager.get_highest_fileid("ped-userfiles", "staticIndexColumn", "fileid", \
 #                              "staticIndexColumn-fileid-index"))

@@ -20,7 +20,7 @@ from common.globals import PED_Module
 
 def saveDocumentFile(event, context):
      
-    print(event)
+    # print(event)
     logging.debug(event)
 
     #process OPTIONS method
@@ -85,12 +85,12 @@ def saveDocumentFile(event, context):
             presignedURL = ''
             
             # for html content
-            if textInHTML is not None:
+            if textInHTML is not None and textInHTML != '':
                 presignedURL = Utility.uploadDocumentinHTMLtoS3(textInHTML, localFileName, \
                                                             localFileLocation, s3filePath)
             # for base64 content    
-            elif fileContentInBase64 is not None:
-                presignedURL = Utility.uploadDocumentinBase64toS3(textInHTML, localFileName, \
+            elif fileContentInBase64 is not None and fileContentInBase64 != '':
+                presignedURL = Utility.uploadDocumentinBase64toS3(fileContentInBase64, localFileName, \
                                                             localFileLocation, s3filePath)
             
             if presignedURL is None:
