@@ -20,7 +20,7 @@ from common.globals import PED_Module
 
 def saveDocumentFile(event, context):
      
-    # print(event)
+    print(event)
     logging.debug(event)
 
     #process OPTIONS method

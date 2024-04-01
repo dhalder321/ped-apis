@@ -139,22 +139,22 @@ from docOfTopicOutline import generateDocOfTopicOutline
 
 
 # read  file ppt file in base64 format
-with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\IndianPolitics.docx", \
-            "rb") as f:
-    bytes = f.read()
-req = {
-        "userid": "34454",
-        "transactionId": "6932874iruwe764283",
-        "text": "",
-        "fileContentInBase64": base64.b64encode(bytes).decode('utf-8'),
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\IndianPolitics.docx", \
+#             "rb") as f:
+#     bytes = f.read()
+# req = {
+#         "userid": "34454",
+#         "transactionId": "6932874iruwe764283",
+#         "text": "",
+#         "fileContentInBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
 
-data = saveDocumentFile({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# data = saveDocumentFile({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 # print(json.loads(data['body'])['Response']))
 
 
