@@ -21,6 +21,7 @@ from web2text import generateDocumentFromWebContent
 from ppt2video import generateVideoFromPresentation
 from ppt2image import getImagesFromPPT
 from docOfTopicOutline import generateDocOfTopicOutline
+from quickText import generateQuickText
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -59,7 +60,6 @@ from docOfTopicOutline import generateDocOfTopicOutline
 #     }, {})
 # print(data)
 # print(json.loads(json.loads(data['body'])['Response']))
-
 
 # req = {
 #         "httpMethod" : "POST",
@@ -106,6 +106,20 @@ from docOfTopicOutline import generateDocOfTopicOutline
 # print(data)
 # print(json.loads(data['body'])['Response'])
 
+
+# data = generateQuickText({
+#         "httpMethod" : "POST",
+#         "body": """{
+#         "transactionId": "KHIHo4y29852c24c24c2",
+#         "userid": "2",
+#         "role": "US Political science professor",
+#         "topic": "US Political reforms",
+#         "essaySize": "s",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }"""
+# }, {})
+# print(data)
+# print(json.loads(data['body'])['Response'])
 
 # html = '''<!DOCTYPE html>
 #                     <html lang="en">
@@ -280,21 +294,21 @@ from docOfTopicOutline import generateDocOfTopicOutline
  
 
 #  read  file ppt file in base64 format
-# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
-#             "rb") as f:
-#     bytes = f.read()
-# req = {
-#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-#         "fileName": "humanrights.pdf", 
-#         "userid": "90034",
-#         "transactionId": "8736423hk2j3483",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }
-# # print (req)
-# data = generateVideoFromPresentation({
-#         "httpMethod": "POST",
-#         "body": json.dumps(req)
-# }, {})
-# print(data)
+with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
+            "rb") as f:
+    bytes = f.read()
+req = {
+        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+        "fileName": "humanrights.pptx", 
+        "userid": "67745",
+        "transactionId": "8736423hk2j3483",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }
+# print (req)
+data = generateVideoFromPresentation({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)
 
 # getImagesFromPPT("c:\\users\\dhalde\\Brazil's Top Tourist Destinations.pptx")

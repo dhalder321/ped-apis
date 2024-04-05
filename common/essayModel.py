@@ -41,13 +41,14 @@ def generateLargeEssayWithMultipleInvokes(system_role, user_prompt, outputType =
 
         for index, subHeading in enumerate(points, start=1):
             #generate text for sub heading
-            text += subHeading + '\n'
+            # if heading != subHeading:
+            #     text += subHeading + '\n'
             #generate text for heading
             t = retryModelForOutputType(system_role, Prompt.getPrompt(Utility.ESSAY_MODEL_SUBHEADING_PROMPT_TYPE) \
                                         .replace('{{SUBHEADING}}',subHeading).replace('{{ESSAY_NUNBER}}', essayNo)\
                                         ,'text', max_tokens=1500, maxRetry=2)
             if t is not None:
-                text += t + '\n'
+                text += t + '\n\n'
             # print (subHeading + "*******************************************************::\n" + t)
 
     # convert the text in html
@@ -88,13 +89,14 @@ def generateMediumEssayWithMultipleInvokes(system_role, user_prompt, outputType 
 
         for subHeading in sub_topics:
             #generate text for sub heading
-            text += subHeading + '\n'
+            # if heading != subHeading:
+            #     text += subHeading + '\n'
             #generate text for heading
             t = retryModelForOutputType(system_role, Prompt.getPrompt(Utility.MEDIUM_ESSAY_MODEL_SUBHEADING_PROMPT_TYPE) \
                                         .replace('{{SUBHEADING}}',subHeading).replace('{{ESSAY_NUNBER}}', essayNo)\
                                         ,'text', max_tokens=1500, maxRetry=2)
             if t is not None:
-                text += t + '\n'
+                text += t + '\n\n'
             # print (subHeading + "*******************************************************::\n" + t)
 
     # convert the text in html
@@ -137,13 +139,14 @@ def generateShortEssayWithMultipleInvokes(system_role, user_prompt, outputType =
 
         for subHeading in sub_topics:
             #generate text for sub heading
-            text += subHeading + '\n'
+            # if heading != subHeading:
+            #     text += subHeading + '\n'
             #generate text for heading
             t = retryModelForOutputType(system_role, Prompt.getPrompt(Utility.SHORT_ESSAY_MODEL_SUBHEADING_PROMPT_TYPE) \
                                         .replace('{{SUBHEADING}}',subHeading).replace('{{ESSAY_NUNBER}}', essayNo)\
                                         ,'text', max_tokens=1500, maxRetry=2)
             if t is not None:
-                text += t + '\n'
+                text += t + '\n\n'
             # print (subHeading + "*******************************************************::\n" + t)
 
     # convert the text in html

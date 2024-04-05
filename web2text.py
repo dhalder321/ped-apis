@@ -34,9 +34,14 @@ def generateDocumentFromWebContent(event, context):
     print(event)
     logging.debug(event)
 
+    origin = None
+    if 'headers' in event and event['headers'] != '' and \
+          'origin' in event['headers'] and event['headers']['origin'] != '':
+        origin = event['headers']['origin']
+
     #process OPTIONS method
     if 'httpMethod' in event and event['httpMethod'] == 'OPTIONS':
-      return Utility.generateResponse(200, {})
+      return Utility.generateResponse(200, {}, origin)
 
 
     #process only POST methods
@@ -46,7 +51,7 @@ def generateDocumentFromWebContent(event, context):
             return Utility.generateResponse(400, {
                         'errorCode': "999",
                         'error': 'No request object found',
-                    })
+                    }, origin)
         
         body = json.loads(event['body'])
         try:
@@ -74,7 +79,7 @@ def generateDocumentFromWebContent(event, context):
                         'errorCode': "1001",
                         'error': 'Missing userid in the request',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), "-1", response)
                 return response
 
@@ -96,7 +101,7 @@ def generateDocumentFromWebContent(event, context):
                         'errorCode': "2001",
                         'error': 'text could not be retrieved from provided presentation file',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
@@ -108,7 +113,7 @@ def generateDocumentFromWebContent(event, context):
                         'errorCode': "2002",
                         'error': 'Invalid URL provided',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
@@ -121,7 +126,7 @@ def generateDocumentFromWebContent(event, context):
                         'errorCode': "2003",
                         'error': 'text is too short for any transformation',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
@@ -133,7 +138,7 @@ def generateDocumentFromWebContent(event, context):
                         'errorCode': "2004",
                         'error': 'text is too large for processing',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
@@ -153,7 +158,7 @@ def generateDocumentFromWebContent(event, context):
                         'errorCode': "2005",
                         'error': 'model response could not be obtained',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
@@ -164,7 +169,7 @@ def generateDocumentFromWebContent(event, context):
                         'errorCode': "2006",
                         'error': 'prompt could not be retrieved',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
@@ -186,7 +191,7 @@ def generateDocumentFromWebContent(event, context):
                                     'transactionId' : tran_id,
                                     'errorCode': "2007",
                                     'error': 'document could not be stored',
-                                })
+                                }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
@@ -214,7 +219,7 @@ def generateDocumentFromWebContent(event, context):
                                     'transactionId' : tran_id,
                                     'errorCode': "2008",
                                     'error': 'document record could not be updated in database',
-                                })
+                                }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
@@ -229,7 +234,7 @@ def generateDocumentFromWebContent(event, context):
                                     'transactionId' : tran_id,
                                     'Response': presignedURL,
                                     'AnswerRetrieved': True
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)
             return response
 
@@ -244,6 +249,6 @@ def generateDocumentFromWebContent(event, context):
                                     'errorCode': "5001",
                                     'error': 'Error processing your request',
                                     'AnswerRetrieved': False
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), -1, response)
             return response

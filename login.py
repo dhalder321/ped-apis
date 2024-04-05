@@ -21,9 +21,14 @@ def loginUserWithemail(event, context):
     print(event)
     logging.debug(event)
 
+    origin = None
+    if 'headers' in event and event['headers'] != '' and \
+          'origin' in event['headers'] and event['headers']['origin'] != '':
+        origin = event['headers']['origin']
+
     #process OPTIONS method
     if 'httpMethod' in event and event['httpMethod'] == 'OPTIONS':
-      return Utility.generateResponse(200, {})
+      return Utility.generateResponse(200, {}, origin)
 
     #process only POST methods
     if 'httpMethod' in event and event['httpMethod'] == 'POST':
@@ -32,7 +37,7 @@ def loginUserWithemail(event, context):
             return Utility.generateResponse(400, {
                         'errorCode': "999",
                         'error': 'No request object found',
-                    })
+                    }, origin)
         
         body = json.loads(event['body'])
 
@@ -65,7 +70,7 @@ def loginUserWithemail(event, context):
                         'errorCode': "1001",
                         'error': 'Missing email or password in the login request',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), "-1", response)
                 return response
 
@@ -95,7 +100,7 @@ def loginUserWithemail(event, context):
                             'errorCode': "2001",
                             'error': 'More than one user found',
                             'AnswerRetrieved': False
-                        })
+                        }, origin)
                     Utility.updateUserActivity(str(activityId), "-1", response)
                     return response
                 elif len(userRecord) <= 0:
@@ -105,7 +110,7 @@ def loginUserWithemail(event, context):
                             'errorCode': "2002",
                             'error': 'no user found',
                             'AnswerRetrieved': False
-                        })
+                        }, origin)
                     Utility.updateUserActivity(str(activityId), "-1", response)
                     return response
             
@@ -127,7 +132,7 @@ def loginUserWithemail(event, context):
                                     'transactionId' : tran_id,
                                     'errorCode': "2003",
                                     'error': 'Error processing your request',
-                                })
+                                }, origin)
                 Utility.updateUserActivity(str(activityId), "-1", response)
                 return response
 
@@ -138,7 +143,7 @@ def loginUserWithemail(event, context):
                                     'firstName': userRecord[0]['firstName'],
                                     'lastName': userRecord[0]['lastName'],
                                     'AnswerRetrieved': True
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), "-1", response)
             return response
 
@@ -153,7 +158,7 @@ def loginUserWithemail(event, context):
                                     'errorCode': "5001",
                                     'error': 'Error processing your request',
                                     'AnswerRetrieved': False
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), "-1", response)
             return response
 

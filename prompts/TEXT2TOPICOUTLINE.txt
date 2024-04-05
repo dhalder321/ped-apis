@@ -1,4 +1,4 @@
-You need to generate a 1000 word essay on "{{TOPIC}}" focused on the "{{SUMMARY}}". You need to provide a detailed outline for that essay. Include in the outline the placeholders for important topics such as mathematical formulas, any important theories, recent facts, recent case studies, examples, applications of these theories, formulas. Be as detailed as possible while providing the outline of the essay. Please provide the outline in HTML format. DO NOT generate any other text apart from the HTML.
+You need to generate a 1000 word essay on topic: "{{TOPIC}}" focused on the perspective: "{{SUMMARY}}". You need to provide a detailed outline for that essay. Include in the outline the placeholders for important topics such as mathematical formulas, any important theories, recent facts, recent case studies, examples, applications of these theories, formulas. Be as detailed as possible while providing the outline of the essay. Please provide the outline in HTML format and in bulletted list. The entire outline should in same font and font size. DO NOT generate any other text apart from the HTML.
 
 Outline should be in following format:
 

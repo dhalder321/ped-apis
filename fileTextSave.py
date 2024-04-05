@@ -23,9 +23,15 @@ def saveDocumentFile(event, context):
     print(event)
     logging.debug(event)
 
+    # process OPTIONS method
+    origin = None
+    if 'headers' in event and event['headers'] != '' and \
+          'origin' in event['headers'] and event['headers']['origin'] != '':
+        origin = event['headers']['origin']
+
     #process OPTIONS method
     if 'httpMethod' in event and event['httpMethod'] == 'OPTIONS':
-      return Utility.generateResponse(200, {})
+      return Utility.generateResponse(200, {}, origin)
 
 
     #process only POST methods
@@ -35,7 +41,7 @@ def saveDocumentFile(event, context):
             return Utility.generateResponse(400, {
                         'errorCode': "999",
                         'error': 'No request object found',
-                    })
+                    }, origin)
         
         body = json.loads(event['body'])
 
@@ -68,7 +74,7 @@ def saveDocumentFile(event, context):
                         'errorCode': "1001",
                         'error': 'Missing file content and text to save in the request',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
@@ -100,7 +106,7 @@ def saveDocumentFile(event, context):
                         'errorCode': "2001",
                         'error': 'File content could not be saved locally',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             # add record in userfiles table
@@ -127,7 +133,7 @@ def saveDocumentFile(event, context):
                                     'transactionId' : tran_id,
                                     'errorCode': "2002",
                                     'error': 'file record could not be saved in db',
-                                })
+                                }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
@@ -142,7 +148,7 @@ def saveDocumentFile(event, context):
                                     'transactionId' : tran_id,
                                     'Response': presignedURL,
                                     'AnswerRetrieved': True
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)
             return response
 
@@ -157,6 +163,6 @@ def saveDocumentFile(event, context):
                                     'errorCode': "5001",
                                     'error': 'Error processing your request',
                                     'AnswerRetrieved': False
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)
             return response

@@ -27,6 +27,7 @@ class Utility:
   TOPIC2SUMMARY_PROMPT_TYPE = 'TOPIC2SUMMARY'
   TEXT2TOPICOUTLINE_PROMPT_TYPE = 'TEXT2TOPICOUTLINE'
   TEXTOFTOPICOUTLINE_PROMPT_TYPE = 'TEXTOFTOPICOUTLINE'
+  QUICK_TEXT_PROMPT_TYPE = 'QUICK_TEXT'
 
   ESSAY_MODEL_OVERRIDE_PROMPT_TYPE = "ESSAY_MODEL_OVERRIDE_PROMPT"                         
   ESSAY_MODEL_SUBHEADING_PROMPT_TYPE = "ESSAY_MODEL_SUBHEADING_PROMPT"                        
@@ -51,6 +52,7 @@ class Utility:
          TOPIC2SUMMARY_PROMPT_TYPE: "TOPIC2SUMMARY.txt",
     TEXT2TOPICOUTLINE_PROMPT_TYPE: "TEXT2TOPICOUTLINE.txt",
     TEXTOFTOPICOUTLINE_PROMPT_TYPE: "TEXTOFTOPICOUTLINE.txt",
+    QUICK_TEXT_PROMPT_TYPE: "QUICK_TEXT.txt",
 
     ESSAY_MODEL_OVERRIDE_PROMPT_TYPE  :  "ESSAY_MODEL_OVERRIDE_PROMPT.txt",                         
     ESSAY_MODEL_SUBHEADING_PROMPT_TYPE  :  "ESSAY_MODEL_SUBHEADING_PROMPT.txt",                        
@@ -86,6 +88,7 @@ class Utility:
   PROMPT_EXTENSION_4_HTML_OUTPUT = "Generate the output strictly and strictly in HTML format with at minimum doctype, html, head and body tags and other basic HTML tags. Do NOT add any meta tags."
 
   VIDEO_GENERATION_BACKGROUND_MUSIC_FILE_NAME = "learning-video-background-music.mp3"
+  PPT2IMAGE_GENERATION_LAMBDA_FUNCTION_NAME = "ped-getimagesfromppt"
   ###################################################
   #              Environment variables
   ####################################################
@@ -127,11 +130,11 @@ class Utility:
   @staticmethod
   def initiate():
     #if Utility.PROMPT_LOCATION != 'dev':
-    Utility.EFS_LOCATION = Utility.Efs_Path
+    Utility.EFS_LOCATION = Utility.Local_Location
 
 
   @staticmethod
-  def generateResponse(responseCode, bodyJson, headers=None):
+  def generateResponse(responseCode, bodyJson, origin=None, headers=None):
       
       try:
       
@@ -141,7 +144,7 @@ class Utility:
         headers['Content-Type'] = 'application/json'
         #add CORS headers
         headers['Access-Control-Allow-Headers'] = 'Content-Type'
-        headers['Access-Control-Allow-Origin'] = Utility.CORS_ALLOWED_ORIGIN
+        headers['Access-Control-Allow-Origin'] = Utility.CORS_ALLOWED_ORIGIN if origin is None else origin
         headers['Access-Control-Allow-Methods'] = 'OPTIONS,POST,GET'
 
         return {

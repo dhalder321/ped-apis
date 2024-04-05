@@ -17,9 +17,15 @@ def generateTextOfTopicOutline(event, context):
     print(event)
     logging.debug(event)
 
+    # process OPTIONS method
+    origin = None
+    if 'headers' in event and event['headers'] != '' and \
+          'origin' in event['headers'] and event['headers']['origin'] != '':
+        origin = event['headers']['origin']
+
     #process OPTIONS method
     if 'httpMethod' in event and event['httpMethod'] == 'OPTIONS':
-      return Utility.generateResponse(200, {})
+      return Utility.generateResponse(200, {}, origin)
 
 
     #process only POST methods
@@ -29,7 +35,7 @@ def generateTextOfTopicOutline(event, context):
             return Utility.generateResponse(400, {
                         'errorCode': "999",
                         'error': 'No request object found',
-                    })
+                    }, origin)
         
         body = json.loads(event['body'])
         try:
@@ -60,7 +66,7 @@ def generateTextOfTopicOutline(event, context):
                         'errorCode': "1001",
                         'error': 'Missing userid in the request',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), "-1", response)
                 return response
 
@@ -74,7 +80,7 @@ def generateTextOfTopicOutline(event, context):
                         'errorCode': "1002",
                         'error': 'Missing system role or topic in the request',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
                 
@@ -88,7 +94,7 @@ def generateTextOfTopicOutline(event, context):
                         'errorCode': "1003",
                         'error': 'prompt could not be retrieved',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
@@ -117,7 +123,7 @@ def generateTextOfTopicOutline(event, context):
                                     'transactionId' : tran_id,
                                     'Response': modelResponse,
                                     'AnswerRetrieved': True
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)
             return response
 
@@ -132,7 +138,7 @@ def generateTextOfTopicOutline(event, context):
                                     'errorCode': "5001",
                                     'error': 'Error processing your request',
                                     'AnswerRetrieved': False
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), -1, response)
             return response
             

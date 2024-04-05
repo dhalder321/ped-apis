@@ -23,9 +23,15 @@ def loginUserWithAccessKey(event, context):
     print(event)
     logging.debug(event)
 
+    # process OPTIONS method
+    origin = None
+    if 'headers' in event and event['headers'] != '' and \
+          'origin' in event['headers'] and event['headers']['origin'] != '':
+        origin = event['headers']['origin']
+
     #process OPTIONS method
     if 'httpMethod' in event and event['httpMethod'] == 'OPTIONS':
-      return Utility.generateResponse(200, {})
+      return Utility.generateResponse(200, {}, origin)
 
     #process only POST methods
     if 'httpMethod' in event and event['httpMethod'] == 'POST':
@@ -34,7 +40,7 @@ def loginUserWithAccessKey(event, context):
             return Utility.generateResponse(400, {
                         'errorCode': "999",
                         'error': 'No request object found',
-                    })
+                    }, origin)
         
         body = json.loads(event['body'])
 
@@ -65,7 +71,7 @@ def loginUserWithAccessKey(event, context):
                         'errorCode': "1001",
                         'error': 'invalid access key provided',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), "-1", response)
                 return response
 
@@ -81,7 +87,7 @@ def loginUserWithAccessKey(event, context):
                             'errorCode': "2001",
                             'error': 'More than one user found',
                             'AnswerRetrieved': False
-                        })
+                        }, origin)
                     Utility.updateUserActivity(str(activityId), "-1", response)
                     return response
                 elif len(userRecord) <= 0:
@@ -91,7 +97,7 @@ def loginUserWithAccessKey(event, context):
                             'errorCode': "2002",
                             'error': 'no user found',
                             'AnswerRetrieved': False
-                        })
+                        }, origin)
                     Utility.updateUserActivity(str(activityId), "-1", response)
                     return response
             
@@ -114,7 +120,7 @@ def loginUserWithAccessKey(event, context):
                                     'transactionId' : tran_id,
                                     'errorCode': "2003",
                                     'error': 'Error processing your request',
-                                })
+                                }, origin)
                 Utility.updateUserActivity(str(activityId), "-1", response)
                 return response
 
@@ -126,7 +132,7 @@ def loginUserWithAccessKey(event, context):
                                     'lastName': userRecord[0]['lastName'],
                                     'email': email,
                                     'AnswerRetrieved': True
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), "-1", response)
             return response
 
@@ -141,7 +147,7 @@ def loginUserWithAccessKey(event, context):
                                     'errorCode': "5001",
                                     'error': 'Error processing your request',
                                     'AnswerRetrieved': False
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), "-1", response)
             return response
 

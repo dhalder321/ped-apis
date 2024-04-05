@@ -19,9 +19,13 @@ def generateSummariesFromTopic(event, context):
     logging.debug(event)
 
     #process OPTIONS method
-    if 'httpMethod' in event and event['httpMethod'] == 'OPTIONS':
-      return Utility.generateResponse(200, {})
+    origin = None
+    if 'headers' in event and event['headers'] != '' and \
+          'origin' in event['headers'] and event['headers']['origin'] != '':
+        origin = event['headers']['origin']
 
+    if 'httpMethod' in event and event['httpMethod'] == 'OPTIONS':
+      return Utility.generateResponse(200, {}, origin)
 
     #process only POST methods
     if 'httpMethod' in event and event['httpMethod'] == 'POST':
@@ -30,7 +34,7 @@ def generateSummariesFromTopic(event, context):
             return Utility.generateResponse(400, {
                         'errorCode': "999",
                         'error': 'No request object found',
-                    })
+                    }, origin)
         
         body = json.loads(event['body'])
         try:
@@ -58,7 +62,7 @@ def generateSummariesFromTopic(event, context):
                         'errorCode': "1001",
                         'error': 'Missing userid in the request',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), "-1", response)
                 return response
 
@@ -72,7 +76,7 @@ def generateSummariesFromTopic(event, context):
                         'errorCode': "1002",
                         'error': 'Missing system role or topic in the request',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
                 
@@ -86,7 +90,7 @@ def generateSummariesFromTopic(event, context):
                         'errorCode': "1003",
                         'error': 'prompt could not be retrieved',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
@@ -101,7 +105,7 @@ def generateSummariesFromTopic(event, context):
                                     'transactionId' : tran_id,
                                     'Response': modelResponse,
                                     'AnswerRetrieved': True
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)
             return response
 
@@ -116,7 +120,7 @@ def generateSummariesFromTopic(event, context):
                                     'errorCode': "5001",
                                     'error': 'Error processing your request',
                                     'AnswerRetrieved': False
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), -1, response)
             return response
         

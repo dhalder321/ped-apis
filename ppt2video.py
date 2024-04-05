@@ -10,6 +10,7 @@ from transform.outputGenerator import outputGenerator
 from common.voiceOver import generateVoiceOverFiles 
 from common.video import generateVideo
 from ppt2image import getImagesFromPPT
+from common.lambdaFunction import invokeLambdaFunction
 
 
 ############################################################
@@ -136,32 +137,23 @@ def generateVideoFromPresentation(event, context):
             print("***************Script files generated successfully**************************")
 
             
-            # STEP 2: invoke the generateImagesFromPPT API to get the images created
+            # STEP 2: invoke the lambda function to get the images created
             # pass the local ppt file path
-            # imageFilePath = getImagesFromPPT(pptFilePath)
-            # response = requests.post(Utility.PPT_2_IMAGE_GENERATION_API_URL, 
-            #     headers=
-            #     {
-            #         "content-type": "application/json",
-            #     }, 
-            #     data = {
-            #             "pptFilePath" : pptFilePath
-            #     })
-            # data = {}
-            # if response.status_code == 200:
-            #     data = response.json()
-            
-            # if 'imageFilePath' in data and data['imageFilePath'] != '':
-            #     imageFilePath = data['imageFilePath']
-            # if imageFilePath is None:
-            #     response = Utility.generateResponse(500, {
-            #             'transactionId' : tran_id,
-            #             'errorCode': "2004",
-            #             'error': 'image files could not be generated',
-            #             'AnswerRetrieved': False
-            #         })
-            #     Utility.updateUserActivity(str(activityId), userid, response)
-            #     return response
+            retVal = invokeLambdaFunction(Utility.PPT_2_IMAGE_GENERATION_API_URL, pptFilePath)
+
+            # check for image file path            
+            imageFilePath = str(Path(Path(pptFilePath).parent, "images"))
+
+            if imageFilePath is None or Path(imageFilePath).exists == False \
+                            or not any(Path(imageFilePath).iterdir()) :
+                response = Utility.generateResponse(500, {
+                        'transactionId' : tran_id,
+                        'errorCode': "2004",
+                        'error': 'image files could not be generated',
+                        'AnswerRetrieved': False
+                    })
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
             # print("***************image files generated successfully**************************")
             
             # STEP 3: generate the voice over
@@ -180,8 +172,8 @@ def generateVideoFromPresentation(event, context):
 
             # STEP 4: generate the video
             backgroundMusicPath = workingDir / Utility.VIDEO_GENERATION_BACKGROUND_MUSIC_FILE_NAME
-            # videoFilePath = generateVideo(imageFilePath, audioFilePath, \
-            #                               str(backgroundMusicPath), str(workingDir))
+            videoFilePath = generateVideo(imageFilePath, audioFilePath, \
+                                          str(backgroundMusicPath), str(workingDir))
             
             videoFilePath = None
             if videoFilePath is None or videoFilePath == '':
