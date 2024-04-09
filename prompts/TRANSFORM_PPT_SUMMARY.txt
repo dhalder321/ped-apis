@@ -1,0 +1,16 @@
+We need to generate a slide presentation within slide count between {{SLIDE_COUNT}} slides strictly on the summary of the text provided below. Do not use any other text for summary data generation. Generate a single title to show in the title slide. Generate for each slide - a heading of the slide, and the slide content. Instructions for slide content generation and instructions for slide notes generation are provided below
+
+Slide content instruction--------------------------------------------
+{{CONTENT_INSTRUCTION}}
+
+Slide notes generation instruction------------------------------------------
+{{NOTES_INSTRUCTION}}
+
+Generate only and only in JSON format provided below. Do not generate any other text apart from the JSON. Output JSON format is following.
+
+Output JSON format-----------------------------------------------------
+{{SAMPLE_JSON}}
+
+Text to consider for slide data generation is given below.
+Text-------------------------------------------------
+{{TEXT}}

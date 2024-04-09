@@ -1,0 +1,17 @@
+
+{
+    "title": 
+            "provide a single title in less than 5 words of the slide deck that correctly outlines the topic in the text provided",
+    
+    "slides": [
+        {
+            "heading": "provide the heading of the first slide",
+            "content": "provide the slide content in text with full english sentences for first slide. Do not provide more than 5 full sentences"
+        },
+        {
+            "heading": "provide the heading of the second slide",
+            "content": "provide the slide content in text with full english sentences for second  slide. Do not provide more than 5 full sentences"
+        },
+        ...
+    ]
+}

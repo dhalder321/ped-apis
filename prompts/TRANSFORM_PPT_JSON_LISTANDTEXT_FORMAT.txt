@@ -1,0 +1,19 @@
+
+
+
+{
+    "title": 
+            "provide a single title in less than 5 words of the slide deck that correctly outlines the topic in the text provided",
+    
+    "slides": [
+        {
+            "heading": "provide the heading of the first slide",
+            "content": "provide the slide content in maximum 3 bullets for first slide. The passage for each bullet will not contain more than 2 full sentenses in english"
+        },
+        {
+            "heading": "provide the heading of the second slide",
+            "content": "provide the slide content in maximum 3 bullets for second slide. The passage for each bullet will not contain more than 2 full sentenses in english"
+        },
+        ...
+    ]
+}

@@ -1,0 +1,33 @@
+generate a quiz of question count between {{QUESTION_COUNT}} only and only from the text given below. The difficulty level of the questions have to be {{DIFFICULTY_LEVEL}}. The allowed question types are {{QUESTION_TYPES_COMMA_SEPARATED}}. Make sure that generated questions are understandable to students. Generate a hint for the correct answer for each question.
+
+{{EXPLANATION_INSTRUCTION}}
+
+The quiz will be generated strictly in JSON format. DO NOT generate any other text apart from JSON. The output JSON format is given below:
+
+Output JSON format---------------------------------
+
+{
+    "quizName": "geneate a 3 word quiz name based on the text given below",
+    "questions": [
+                    {
+                    "questionNumber": "1",
+                    "questionText": "put the first question here in full english sentences",
+                    "answerOptions": [
+                                        {"optionNumber": "1, "optionText": "text of answer option 1",}
+                                        {"optionNumber": "2, "optionText": "text of answer option 2",}
+                                        {"optionNumber": "3, "optionText": "text of answer option 3",}
+                                        {"optionNumber": "4, "optionText": "text of answer option 4",}
+                                        {"optionNumber": "5, "optionText": "text of answer option 5",}
+
+                    ]
+                    "correctAnswerNumber": "answer option number",
+                    "answerHintText": "generate a answer hint text here",
+                    "answerExplanation": "generate an explanation for the correct answer from the given text if answer explanation is to be generated as per above instruction",
+                }
+
+    ]
+
+}
+
+Test is given below-------------------
+{{TEXT}}

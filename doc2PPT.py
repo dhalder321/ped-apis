@@ -146,16 +146,19 @@ def generatePPTFromDocument(event, context):
                 return response
 
             # transform the input text 
-            newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
-                if instruction is not None else Utility.PROMPT_EXTENSION_4_HTML_OUTPUT
+            # newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
+            #     if instruction is not None else Utility.PROMPT_EXTENSION_4_HTML_OUTPUT
             inputs = {
-                # "wordCount": wordCount,
-                # "renderingType": renderingType,
-                "instruction": newInst
+                "slideCount" : slideCount,
+                "contentType" : contentType,
+                "format" : format,
+                "notes" : notes,
+                # "instruction": newInst
             }
-            trmsText = transformationHandler.transformText(retVal, renderingType, **inputs)
+            trmsJSON = transformationHandler.transformTextForPPTGeneration \
+                                        (retVal, **inputs)
 
-            if trmsText is None:
+            if trmsJSON is None:
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
                         'errorCode': "2004",
@@ -165,7 +168,7 @@ def generatePPTFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            if trmsText == "PROMPT_NOT_GENERATED":
+            if trmsJSON == "PROMPT_NOT_GENERATED":
                 
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
@@ -176,15 +179,15 @@ def generatePPTFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # save html text in word document
-            # upload the document to S3 and generate pre-signed URL
+            # save json in ppt 
+            # upload the ppt to S3 and generate pre-signed URL
             localDocFileLocation = str(Path(Utility.EFS_LOCATION, userid))
             datetimestring = datetime.now().replace(tzinfo=timezone.utc).strftime("%m%d%Y%H%M%S")
             datetimeFormattedString = datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S")
-            localDocFileName = "Document_"+ tran_id + "_" + datetimestring + ".docx"
+            localDocFileName = "PPT_"+ tran_id + "_" + datetimestring + ".pptx"
             localDocFilePath = str(Path(localDocFileLocation, localDocFileName))
             s3filePath = "/" + userid + "/" + localDocFileName
-            presignedURL = outputGenerator.storeOutputFile(trmsText, "DOC", "HTML", \
+            presignedURL = outputGenerator.storeOutputFile(trmsJSON, "PPT", "JSON", \
                                                            localDocFileName, localDocFileLocation,\
                                                             s3filePath)
             
@@ -193,7 +196,7 @@ def generatePPTFromDocument(event, context):
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
                                     'errorCode': "2006",
-                                    'error': 'document could not be stored',
+                                    'error': 'ppt could not be stored',
                                 }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
@@ -211,7 +214,7 @@ def generatePPTFromDocument(event, context):
                 "s3bucketName": Utility.S3BUCKE_NAME,
                 "initials3PresignedURLGenerated": presignedURL,
                 "fileCreationDateTime": datetimeFormattedString,
-                "fileType": "docx",
+                "fileType": "pptx",
                 "fileStatus": "complete",
                 "user-fileName": "",
             })

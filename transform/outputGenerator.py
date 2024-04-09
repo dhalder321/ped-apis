@@ -19,6 +19,15 @@ class outputGenerator:
             return Utility.uploadDocumentinHTMLtoS3(text, fileName, \
                                                 localFileLocation, s3Path)
         
+        elif outputFormat == 'PPT' and textType == 'JSON':
+            return Utility.uploadPPTinJSONtoS3(text, fileName, \
+                                                localFileLocation, s3Path)
+        
+        elif outputFormat == 'QUIZ' and textType == 'JSON':
+            return Utility.uploadQuizinJSONtoS3(text, fileName, \
+                                                localFileLocation, s3Path)
+        
+        
 
     @staticmethod
     def storeVideoFile(localVideoFilePath, s3filePath):

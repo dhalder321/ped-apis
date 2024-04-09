@@ -1,0 +1,1 @@
+Generate a verbose text for each slide text so that it can be in slide's note section. Note text should be in full english sentenses and the text in the note have to explain in detail the content in the slide. 
