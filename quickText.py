@@ -19,7 +19,7 @@ from common.essayModel import generateShortEssayWithMultipleInvokes, \
 ############################################################
 def generateQuickText(event, context):
      
-    print(event)
+    # print(event)
     logging.debug(event)
 
     # process OPTIONS method
@@ -104,7 +104,7 @@ def generateQuickText(event, context):
                     "TOPIC": sl_question
             } 
             prompt = Prompt.processPrompts(prompt, dict)
-            #print(prompt)
+            print(prompt + "\n\n")
 
             # Create the chat completion
             modelResponse = ''
@@ -150,6 +150,12 @@ def generateQuickText(event, context):
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
+            
+            # delete the local files and folders
+            Path(localFilePath).unlink()
+            localFolder = Path(localFileLocation)
+            if localFolder is not None and not any(localFolder.iterdir()):
+                localFolder.rmdir()
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {

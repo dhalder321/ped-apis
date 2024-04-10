@@ -1,6 +1,6 @@
 import json
 import base64
-from common.model import getModelResponse, retryModelForOutputType
+from common.model import getModelResponse, retryModelForOutputType, getBulkModelResponses
 from common.s3File import uploadFile, downloadFile, deleteFile, readFile
 from common.prompts import Prompt
 from common.globals import Utility
@@ -22,6 +22,11 @@ from ppt2video import generateVideoFromPresentation
 from ppt2image import getImagesFromPPT
 from docOfTopicOutline import generateDocOfTopicOutline
 from quickText import generateQuickText
+import asyncio
+import aiohttp
+import ssl
+import certifi
+
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -107,18 +112,18 @@ from quickText import generateQuickText
 # print(json.loads(data['body'])['Response'])
 
 
-# data = generateQuickText({
-#         "httpMethod" : "POST",
-#         "body": """{
-#         "transactionId": "KHIHo4y29852c24c24c2",
-#         "userid": "2",
-#         "role": "US Political science professor",
-#         "topic": "US Political reforms",
-#         "essaySize": "s",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }"""
-# }, {})
-# print(data)
+data = generateQuickText({
+        "httpMethod" : "POST",
+        "body": """{
+        "transactionId": "KHIHo4y29852c24c24c2",
+        "userid": "2",
+        "role": "history professor",
+        "topic": "akbar's kingdom expansion strategies in India",
+        "essaySize": "m",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }"""
+}, {})
+print(data)
 # print(json.loads(data['body'])['Response'])
 
 # html = '''<!DOCTYPE html>
@@ -294,21 +299,29 @@ from quickText import generateQuickText
  
 
 #  read  file ppt file in base64 format
-with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
-            "rb") as f:
-    bytes = f.read()
-req = {
-        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-        "fileName": "humanrights.pptx", 
-        "userid": "67745",
-        "transactionId": "8736423hk2j3483",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
-# print (req)
-data = generateVideoFromPresentation({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
+#             "rb") as f:
+#     bytes = f.read()
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "humanrights.pptx", 
+#         "userid": "67745",
+#         "transactionId": "8736423hk2j3483",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# # print (req)
+# data = generateVideoFromPresentation({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 # getImagesFromPPT("c:\\users\\dhalde\\Brazil's Top Tourist Destinations.pptx")
+
+
+
+# prompts = ["one", "two", "three", "four"]
+# results = asyncio.run(getBulkModelResponses("you are a mathematician", prompts))
+# # print(results)
+# for t in results:
+#     print("result:" + t.result())

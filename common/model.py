@@ -4,9 +4,14 @@ import logging
 import traceback
 from openai import OpenAI
 from lxml import etree
+import asyncio
+import aiohttp
+import ssl
+import certifi
 
 #client = OpenAI(os.environ["OPENAI_API_KEY"])
-client = OpenAI(api_key="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")
+API_KEY = "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"
+client = OpenAI(api_key=API_KEY)
 
 def getModelResponse(system_role, user_prompt, llm = "gpt-3.5-turbo", max_tokens=800):
 
@@ -45,7 +50,6 @@ def getModelResponse(system_role, user_prompt, llm = "gpt-3.5-turbo", max_tokens
         # Log the error with stack trace to CloudWatch Logs
         logging.error(f"Error in getModelResponse Function: {str(e)}")
         logging.error("Stack Trace:", exc_info=True)
-
 
 ## This method invokes chat gpt LLM and returns a JSON response.
 ## In case JSON is not in correct format, it will retry for 3 times.
@@ -102,6 +106,43 @@ def retryModelForOutputType(system_role, user_prompt, outputType = "text", llm= 
             response = getModelResponse(system_role, user_prompt, llm, max_tokens)
             continue
     return None
+
+# Call ChatGPT with the given prompt, asynchronously.
+async def getModelResponseAsync(session, system_role, user_prompt, llm = "gpt-3.5-turbo", max_tokens=800):
+    payload = {
+        'model': llm,
+        'messages': [
+            {"role": "system", "content": system_role},
+            {"role": "user", "content": user_prompt}
+        ]
+    }
+    try:
+        async with session.post(
+            url='https://api.openai.com/v1/chat/completions',
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {API_KEY}"},
+            json=payload,
+            ssl=ssl.create_default_context(cafile=certifi.where())
+        ) as response:
+            response = await response.json()
+    
+        if "error" in response:
+            print(f"OpenAI request failed in getModelResponseAsync method with error {response['error']}")
+    
+        return response['choices'][0]['message']['content']
+    
+    except Exception as e:
+        print("error in getModelResponseAsync method: " + str(e))
+
+# Call chatGPT for all the given prompts in parallel.
+async def getBulkModelResponses(system_role, prompts, llm = "gpt-3.5-turbo", max_tokens=800):
+
+    async with aiohttp.ClientSession() as session, asyncio.TaskGroup() as tg:
+    
+        responses = \
+            [tg.create_task(getModelResponseAsync(session, system_role, prompt, llm, max_tokens)) for prompt in prompts]
+    
+    return responses
+
 
 def validateHTML(html):
 

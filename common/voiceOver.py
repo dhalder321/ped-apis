@@ -1,4 +1,3 @@
-from gtts import gTTS
 import os, logging
 from pathlib import Path
 
