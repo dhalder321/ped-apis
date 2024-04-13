@@ -416,6 +416,13 @@ class Utility:
   @staticmethod
   def uploadQuizinJSONtoS3(quizJson, fileName, localFileLocation, s3FfilePath):
 
+    if localFileLocation is None or fileName is None:
+      return None
+
+    isExist = os.path.exists(localFileLocation)
+    if not isExist:    
+      os.makedirs(localFileLocation)
+    
     localFilePath = str(Path(localFileLocation, fileName)) 
     with open(localFilePath, 'w') as file:
       file.write(quizJson)
@@ -483,6 +490,18 @@ class Utility:
                                                         "responseBody": json.dumps(response)
                                                       })
   
+  @staticmethod
+  def handlePriorTransactionIds(tran_IDs):
+
+    # look for existing transaction id with completion status
+    # if found, return the response
+    return
+
+  @staticmethod
+  def formatLogs(dict):
+    return ""
+
+
 
 class PED_Module:
    

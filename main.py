@@ -300,26 +300,48 @@ from doc2quiz import generateQuizFromDocument
  
 
 #  read  file ppt file in base64 format
-with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\BritishPoliticsIndia.docx", \
-            "rb") as f:
-    bytes = f.read()
-req = {
-        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-        "fileName": "humanrights.docx", 
-        "userid": "23343",
-        "slideCount": "Default",
-        "contentType": "Full Text",
-        "format": "Text Only", #"List with headings", #"List with text", #"Text Only",
-        "notes": "y",
-        "transactionId": "98327402lkjsdf33effe",
-        "requesttimeinUTC": "4/12/2024 21:18"
-    }
-# print (req)
-data = generatePPTFromDocument({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\BritishCrueltyInIndia.docx", \
+#             "rb") as f:
+#     bytes = f.read()
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "GenghisKhan.docx", 
+#         "userid": "23343",
+#         "slideCount": "Default", # 5-10, 10-15
+#         "contentType": "Summary", #"Full Text",
+#         "format": "Text Only", #"List with headings", #"List with text", #"Text Only",
+#         "notes": "y",
+#         "transactionId": "98327402lkjsdf33effe",
+#         "requesttimeinUTC": "4/12/2024 21:18"
+#     }
+# # print (req)
+# data = generatePPTFromDocument({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
+
+#  read  file ppt file in base64 format
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Globalization.docx", \
+#             "rb") as f:
+#     bytes = f.read()
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "humanrights.docx", 
+#         "userid": "334433",
+#         "qestionCount": "5-10", # 5-10, 10-15, if Default selected, set q count :- 15-20
+#         "difficulty": "simple", # "simple", "medium", "hard", "very hard"
+#         "questionType": "multiple choice, true/false, fill the blanks, ranking/ordering",
+#         "explanation": "y",
+#         "transactionId": "98327402lkjsdf33effe",
+#         "requesttimeinUTC": "4/12/2024 21:18"
+#     }
+# # print (req)
+# data = generateQuizFromDocument({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 #  read  file ppt file in base64 format
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \

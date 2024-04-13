@@ -1,18 +1,5 @@
 
-
 {
-    "title": 
-            "provide a single title in less than 5 words of the slide deck that correctly outlines the topic in the text provided",
-    
-    "slides": [
-        {
-            "heading": "provide the heading of the first slide",
-            "content": "provide the slide content in maximum 5 bullets for the first slide. The heading for each bullet will not contain more than 5 english words"
-        },
-        {
-            "heading": "provide the heading of the second slide",
-            "content": "provide the slide content in maximum 5 bullets for the second slide. The heading for each bullet will not contain more than 5 english words"
-        },
-        ...
-    ],
+    "heading": "copy the exact above mentioned slide heading here. Do not strictly modify it",
+    "content": "provide the slide content in string array of maximum 5 bullets. The heading for each bullet will not contain more than 5 english words",
 }

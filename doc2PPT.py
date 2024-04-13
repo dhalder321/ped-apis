@@ -129,13 +129,23 @@ def generatePPTFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # check for minimum length of the text- min 400 chars
+            # check for minimum length of the text- min 400 chars and max 35000
             if len(retVal) < 400:
                 
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
                         'errorCode': "2003",
                         'error': 'text is too short for any transformation',
+                        'AnswerRetrieved': False
+                    }, origin)
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
+
+            if len(retVal) > 35000:
+                response = Utility.generateResponse(500, {
+                        'transactionId' : tran_id,
+                        'errorCode': "2004",
+                        'error': 'text is too long for any transformation',
                         'AnswerRetrieved': False
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
@@ -157,7 +167,7 @@ def generatePPTFromDocument(event, context):
             if trmsJSON is None:
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
-                        'errorCode': "2004",
+                        'errorCode': "2005",
                         'error': 'model response could not be obtained',
                         'AnswerRetrieved': False
                     }, origin)
@@ -168,13 +178,13 @@ def generatePPTFromDocument(event, context):
                 
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
-                        'errorCode': "2005",
+                        'errorCode': "2006",
                         'error': 'prompt could not be retrieved',
                         'AnswerRetrieved': False
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
-            print (trmsJSON)
+            # print (trmsJSON)
             
             # save json in ppt 
             # upload the ppt to S3 and generate pre-signed URL
@@ -193,7 +203,7 @@ def generatePPTFromDocument(event, context):
                 # Return a 500 server error response
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
-                                    'errorCode': "2006",
+                                    'errorCode': "2007",
                                     'error': 'ppt could not be stored',
                                 }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
@@ -221,7 +231,7 @@ def generatePPTFromDocument(event, context):
                 # Return a 500 server error response
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
-                                    'errorCode': "2007",
+                                    'errorCode': "2008",
                                     'error': 'document record could not be updated in database',
                                 }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)

@@ -31,7 +31,7 @@ from transform.outputGenerator import outputGenerator
 ############################################################
 def generateQuizFromDocument(event, context):
 
-    print(event)
+    # print(event)
     logging.debug(event)
 
     origin = None
@@ -70,10 +70,10 @@ def generateQuizFromDocument(event, context):
             # Parse the incoming JSON payload
             fileContent = body["fileContentBase64"] if 'fileContentBase64' in body else None
             fileName = body["fileName"] if 'fileName' in body else None
-            slideCount = body["slideCount"]  if "slideCount" in body else None
-            contentType = body["contentType"]  if "contentType" in body else None
-            format = body["format"]  if "format" in body else None
-            notes = body["notes"]  if "notes" in body else None
+            questionCount = body["qestionCount"]  if "qestionCount" in body else None
+            difficulty = body["difficulty"]  if "difficulty" in body else None
+            questionType = body["questionType"]  if "questionType" in body else None
+            explanation = body["explanation"]  if "explanation" in body else None
             userid = body["userid"]  if "userid" in body else None
 
             if userid is None:
@@ -101,7 +101,7 @@ def generateQuizFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
-            # get the text from the ppt content
+            # get the text from the file content
             inputValues = {
                             "fileContentBase64": fileContent,
                             "docFilename": fileName,
@@ -110,8 +110,6 @@ def generateQuizFromDocument(event, context):
                             }
             retVal = inputProcessor.processInput("docContentBase64", \
                                                         **inputValues)
-            
-            # get the text from ppt file
             if retVal is None:
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
@@ -134,7 +132,7 @@ def generateQuizFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # check for minimum length of the text- min 400 chars
+            # check for minimum length of the text- min 400 chars and max 35000 chars
             if len(retVal) < 400:
                 
                 response = Utility.generateResponse(500, {
@@ -145,15 +143,26 @@ def generateQuizFromDocument(event, context):
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
+            
+            if len(retVal) > 35000:
+                
+                response = Utility.generateResponse(500, {
+                        'transactionId' : tran_id,
+                        'errorCode': "2004",
+                        'error': 'text is too long for any transformation',
+                        'AnswerRetrieved': False
+                    }, origin)
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
 
             # transform the input text 
             # newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
             #     if instruction is not None else Utility.PROMPT_EXTENSION_4_HTML_OUTPUT
             inputs = {
-                "slideCount" : slideCount,
-                "contentType" : contentType,
-                "format" : format,
-                "notes" : notes,
+                "questionCount" : questionCount,
+                "difficulty" : difficulty,
+                "questionTypes" : questionType,
+                "explanation" : explanation,
                 # "instruction": newInst
             }
             trmsJSON = transformationHandler.transformTextForQuizGeneration \
