@@ -59,13 +59,15 @@ class Utility:
   TRANSFORM_PPT_JSON_TEXT_NOTES_FORMAT_PROMPT_TYPE = "TRANSFORM_PPT_JSON_TEXT_NOTES_FORMAT"
   TRANSFORM_PPT_NOTES_INSTRUCTION_PROMPT_TYPE = "TRANSFORM_PPT_NOTES_INSTRUCTION"
   TRANSFORM_PPT_SUMMARY_PROMPT_TYPE = "TRANSFORM_PPT_SUMMARY"
+  TRANSFORM_PPT_OVERRIDE_PROMPT_TYPE = "TRANSFORM_PPT_OVERRIDE_PROMPT"
+  TRANSFORM_PPT_SUBHEADING_PROMPT_TYPE = "TRANSFORM_PPT_SUBHEADING_PROMPT"
 
   TRANSFORM_QUIZ_PROMPT_TYPE = "TRANSFORM_QUIZ"
 
   SLIDE_NOTE_FOR_VIDEO_PROMPT_TYPE = "SLIDE_NOTE_FOR_VIDEO" 
 
   PROMPT_TYPE2FILE_NAME = {
-         TOPIC2SUMMARY_PROMPT_TYPE: "TOPIC2SUMMARY.txt",
+    TOPIC2SUMMARY_PROMPT_TYPE: "TOPIC2SUMMARY.txt",
     TEXT2TOPICOUTLINE_PROMPT_TYPE: "TEXT2TOPICOUTLINE.txt",
     TEXTOFTOPICOUTLINE_PROMPT_TYPE: "TEXTOFTOPICOUTLINE.txt",
     QUICK_TEXT_PROMPT_TYPE: "QUICK_TEXT.txt",
@@ -99,6 +101,8 @@ class Utility:
     TRANSFORM_PPT_JSON_TEXT_NOTES_FORMAT_PROMPT_TYPE : "TRANSFORM_PPT_JSON_TEXT_NOTES_FORMAT.txt",
     TRANSFORM_PPT_NOTES_INSTRUCTION_PROMPT_TYPE : "TRANSFORM_PPT_NOTES_INSTRUCTION.txt",
     TRANSFORM_PPT_SUMMARY_PROMPT_TYPE : "TRANSFORM_PPT_SUMMARY.txt",
+    TRANSFORM_PPT_OVERRIDE_PROMPT_TYPE : "TRANSFORM_PPT_OVERRIDE_PROMPT.txt",
+    TRANSFORM_PPT_SUBHEADING_PROMPT_TYPE : "TRANSFORM_PPT_SUBHEADING_PROMPT.txt",
 
     TRANSFORM_QUIZ_PROMPT_TYPE : "TRANSFORM_QUIZ.txt",
 
@@ -120,6 +124,9 @@ class Utility:
 
   VIDEO_GENERATION_BACKGROUND_MUSIC_FILE_NAME = "learning-video-background-music.mp3"
   PPT2IMAGE_GENERATION_LAMBDA_FUNCTION_NAME = "ped-getimagesfromppt"
+  BASIC_PPT_TEXT_TEMPLATE_FILE_NAME = "BasicPresentationTextTemplate.pptx"
+  BASIC_PPT_LIST_TEMPLATE_FILE_NAME = "BasicPresentationListTemplate.pptx"
+
   ###################################################
   #              Environment variables
   ####################################################
@@ -287,8 +294,12 @@ class Utility:
     return presignedURL
   
   @staticmethod
-  def uploadPPTinJSONtoS3(slidejson, fileName, localFileLocation, s3FfilePath):
+  def uploadPPTinJSONtoS3(slidejson, fileName, localFileLocation, s3FfilePath, layoutType):
 
+    #check for file location existance
+    isExist = os.path.exists(localFileLocation)
+    if not isExist:    
+      os.makedirs(localFileLocation)
     
     r = json.loads(slidejson)
 
@@ -332,7 +343,13 @@ class Utility:
     # 8 ->  Pic with caption 
     # """
     
-    prs = Presentation(fileName)
+    if layoutType == 'TEXT':
+      prs = Presentation(Utility.BASIC_PPT_TEXT_TEMPLATE_FILE_NAME)
+      print("Text template picked up.")
+    else:
+      prs = Presentation(Utility.BASIC_PPT_LIST_TEMPLATE_FILE_NAME)
+      print("List template picked up.")
+      
     if title is not None:
         title_slide = prs.slides[0] #.add_slide(prs.slide_layouts[0])
         title_text = title_slide.shapes.title
@@ -348,15 +365,19 @@ class Utility:
           ttl = new_slide.shapes.title
           ttl.text = slide['heading']
 
-      if 'content' in slide.keys() and slide['content']:
-          content = ""
+      if layoutType == 'TEXT':
+        if 'content' in slide.keys() and slide['content']:
+          content = slide['content']
+      elif layoutType == 'LIST':
+        if 'content' in slide.keys() and slide['content']:
+          content = ''
           for c in slide['content']:
-              content += c + "\n\n"
+            content += c + '\n\n'
 
-      if 'note' in slide.keys() and slide['note']:
+      if 'notes' in slide.keys() and slide['notes']:
           notes_slide = new_slide.notes_slide
           text_frame = notes_slide.notes_text_frame
-          text_frame.text = slide['note']
+          text_frame.text = slide['notes']
 
       if content is not None and content != "":
           shapes = new_slide.shapes

@@ -13,7 +13,8 @@ class outputGenerator:
 
 
     @staticmethod
-    def storeOutputFile(text, outputFormat, textType, fileName, localFileLocation, s3Path):
+    def storeOutputFile(text, outputFormat, textType, fileName, localFileLocation, s3Path, \
+                        anyObject=None):
 
         if outputFormat == "DOC" and textType == "HTML":
             return Utility.uploadDocumentinHTMLtoS3(text, fileName, \
@@ -21,7 +22,7 @@ class outputGenerator:
         
         elif outputFormat == 'PPT' and textType == 'JSON':
             return Utility.uploadPPTinJSONtoS3(text, fileName, \
-                                                localFileLocation, s3Path)
+                                                localFileLocation, s3Path, anyObject)
         
         elif outputFormat == 'QUIZ' and textType == 'JSON':
             return Utility.uploadQuizinJSONtoS3(text, fileName, \

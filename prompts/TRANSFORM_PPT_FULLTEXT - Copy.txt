@@ -6,6 +6,11 @@ Slide content instruction--------------------------------------------
 Notes generation instruction------------------------------------------
 {{NOTES_INSTRUCTION}}
 
+Generate only and only in JSON format provided below. Do not generate any other text apart from the JSON. Output JSON format is following.
+
+Output JSON format-----------------------------------------------------
+{{SAMPLE_JSON}}
+
 Text to consider for slide data generation is given below.
 Text-------------------------------------------------
 {{TEXT}}

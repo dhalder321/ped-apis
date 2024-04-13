@@ -14,5 +14,5 @@
             "content": "provide the slide content in maximum 5 bullets for the second slide. The heading for each bullet will not contain more than 5 english words"
         },
         ...
-    ]
+    ],
 }

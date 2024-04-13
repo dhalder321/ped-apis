@@ -15,5 +15,5 @@
             "content": "provide the slide content in maximum 3 bullets for second slide. The passage for each bullet will not contain more than 2 full sentenses in english"
         },
         ...
-    ]
+    ],
 }

@@ -1,0 +1,15 @@
+Generate a output JSON for given main prompt in following format. DO NOT generate any other text apart from the JSON------------
+{
+    "title": "title of the slide",
+    "headings": [
+        "heading of slide 1",
+        "heading of slide 2",
+        "heading of slide 3",
+        "heading of slide 4",
+        "heading of slide 5",
+        ...
+    ]
+}
+
+Main prompt has been given below---------------------------
+{{PROMPT}}

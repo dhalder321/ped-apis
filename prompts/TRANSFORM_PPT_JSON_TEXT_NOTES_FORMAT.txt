@@ -1,7 +1,6 @@
 
 {
-    "title": 
-            "provide a single title in less than 5 words of the slide deck that correctly outlines the topic in the text provided",
+    "title": "provide a single title in less than 5 words of the slide deck that correctly outlines the topic in the text provided",
     
     "slides": [
         {
@@ -15,5 +14,5 @@
             "notes": "provide a verbose explanation of content in the second slide. It will contain around 5 full sentenses in english"
         },
         ...
-    ]
+    ],
 }

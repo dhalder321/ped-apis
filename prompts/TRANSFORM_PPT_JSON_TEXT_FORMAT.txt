@@ -13,5 +13,5 @@
             "content": "provide the slide content in text with full english sentences for second  slide. Do not provide more than 5 full sentences"
         },
         ...
-    ]
+    ],
 }

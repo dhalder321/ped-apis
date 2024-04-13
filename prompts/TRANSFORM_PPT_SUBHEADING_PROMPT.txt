@@ -1,0 +1,12 @@
+You are generating a single slide in parts following the main prompt given below. The  identification number of the slide you are generating is "{{SLIDE_ID}}". You are generating slide number: "{{SLIDE_NUMBER}}". The heading of the slide is "{{SLIDE_HEADING}}".
+
+You have to generate the slide content and slide note for the above mentioned slide number in following JSON format. DO NOT generate any other text apart from this JSON:
+{
+    "heading": "copy the exact above mentioned slide heading here. Do not strictly modify it",
+    "content": "content to put into the slide",
+    "notes": "verbose in-detail elabotation of the slide content in full english sentences to put into slide note section"
+}
+
+
+The main prompt of the of the final slide is given below till the end-----------------------
+{{PROMPT}}

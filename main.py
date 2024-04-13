@@ -26,7 +26,8 @@ import asyncio
 import aiohttp
 import ssl
 import certifi
-
+from doc2PPT import generatePPTFromDocument
+from doc2quiz import generateQuizFromDocument
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -112,18 +113,18 @@ import certifi
 # print(json.loads(data['body'])['Response'])
 
 
-data = generateQuickText({
-        "httpMethod" : "POST",
-        "body": """{
-        "transactionId": "KHIHo4y29852c24c24c2",
-        "userid": "2",
-        "role": "history professor",
-        "topic": "akbar's kingdom expansion strategies in India",
-        "essaySize": "m",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }"""
-}, {})
-print(data)
+# data = generateQuickText({
+#         "httpMethod" : "POST",
+#         "body": """{
+#         "transactionId": "KHIHo4y29852c24c24c2",
+#         "userid": "2",
+#         "role": "astronomy professor",
+#         "topic": "Pluto's role in solar system",
+#         "essaySize": "l",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }"""
+# }, {})
+# print(data)
 # print(json.loads(data['body'])['Response'])
 
 # html = '''<!DOCTYPE html>
@@ -299,6 +300,28 @@ print(data)
  
 
 #  read  file ppt file in base64 format
+with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\BritishPoliticsIndia.docx", \
+            "rb") as f:
+    bytes = f.read()
+req = {
+        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+        "fileName": "humanrights.docx", 
+        "userid": "23343",
+        "slideCount": "Default",
+        "contentType": "Full Text",
+        "format": "Text Only", #"List with headings", #"List with text", #"Text Only",
+        "notes": "y",
+        "transactionId": "98327402lkjsdf33effe",
+        "requesttimeinUTC": "4/12/2024 21:18"
+    }
+# print (req)
+data = generatePPTFromDocument({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)
+
+#  read  file ppt file in base64 format
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
 #             "rb") as f:
 #     bytes = f.read()
@@ -325,3 +348,5 @@ print(data)
 # # print(results)
 # for t in results:
 #     print("result:" + t.result())
+
+

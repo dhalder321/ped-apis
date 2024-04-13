@@ -15,5 +15,5 @@
             "notes": "provide a verbose explanation of content in the second slide. It will contain around 5 full sentenses in english"
         },
         ...
-    ]
+    ],
 }

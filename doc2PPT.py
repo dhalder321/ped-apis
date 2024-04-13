@@ -1,12 +1,8 @@
 import logging
-import os
 import json, uuid
 from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
-from docx import Document
-from htmldocx import HtmlToDocx
-from common.prompts import Prompt
 from common.globals import Utility, PED_Module, DBTables
 from transform.inputProcessor import inputProcessor 
 from transform.transformationHandler import transformationHandler 
@@ -30,7 +26,7 @@ from transform.outputGenerator import outputGenerator
 ############################################################
 def generatePPTFromDocument(event, context):
 
-    print(event)
+    # print(event)
     logging.debug(event)
 
     origin = None
@@ -178,6 +174,7 @@ def generatePPTFromDocument(event, context):
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
+            print (trmsJSON)
             
             # save json in ppt 
             # upload the ppt to S3 and generate pre-signed URL
@@ -189,7 +186,8 @@ def generatePPTFromDocument(event, context):
             s3filePath = "/" + userid + "/" + localDocFileName
             presignedURL = outputGenerator.storeOutputFile(trmsJSON, "PPT", "JSON", \
                                                            localDocFileName, localDocFileLocation,\
-                                                            s3filePath)
+                                                            s3filePath, \
+                                                            'LIST' if "List".upper() in format.upper() else 'TEXT')
             
             if presignedURL is None:
                 # Return a 500 server error response
