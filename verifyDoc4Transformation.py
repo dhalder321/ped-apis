@@ -1,12 +1,7 @@
 import logging
 import json, uuid
-from pathlib import Path
-from datetime import datetime, timezone
-from common.db import DBManager
-from common.globals import Utility, PED_Module, DBTables
+from common.globals import Utility, PED_Module
 from transform.inputProcessor import inputProcessor 
-from transform.transformationHandler import transformationHandler 
-from transform.outputGenerator import outputGenerator 
 
 
 ############################################################
@@ -24,7 +19,7 @@ from transform.outputGenerator import outputGenerator
 # 2007 - document record could not be updated in database
 # 5001 - Method level error
 ############################################################
-def generatePPTFromDocument(event, context):
+def verifyDocument(event, context):
 
     # print(event)
     logging.debug(event)
@@ -56,7 +51,7 @@ def generatePPTFromDocument(event, context):
 
             #log user and transaction details
             bodyCurtailed = Utility.curtailObject4Logging(body, "fileContentBase64")
-            activityId = Utility.logUserActivity(body, "generatePPTFromDocument")
+            activityId = Utility.logUserActivity(body, "verifyDocument")
 
             tran_id = body["transactionId"]
             if tran_id is None:
@@ -65,10 +60,6 @@ def generatePPTFromDocument(event, context):
             # Parse the incoming JSON payload
             fileContent = body["fileContentBase64"] if 'fileContentBase64' in body else None
             fileName = body["fileName"] if 'fileName' in body else None
-            slideCount = body["slideCount"]  if "slideCount" in body else None
-            contentType = body["contentType"]  if "contentType" in body else None
-            format = body["format"]  if "format" in body else None
-            notes = body["notes"]  if "notes" in body else None
             userid = body["userid"]  if "userid" in body else None
 
             if userid is None:
@@ -151,102 +142,10 @@ def generatePPTFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
-            # transform the input text 
-            # newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
-            #     if instruction is not None else Utility.PROMPT_EXTENSION_4_HTML_OUTPUT
-            inputs = {
-                "slideCount" : slideCount,
-                "contentType" : contentType,
-                "format" : format,
-                "notes" : notes,
-                # "instruction": newInst
-            }
-            trmsJSON = transformationHandler.transformTextForPPTGeneration \
-                                        (retVal, **inputs)
-
-            if trmsJSON is None:
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2005",
-                        'error': 'model response could not be obtained',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
-            
-            if trmsJSON == "PROMPT_NOT_GENERATED":
-                
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2006",
-                        'error': 'prompt could not be retrieved',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
-            # print (trmsJSON)
-            
-            # save json in ppt 
-            # upload the ppt to S3 and generate pre-signed URL
-            localDocFileLocation = str(Path(Utility.EFS_LOCATION, userid))
-            datetimestring = datetime.now().replace(tzinfo=timezone.utc).strftime("%m%d%Y%H%M%S")
-            datetimeFormattedString = datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S")
-            localDocFileName = "PPT_"+ tran_id + "_" + datetimestring + ".pptx"
-            localDocFilePath = str(Path(localDocFileLocation, localDocFileName))
-            s3filePath = "/" + userid + "/" + localDocFileName
-            presignedURL = outputGenerator.storeOutputFile(trmsJSON, "PPT", "JSON", \
-                                                           localDocFileName, localDocFileLocation,\
-                                                            s3filePath, \
-                                                            'LIST' if "List".upper() in format.upper() else 'TEXT')
-            
-            if presignedURL is None:
-                # Return a 500 server error response
-                response = Utility.generateResponse(500, {
-                                    'transactionId' : tran_id,
-                                    'errorCode': "2007",
-                                    'error': 'ppt could not be stored',
-                                }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
-            
-            # add record in userfiles table
-            retVal = DBManager.addRecordInDynamoTableWithAutoIncrKey(DBTables.UserFiles_Table_Name, \
-                                                                    "staticIndexColumn", "fileid",\
-                                                                    "staticIndexColumn-fileid-index",  \
-                                                                    {
-                "userid": int(userid),
-                "transactionId": tran_id,
-                "staticIndexColumn": 99, #for global sec. index column
-                "fileName": localDocFileName,
-                "s3Filelocation": s3filePath,
-                "s3bucketName": Utility.S3BUCKE_NAME,
-                "initials3PresignedURLGenerated": presignedURL,
-                "fileCreationDateTime": datetimeFormattedString,
-                "fileType": "pptx",
-                "fileStatus": "complete",
-                "user-fileName": "",
-            })
-
-            if retVal is None:
-                # Return a 500 server error response
-                response = Utility.generateResponse(500, {
-                                    'transactionId' : tran_id,
-                                    'errorCode': "2008",
-                                    'error': 'document record could not be updated in database',
-                                }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
-            
-            # delete the local files and folders
-            Path(localDocFilePath).unlink()
-            localFolder = Path(localDocFileLocation)
-            if localFolder is not None and not any(localFolder.iterdir()):
-                localFolder.rmdir()
-
             # Return the response in JSON format
             response = Utility.generateResponse(200, {
                                     'transactionId' : tran_id,
-                                    'Response': presignedURL,
+                                    'Response': 'success',
                                     'AnswerRetrieved': True
                                 }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)
@@ -255,7 +154,7 @@ def generatePPTFromDocument(event, context):
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
             logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                        f"Error in generatePPTFromDocument Function: {str(e)}"))
+                                        f"Error in verifyDocument Function: {str(e)}"))
             logging.error(Utility.formatLogMessage(tran_id, userid, \
                                                    "Stack Trace:", exc_info=True))
             

@@ -126,8 +126,10 @@ def signupNewUser(event, context):
 
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
-            logging.error(f"Error in signupNewUser Function: {str(e)}")
-            logging.error("Stack Trace:", exc_info=True)
+            logging.error(Utility.formatLogMessage(tran_id, "", \
+                                                   f"Error in signupNewUser Function: {str(e)}"))
+            logging.error(Utility.formatLogMessage(tran_id, "", \
+                                                   "Stack Trace:", exc_info=True))
             
             # Return a 500 server error response
             response = Utility.generateResponse(500, {

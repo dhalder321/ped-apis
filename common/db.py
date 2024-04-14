@@ -124,7 +124,12 @@ class DBManager:
     #     value='example_value',
     #     projection_expression='Attribute1, Attribute2'
     # )
-    #
+    # DBManager.getDBItems(table_name=DBTables.User_Table_Name, \
+                                            # sort_key_name="email", sort_key_value=email, \
+                                            # filter_expression= "pwdEn = :value", \
+                                            # value = pwdEn, \
+                                            # projection_expression="userid, firstName, lastName", \
+                                            # index_name="email-index")
     #####################################################################################
     @staticmethod
     def getDBItems(table_name, filter_expression=None, \

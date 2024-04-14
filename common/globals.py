@@ -1,4 +1,4 @@
-import json, os
+import json, os, time
 import base64
 import logging
 from pathlib import Path
@@ -168,7 +168,7 @@ class Utility:
   @staticmethod
   def initiate():
     #if Utility.PROMPT_LOCATION != 'dev':
-    Utility.EFS_LOCATION = Utility.Local_Location
+    Utility.EFS_LOCATION = Utility.Efs_Path
 
 
   @staticmethod
@@ -495,12 +495,57 @@ class Utility:
 
     # look for existing transaction id with completion status
     # if found, return the response
+    if tran_IDs is None or len(tran_IDs) <= 0:
+      return
+    
+    trans = tran_IDs.split(",")
+
+    for t in trans:
+      records = DBManager.getDBItemByIndex(DBTables.UserActivity_Table_Name, \
+                                           "transactionid", "activityid-transactionid-index", \
+                                            t)
+      
+      if records is not None and len(records) == 1:
+
+        # start a loop for 3 times to get the running process to complete 
+        for n in range(3):
+          if "responseStatus" in records[0] and records[0]["responseStatus"] == "success":
+            # return the response
+            if "responseBody" in records[0] and records[0]["responseBody"] != "":
+              return json.loads(records[0]["responseBody"])
+            else: # success but no response found
+              continue
+          else: # record found but not response status or API failed
+            continue
+          
+          # wait for 15 sec
+          time.sleep(15)
+
+          records = DBManager.getDBItemByIndex(DBTables.UserActivity_Table_Name, \
+                                           "transactionid", "activityid-transactionid-index", \
+                                            t)
+      else:
+        continue
+
+
+
+
+
     return
 
   @staticmethod
-  def formatLogs(dict):
-    return ""
+  def formatLogMessage(tran_id, userId, message):
 
+    message = "Transaction ID:\"{transactionId}\"- User ID: \"{userID}\"- Message: \"{message}\""
+
+    if tran_id is None:
+      tran_id = ''
+    if userId is None:
+      userid = ''
+    if message is None:
+      message = ''
+
+    return message.format(transactionId=tran_id, userID = userId, message=message)
 
 
 class PED_Module:

@@ -205,8 +205,10 @@ def generateDocumentFromText(event, context):
 
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
-            logging.error(f"Error in generateDocumentFromDocument Function: {str(e)}")
-            logging.error("Stack Trace:", exc_info=True)
+            logging.error(Utility.formatLogMessage(tran_id, userid, \
+                                                   f"Error in generateDocumentFromDocument Function: {str(e)}"))
+            logging.error(Utility.formatLogMessage(tran_id, userid, \
+                                                   "Stack Trace:", exc_info=True))
             
             # Return a 500 server error response
             response = Utility.generateResponse(500, {

@@ -22,12 +22,9 @@ from ppt2video import generateVideoFromPresentation
 from ppt2image import getImagesFromPPT
 from docOfTopicOutline import generateDocOfTopicOutline
 from quickText import generateQuickText
-import asyncio
-import aiohttp
-import ssl
-import certifi
 from doc2PPT import generatePPTFromDocument
 from doc2quiz import generateQuizFromDocument
+from verifyDoc4Transformation import verifyDocument
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -266,6 +263,7 @@ from doc2quiz import generateQuizFromDocument
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\The Modi Phenomenon and the Re making of India.pdf", \
 #             "rb") as f:
 #     bytes = f.read()
+# #print(base64.b64encode(bytes).decode('utf-8'))
 # req = {
 #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
 #         "fileName": "humanrights.pdf", 
@@ -342,6 +340,25 @@ from doc2quiz import generateQuizFromDocument
 #         "body": json.dumps(req)
 # }, {})
 # print(data)
+
+#  read  file ppt file in base64 format
+with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Globalization.docx", \
+            "rb") as f:
+    bytes = f.read()
+req = {
+        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+        "fileName": "humanrights.docx", 
+        "userid": "334433",
+        "transactionId": "98327402lkjsdf33effe",
+        "requesttimeinUTC": "4/12/2024 21:18"
+    }
+# print (req)
+data = verifyDocument({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)
+
 
 #  read  file ppt file in base64 format
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
