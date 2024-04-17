@@ -110,19 +110,19 @@ from verifyDoc4Transformation import verifyDocument
 # print(json.loads(data['body'])['Response'])
 
 
-data = generateQuickText({
-        "httpMethod" : "POST",
-        "body": """{
-        "transactionId": "728364293kjhfsd98r73",
-        "priorTranIds": "iwehriwe74924234,jhkjh78687124x9x123,",
-        "userid": "123456",
-        "role": "astronomy professor",
-        "topic": "Pluto's role in solar system",
-        "essaySize": "s",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }"""
-}, {})
-print(data)
+# data = generateQuickText({
+#         "httpMethod" : "POST",
+#         "body": """{
+#         "transactionId": "728364293kjhfsd98r73",
+#         "priorTranIds": "iwehriwe74924234,jhkjh78687124x9x123,",
+#         "userid": "123456",
+#         "role": "astronomy professor",
+#         "topic": "Pluto's role in solar system",
+#         "essaySize": "s",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }"""
+# }, {})
+# print(data)
 # print(json.loads(data['body'])['Response'])
 
 # html = '''<!DOCTYPE html>
@@ -281,14 +281,28 @@ print(data)
 # }, {})
 # print(data)
 
+# req = {
+#         "userid": "334400",
+#         "transactionId": "djkfdsr93875932-2523523v235v-23523v5vv325",
+#         "renderingType": "Study guide", 
+#         "instruction": "",
+#         "text": "Democracy, derived from the Greek words \"demos\" (people) and \"kratos\" (rule), embodies a system of governance where power resides with the people. This form of government promotes political equality, participation, and representation. At its core, democracy fosters the idea of collective decision-making, ensuring that the interests and voices of citizens shape policies and laws.   One of democracy's fundamental principles is the protection of individual rights and freedoms. Through mechanisms such as free speech, assembly, and press, citizens can express themselves without fear of repression. Moreover, democratic systems establish an independent judiciary to safeguard against abuses of power, ensuring justice and accountability. Furthermore, democracy promotes transparency and accountability in governance. Elected representatives are accountable to the electorate, and periodic elections serve as mechanisms for citizens to hold their leaders responsible for their actions. Additionally, democratic institutions, such as the legislature and executive branches, operate under checks and balances, preventing any single entity from monopolizing power. Moreover, democracy encourages political participation and civic engagement. Citizens have the right to vote, allowing them to choose their leaders and influence public policies. Furthermore, democratic societies foster a vibrant civil society, comprising non-governmental organizations, advocacy groups, and grassroots movements that contribute to public discourse and policymaking. Despite its merits, democracy faces challenges and criticisms. Issues such as voter apathy, political polarization, and the influence of money in politics can undermine its effectiveness. Moreover, in some cases, democratic processes may lead to the tyranny of the majority, where the rights of minority groups are disregarded. In conclusion, democracy serves as a cornerstone of modern governance, embodying principles of political equality, participation, and representation. By empowering citizens, protecting individual rights, and promoting accountability, democracy fosters a society where the voices of the people shape the course of their nation. However, it requires continuous vigilance and active participation to ensure its vitality and effectiveness in addressing the evolving needs of society.",
+#         "requesttimeinUTC": "4/14/2024 21:18"
+#     }
+# # print (req)
+# data = generateDocumentFromText({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 # req = {
-#         "url": "https://www.cdc.gov/disasters/volcanoes/facts.html", 
-#         "renderingType": "Critical analysis",
-#         "instruction": "generate it for first year college students.",
-#         "userid": "23322",
-#         "transactionId": "aksfjnar832764832",
-#         "requesttimeinUTC": "3/29/2024 21:18"
+        # "url": "https://www.cdc.gov/disasters/volcanoes/facts.html", 
+        # "renderingType": "Critical analysis",
+        # "instruction": "generate it for first year college students.",
+        # "userid": "23322",
+        # "transactionId": "aksfjnar832764832",
+        # "requesttimeinUTC": "3/29/2024 21:18"
 #     }
 # # print (req)
 # data = generateDocumentFromWebContent({
@@ -302,6 +316,7 @@ print(data)
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\BritishCrueltyInIndia.docx", \
 #             "rb") as f:
 #     bytes = f.read()
+# print (base64.b64encode(bytes).decode('utf-8'))
 # req = {
 #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
 #         "fileName": "GenghisKhan.docx", 
@@ -328,10 +343,10 @@ print(data)
 #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
 #         "fileName": "humanrights.docx", 
 #         "userid": "334433",
-#         "qestionCount": "5-10", # 5-10, 10-15, if Default selected, set q count :- 15-20
-#         "difficulty": "simple", # "simple", "medium", "hard", "very hard"
-#         "questionType": "multiple choice, true/false, fill the blanks, ranking/ordering",
-#         "explanation": "y",
+        # "qestionCount": "5-10", # 5-10, 10-15, if Default selected, set q count :- 15-20
+        # "difficulty": "simple", # "simple", "medium", "hard", "very hard"
+        # "questionType": "multiple choice, true/false, fill the blanks, ranking/ordering",
+        # "explanation": "y",
 #         "transactionId": "98327402lkjsdf33effe",
 #         "requesttimeinUTC": "4/12/2024 21:18"
 #     }
@@ -365,7 +380,7 @@ print(data)
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
 #             "rb") as f:
 #     bytes = f.read()
-# # print(base64.b64encode(bytes).decode('utf-8'))
+# print(base64.b64encode(bytes).decode('utf-8'))
 # req = {
 #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
 #         "fileName": "humanrights.pptx", 
@@ -396,5 +411,4 @@ print(data)
 # headers = {"Content-Type": "text/plain"}
 # response = requests.post(url, data=data, headers=headers)
 # print(response)
-
 

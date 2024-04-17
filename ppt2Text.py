@@ -68,6 +68,7 @@ def generateDocumentFromPresentation(event, context):
                 tran_id = str(uuid.uuid1())
         
             # Parse the incoming JSON payload
+            priorTranIds = body["priorTranIds"] if 'priorTranIds' in body else ""
             fileContent = body["fileContentBase64"] if 'fileContentBase64' in body else None
             fileName = body["fileName"] if 'fileName' in body else None
             renderingType = body["renderingType"]  if "renderingType" in body else None
@@ -87,6 +88,13 @@ def generateDocumentFromPresentation(event, context):
 
             # check for valid and logged in user
             # CheckLoggedinUser(userid)
+
+            # if priorTranIds is not empty, locate the privious 
+            # successful transactions
+            if priorTranIds != "":
+                priorResponse = Utility.handlePriorTransactionIds(userid, priorTranIds)
+                if priorResponse is not None:
+                    return priorResponse 
             
             if fileName is None or fileContent is None:
                 # Return a 400 Bad Request response if input is missing
@@ -243,9 +251,8 @@ def generateDocumentFromPresentation(event, context):
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
             logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                                   f"Error in generateDocumentFromPresentation Function: {str(e)}"))
-            logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                                   "Stack Trace:", exc_info=True))
+                                                   message=f"Error in generateDocumentFromPresentation Function: {str(e)}"))
+            logging.error("Stack Trace:", exc_info=True)
             
             # Return a 500 server error response
             response = Utility.generateResponse(500, {

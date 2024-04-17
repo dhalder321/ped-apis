@@ -156,8 +156,7 @@ def saveDocumentFile(event, context):
             # Log the error with stack trace to CloudWatch Logs
             logging.error(Utility.formatLogMessage(tran_id, userid, \
                                                    f"Error in saveDocumentFile Function: {str(e)}"))
-            logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                                   "Stack Trace:", exc_info=True))
+            logging.error("Stack Trace:", exc_info=True)
             
             # Return a 500 server error response
             response = Utility.generateResponse(500, {

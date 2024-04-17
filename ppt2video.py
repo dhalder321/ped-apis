@@ -62,6 +62,7 @@ def generateVideoFromPresentation(event, context):
                 tran_id = str(uuid.uuid1())
         
             # Parse the incoming JSON payload
+            priorTranIds = body["priorTranIds"] if 'priorTranIds' in body else ""
             fileContent = body["fileContentBase64"] if 'fileContentBase64' in body else None
             fileName = body["fileName"] if 'fileName' in body else None
             userid = body["userid"]  if "userid" in body else None
@@ -79,6 +80,14 @@ def generateVideoFromPresentation(event, context):
 
             # check for valid and logged in user
             # CheckLoggedinUser(userid)
+
+            # if priorTranIds is not empty, locate the privious 
+            # successful transactions
+            if priorTranIds != "":
+                priorResponse = Utility.handlePriorTransactionIds(userid, priorTranIds)
+                if priorResponse is not None:
+                    return priorResponse 
+                
             if fileName is None or fileContent is None:
                 # Return a 400 Bad Request response if input is missing
                 response = Utility.generateResponse(400, {
@@ -140,6 +149,7 @@ def generateVideoFromPresentation(event, context):
             # STEP 2: invoke the lambda function to get the images created
             # pass the local ppt file path
             retVal = invokeLambdaFunction(Utility.PPT_2_IMAGE_GENERATION_API_URL, pptFilePath)
+            logging.debug("output from ppt2image lambda function:" + str(retVal))
 
             # check for image file path            
             imageFilePath = str(Path(Path(pptFilePath).parent, "images"))
@@ -252,10 +262,9 @@ def generateVideoFromPresentation(event, context):
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
             logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                                   f"Error in generateVideoFromPresentation Function: {str(e)}"))
-            logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                                   "Stack Trace:", exc_info=True))
-            
+                                                   message=f"Error in generateVideoFromPresentation Function: {str(e)}"))
+            logging.error("Stack Trace:", exc_info=True)
+
             # Return a 500 server error response
             response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,

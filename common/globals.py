@@ -139,7 +139,7 @@ class Utility:
   CORS_ALLOWED_ORIGIN = "http://localhost:3000" 
 
   # Windows PPT to Image generation API URL
-  PPT_2_IMAGE_GENERATION_API_URL = ""
+  PPT_2_IMAGE_GENERATION_API_URL = "ped-getimagesfromppt"
 
   ###################################################
 
@@ -170,7 +170,7 @@ class Utility:
   @staticmethod
   def initiate():
     #if Utility.PROMPT_LOCATION != 'dev':
-    Utility.EFS_LOCATION = Utility.Local_Location
+    Utility.EFS_LOCATION = Utility.Efs_Path
 
 
   @staticmethod
@@ -562,7 +562,7 @@ class Utility:
   @staticmethod
   def formatLogMessage(tran_id, userId, message):
 
-    message = "Transaction ID:\"{transactionId}\"- User ID: \"{userID}\"- Message: \"{message}\""
+    msg = "Transaction ID:\"{transactionId}\"- User ID: \"{userID}\"- Message: \"{message}\""
 
     if tran_id is None:
       tran_id = ''
@@ -571,7 +571,7 @@ class Utility:
     if message is None:
       message = ''
 
-    return message.format(transactionId=tran_id, userID = userId, message=message)
+    return msg.format(transactionId=tran_id, userID = userId, message=message)
 
 
 class PED_Module:

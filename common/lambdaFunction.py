@@ -40,8 +40,8 @@ def invokeLambdaFunction(functionName, payload):
         else: # for local, call dotnet directly
             # return None
             # return convertPPT2Images(payload)
-            return ""
+            return None
     except Exception as e:
         logging.error(str(e))
-        return ""
+        return None
 
