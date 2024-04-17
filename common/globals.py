@@ -170,7 +170,7 @@ class Utility:
   @staticmethod
   def initiate():
     #if Utility.PROMPT_LOCATION != 'dev':
-    Utility.EFS_LOCATION = Utility.Efs_Path
+    Utility.EFS_LOCATION = Utility.Local_Location
 
 
   @staticmethod
@@ -493,7 +493,7 @@ class Utility:
                                                       })
   
   @staticmethod
-  def handlePriorTransactionIds(tran_IDs):
+  def handlePriorTransactionIds(userId, tran_IDs):
 
     # look for existing transaction id with completion status
     # if found, return the response
@@ -503,37 +503,61 @@ class Utility:
     trans = tran_IDs.split(",")
 
     for t in trans:
+      if t == "":
+        continue
+
       records = DBManager.getDBItemByIndex(DBTables.UserActivity_Table_Name, \
-                                           "transactionid", "activityid-transactionid-index", \
+                                           "transactionid", "transactionid-index", \
                                             t)
       
+      print(str(records))
+      # if record present, then return response or wait for it to complete
+      # continue with next tran id if 500 error occured
       if records is not None and len(records) == 1:
 
-        # start a loop for 3 times to get the running process to complete 
-        for n in range(3):
-          if "responseStatus" in records[0] and records[0]["responseStatus"] == "success":
-            # return the response
-            if "responseBody" in records[0] and records[0]["responseBody"] != "":
-              return json.loads(records[0]["responseBody"])
-            else: # success but no response found
-              continue
-          else: # record found but not response status or API failed
-            continue
-          
-          # wait for 15 sec
-          time.sleep(15)
+        # match with user id - essential for data privacy issues
+        if 'userid' in records[0] and str(records[0]['userid']) != str(userId):
+          continue
 
-          records = DBManager.getDBItemByIndex(DBTables.UserActivity_Table_Name, \
-                                           "transactionid", "activityid-transactionid-index", \
-                                            t)
-      else:
+        if "responseStatus" in records[0] and records[0]["responseStatus"] == "success":
+          if "responseBody" in records[0] and records[0]["responseBody"] != "":
+                return json.loads(records[0]["responseBody"])
+          else: # no response found
+            continue
+        # API error 
+        elif "responseStatus" in records[0] and records[0]["responseStatus"] != "success":
+          continue
+        
+        # start a loop for 3 times to get the running process to complete 
+        if "responseStatus" not in records[0]:
+
+          for n in range(3):
+            if "responseStatus" in records[0] and records[0]["responseStatus"] == "success":
+
+              # return the response
+              if "responseBody" in records[0] and records[0]["responseBody"] != "":
+                return json.loads(records[0]["responseBody"])
+
+              else: # success but no response found, db updated failed somehow
+                continue
+              
+            # record found but not response status or API failed
+            elif "responseStatus" in records[0] and records[0]["responseStatus"] != "success": 
+              continue
+            
+            # wait for 15 sec
+            time.sleep(15)
+
+            records = DBManager.getDBItemByIndex(DBTables.UserActivity_Table_Name, \
+                                            "transactionid", "transactionid-index", \
+                                              t)
+      else: # no record or more than one record found
         continue
 
 
+    logging.debug(msg="*******No successful transaction found for transaction ids::" + str(tran_IDs))      
 
-
-
-    return
+    return None
 
   @staticmethod
   def formatLogMessage(tran_id, userId, message):

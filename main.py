@@ -110,18 +110,19 @@ from verifyDoc4Transformation import verifyDocument
 # print(json.loads(data['body'])['Response'])
 
 
-# data = generateQuickText({
-#         "httpMethod" : "POST",
-#         "body": """{
-#         "transactionId": "749124h12iur1929121",
-#         "userid": "2",
-#         "role": "astronomy professor",
-#         "topic": "Pluto's role in solar system",
-#         "essaySize": "s",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }"""
-# }, {})
-# print(data)
+data = generateQuickText({
+        "httpMethod" : "POST",
+        "body": """{
+        "transactionId": "728364293kjhfsd98r73",
+        "priorTranIds": "iwehriwe74924234,jhkjh78687124x9x123,",
+        "userid": "123456",
+        "role": "astronomy professor",
+        "topic": "Pluto's role in solar system",
+        "essaySize": "s",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }"""
+}, {})
+print(data)
 # print(json.loads(data['body'])['Response'])
 
 # html = '''<!DOCTYPE html>

@@ -58,6 +58,7 @@ def generateQuickText(event, context):
             # Parse the incoming JSON payload
             system_role = "system" 
             sl_role = body["role"] if 'role' in body else None
+            priorTranIds = body["priorTranIds"] if 'priorTranIds' in body else ""
             sl_question = body["topic"] if 'topic' in body else None
             essaySize = body['essaySize'] if 'essaySize' in body else None
             userid = body["userid"]  if "userid" in body else None
@@ -75,6 +76,13 @@ def generateQuickText(event, context):
 
             # check for valid and logged in user
             # CheckLoggedinUser(userid)
+
+            # if priorTranIds is not empty, locate the privious 
+            # successful transactions
+            if priorTranIds != "":
+                priorResponse = Utility.handlePriorTransactionIds(userid, priorTranIds)
+                if priorResponse is not None:
+                    return priorResponse 
             
             if sl_role is None or sl_question is None:
                 # Return a 400 Bad Request response if input is missing
@@ -151,18 +159,6 @@ def generateQuickText(event, context):
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
-            
-            # generate the sfdt format by invoking lambda function
-            # DOES NOT WORK IF USED LOCALLY
-            # payload = invokeLambdaFunction(Utility.DOC2SFDT_LAMBDA_FUNCTION_NAME,\
-            #                             json.dumps({
-            #                                 "filePath": localFilePath
-            #                             }))
-            
-            # if 'sfdt' in payload and payload['sfdt'] != "":
-            #     sfdt = payload['sfdt']
-            # else:
-            #     sfdt = ""
 
             # delete the local files and folders
             Path(localFilePath).unlink()
@@ -182,7 +178,7 @@ def generateQuickText(event, context):
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
             logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                                   f"Error in generateQuickText Function: {str(e)}"))
+                                                   message=f"Error in generateQuickText Function: {str(e)}"))
             logging.error("Stack Trace:", exc_info=True)
             
             # Return a 500 server error response
