@@ -1,0 +1,132 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Doc2SFDT/1.0.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3",
+          "Syncfusion.DocIO.NET": "25.1.39",
+          "Syncfusion.Licensing": "25.1.39"
+        },
+        "runtime": {
+          "Doc2SFDT.dll": {}
+        }
+      },
+      "Newtonsoft.Json/13.0.3": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.3.27908"
+          }
+        }
+      },
+      "Syncfusion.Compression.NET/25.1.39": {
+        "runtime": {
+          "lib/net8.0/Syncfusion.Compression.NET.dll": {
+            "assemblyVersion": "25.1.39.0",
+            "fileVersion": "25.1.39.0"
+          }
+        }
+      },
+      "Syncfusion.DocIO.NET/25.1.39": {
+        "dependencies": {
+          "Syncfusion.Compression.NET": "25.1.39",
+          "Syncfusion.Licensing": "25.1.39",
+          "Syncfusion.OfficeChart.NET": "25.1.39",
+          "System.Text.Encoding.CodePages": "6.0.0"
+        },
+        "runtime": {
+          "lib/net8.0/Syncfusion.DocIO.NET.dll": {
+            "assemblyVersion": "25.1.39.0",
+            "fileVersion": "25.1.39.0"
+          }
+        }
+      },
+      "Syncfusion.Licensing/25.1.39": {
+        "runtime": {
+          "lib/net8.0/Syncfusion.Licensing.dll": {
+            "assemblyVersion": "25.1.39.0",
+            "fileVersion": "25.1.39.0"
+          }
+        }
+      },
+      "Syncfusion.OfficeChart.NET/25.1.39": {
+        "dependencies": {
+          "Syncfusion.Compression.NET": "25.1.39"
+        },
+        "runtime": {
+          "lib/net8.0/Syncfusion.OfficeChart.NET.dll": {
+            "assemblyVersion": "25.1.39.0",
+            "fileVersion": "25.1.39.0"
+          }
+        }
+      },
+      "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
+      "System.Text.Encoding.CodePages/6.0.0": {
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Doc2SFDT/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Newtonsoft.Json/13.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "path": "newtonsoft.json/13.0.3",
+      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
+    },
+    "Syncfusion.Compression.NET/25.1.39": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-M7OTRbhOv/av6UQn+Xr56MNr/rQOKYhXfKZ/pDJ5YG8fRR+r7lE7zvnOhIKTSAP+Sl93a+vq+Qbt0SqDd/08iA==",
+      "path": "syncfusion.compression.net/25.1.39",
+      "hashPath": "syncfusion.compression.net.25.1.39.nupkg.sha512"
+    },
+    "Syncfusion.DocIO.NET/25.1.39": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jKxFo9AfDhY8ycw199A6oet1+/1A/LvsqRYjur8uXR1fM7VReFaE03CAyw7mMG8NcuLAAqPmlYNibGVsmr+glQ==",
+      "path": "syncfusion.docio.net/25.1.39",
+      "hashPath": "syncfusion.docio.net.25.1.39.nupkg.sha512"
+    },
+    "Syncfusion.Licensing/25.1.39": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-i8krFQ2ElmL27dOwoPwwi8BZBX9hxaVgXVeVQZMvHp/U5k9Pn0UDp7/edzDkLmsIQFZHXx1J56VxR+4T+UKarA==",
+      "path": "syncfusion.licensing/25.1.39",
+      "hashPath": "syncfusion.licensing.25.1.39.nupkg.sha512"
+    },
+    "Syncfusion.OfficeChart.NET/25.1.39": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wK12RfXG+AIE0ljdkisde1Hzofai/H3Qrnxt4eLQKUF2uzWag67xkgsFYe6HDEJzqDNLdnh6YdLW+MNgCBHqUA==",
+      "path": "syncfusion.officechart.net/25.1.39",
+      "hashPath": "syncfusion.officechart.net.25.1.39.nupkg.sha512"
+    },
+    "System.Runtime.CompilerServices.Unsafe/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg==",
+      "path": "system.runtime.compilerservices.unsafe/6.0.0",
+      "hashPath": "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+    },
+    "System.Text.Encoding.CodePages/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ZFCILZuOvtKPauZ/j/swhvw68ZRi9ATCfvGbk1QfydmcXBkIWecWKn/250UH7rahZ5OoDBaiAudJtPvLwzw85A==",
+      "path": "system.text.encoding.codepages/6.0.0",
+      "hashPath": "system.text.encoding.codepages.6.0.0.nupkg.sha512"
+    }
+  }
+}

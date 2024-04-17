@@ -114,6 +114,8 @@ class Utility:
   Efs_Path = '/mnt/ped'
   EFS_LOCATION = Local_Location
 
+  DOC2SFDT_LAMBDA_FUNCTION_NAME = 'arn:aws:lambda:us-east-2:464311745778:function:ped-doc2sfdt'
+
   S3BUCKE_NAME = 'pedbuc'
   S3OBJECT_NAME_FOR_USER_FILES = 'user-files'
   S3OBJECT_NAME_FOR_PROMPT_FILES = 'prompts'

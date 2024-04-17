@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from common.prompts import Prompt
 from common.globals import Utility, PED_Module
+from common.lambdaFunction import invokeLambdaFunction
 from common.essayModel import generateShortEssayWithMultipleInvokes
 
 ############################################################
@@ -156,6 +157,24 @@ def generateDocOfTopicOutline(event, context):
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
+        
+            # generate the sfdt format by invoking lambda function
+            # DOES NOT WORK IF USED LOCALLY
+            # payload = invokeLambdaFunction(Utility.DOC2SFDT_LAMBDA_FUNCTION_NAME,\
+            #                             json.dumps({
+            #                                 "filePath": localFilePath
+            #                             }))
+            
+            # if 'sfdt' in payload and payload['sfdt'] != "":
+            #     sfdt = payload['sfdt']
+            # else:
+            #     sfdt = ""
+            
+            # delete the local files and folders
+            Path(localFilePath).unlink()
+            localFolder = Path(localFileLocation)
+            if localFolder is not None and not any(localFolder.iterdir()):
+                localFolder.rmdir()
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {
@@ -170,8 +189,7 @@ def generateDocOfTopicOutline(event, context):
             # Log the error with stack trace to CloudWatch Logs
             logging.error(Utility.formatLogMessage(tran_id, userid, \
                                                    f"Error in generateTextOfTopicOutline Function: {str(e)}"))
-            logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                                   "Stack Trace:", exc_info=True))
+            logging.error("Stack Trace:", exc_info=True)
             
             # Return a 500 server error response
             response = Utility.generateResponse(500, {

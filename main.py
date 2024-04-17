@@ -1,4 +1,4 @@
-import json
+import json, requests
 import base64
 from common.model import getModelResponse, retryModelForOutputType, getBulkModelResponses
 from common.s3File import uploadFile, downloadFile, deleteFile, readFile
@@ -113,11 +113,11 @@ from verifyDoc4Transformation import verifyDocument
 # data = generateQuickText({
 #         "httpMethod" : "POST",
 #         "body": """{
-#         "transactionId": "KHIHo4y29852c24c24c2",
+#         "transactionId": "749124h12iur1929121",
 #         "userid": "2",
 #         "role": "astronomy professor",
 #         "topic": "Pluto's role in solar system",
-#         "essaySize": "l",
+#         "essaySize": "s",
 #         "requesttimeinUTC": "3/14/2024 21:18"
 #     }"""
 # }, {})
@@ -342,28 +342,29 @@ from verifyDoc4Transformation import verifyDocument
 # print(data)
 
 #  read  file ppt file in base64 format
-with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Globalization.docx", \
-            "rb") as f:
-    bytes = f.read()
-req = {
-        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-        "fileName": "humanrights.docx", 
-        "userid": "334433",
-        "transactionId": "98327402lkjsdf33effe",
-        "requesttimeinUTC": "4/12/2024 21:18"
-    }
-# print (req)
-data = verifyDocument({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Globalization.docx", \
+#             "rb") as f:
+#     bytes = f.read()
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "humanrights.docx", 
+#         "userid": "334433",
+#         "transactionId": "98327402lkjsdf33effe",
+#         "requesttimeinUTC": "4/12/2024 21:18"
+#     }
+# # print (req)
+# data = verifyDocument({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 
 #  read  file ppt file in base64 format
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
 #             "rb") as f:
 #     bytes = f.read()
+# # print(base64.b64encode(bytes).decode('utf-8'))
 # req = {
 #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
 #         "fileName": "humanrights.pptx", 
@@ -387,5 +388,12 @@ print(data)
 # # print(results)
 # for t in results:
 #     print("result:" + t.result())
+
+# NOT WORKING CODE.
+# url = 'https://ky45lpx7ng.execute-api.us-east-2.amazonaws.com/default/ped-doc2sfdt'
+# data = '/mnt/ped/287987/DocumentFile_KHIHo4y29852c24c24c2_04082024193322.docx'
+# headers = {"Content-Type": "text/plain"}
+# response = requests.post(url, data=data, headers=headers)
+# print(response)
 
 

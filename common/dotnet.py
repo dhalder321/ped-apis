@@ -1,15 +1,24 @@
-from pythonnet import load
-load("coreclr")
+# # from pythonnet import load
+# # load("coreclr")
 
-import clr
+# import clr
 
-clr.AddReference("C:\\openai-sdk\\ped-apis\\dlls\\ped-api-raw.dll")
+# from System import String
+
+# # clr.AddReference("C:\\openai-sdk\\ped-apis\\dlls\\ppt2Image\\ped-api-raw.dll")
+# clr.AddReference("C:\\openai-sdk\\ped-apis\\dlls\\doc2SFDT\\Doc2SFDT.dll")
 
 
-from ped_api_raw import PPT2Images
+# from pedapi import Doc2SFDT
 
-def convertPPT2Images(pptFilePath):
+# def convertDoc2SFDT(docFilePath):
 
-    cls = PPT2Images()
+#     cls = Doc2SFDT()
 
-    return cls.convertPPT2Image(pptFilePath)
+#     return cls.ConvertDocument2SFDT(docFilePath)
+
+# def convertPPT2Images(pptFilePath):
+
+#     cls = PPT2Images()
+
+#     return cls.convertPPT2Image(pptFilePath)
