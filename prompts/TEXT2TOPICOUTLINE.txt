@@ -1,10 +1,28 @@
-You need to generate a 1000 word essay on topic: "{{TOPIC}}" focused on the perspective: "{{SUMMARY}}". You need to provide a detailed outline for that essay. Include in the outline the placeholders for important topics such as mathematical formulas, any important theories, recent facts, recent case studies, examples, applications of these theories, formulas. Be as detailed as possible while providing the outline of the essay. Please provide the outline in HTML format and in bulletted list. The entire outline should in same font and font size. DO NOT generate any other text apart from the HTML.
+You need to generate a 1500 word essay on topic: "{{TOPIC}}" focused on the perspective: "{{SUMMARY}}". 
 
-Outline should be in following format:
+You need to provide a detailed outline for that essay. The outline should include multiple headings, and multiple subpoints under each heading. Include in the outline the headings and subpoints for important topics such as mathematical formulas, any important theories, recent facts, recent case studies, examples, applications of these theories, formulas. Be as detailed as possible while providing the outline of the essay. 
 
-Heading of the first topic
- first sub-heading under the first topic
- second sub-heading under the first topic
-Heading of the second topic
- first sub-heading under the second topic
- second sub-heading under the second topic
+Please provide the outline in HTML format. Ensure that the HTML is structured using standard tags for headings, and subpoints, with all text styled uniformly in terms of font type and size. DO NOT use any HTML h tags.
+
+DO NOT generate any other text apart from the HTML.
+
+Details:
+
+Use standard HTML tags for the headings, and subpoint items.
+Ensure all text elements share the same font type and size.
+
+Sample Outline in HTML given below on the topic "Globalization". Generated outline have to be strictly in the following format:
+
+<p><strong>A. Migration of Workforce</strong></p>        
+<p>I. Impact of Globalization on Employment Patterns</p>        
+<p>II. Changes in Skilled and Unskilled Workforce Migration</p>        
+<p>III. Technology's Role in Workforce Mobility</p>
+<p><strong>B. Changes in Urbanization Patterns</strong></p>        
+<p>I. Urban-Rural Divide Post-COVID</p>        
+<p>II. Impact of Globalization on Urban Planning</p>        
+<p>III. Infrastructure Development for Urbanization</p>    
+<p><strong>C. Transformation of Societal Values</strong></p>        
+<p>I. Cultural Exchange and Identity Crisis</p>        
+<p>II. Global Influences on Indian Social Norms</p>        
+<p>III. Role of Education in Value Transformation</p>
+...
