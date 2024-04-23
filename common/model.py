@@ -1,4 +1,4 @@
-import os
+import time
 import json
 import logging
 import traceback
@@ -111,24 +111,28 @@ def retryModelForOutputType(system_role, user_prompt, outputType = "text", llm= 
 async def getModelResponseAsync(session, system_role, user_prompt, llm = "gpt-3.5-turbo", max_tokens=800):
     payload = {
         'model': llm,
+        "max_tokens": max_tokens,
         'messages': [
             {"role": "system", "content": system_role},
             {"role": "user", "content": user_prompt}
         ]
     }
     try:
-        async with session.post(
-            url='https://api.openai.com/v1/chat/completions',
-            headers={"Content-Type": "application/json", "Authorization": f"Bearer {API_KEY}"},
-            json=payload,
-            ssl=ssl.create_default_context(cafile=certifi.where())
-        ) as response:
-            response = await response.json()
-    
-        if "error" in response:
-            print(f"OpenAI request failed in getModelResponseAsync method with error {response['error']}")
-    
-        return response['choices'][0]['message']['content']
+        for n in range(3):
+            async with session.post(
+                url='https://api.openai.com/v1/chat/completions',
+                headers={"Content-Type": "application/json", "Authorization": f"Bearer {API_KEY}"},
+                json=payload,
+                ssl=ssl.create_default_context(cafile=certifi.where())
+            ) as response:
+                response = await response.json()
+
+            # wait for 5 secs for other threads to complete
+            if "error" in response:
+                print(f"OpenAI request failed in getModelResponseAsync method with error {response['error']}")
+                time.sleep(5)
+            else:    
+                return response['choices'][0]['message']['content']
     
     except Exception as e:
         print("error in getModelResponseAsync method: " + str(e))

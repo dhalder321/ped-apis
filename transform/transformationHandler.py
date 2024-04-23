@@ -1,4 +1,4 @@
-import json, uuid
+import json, uuid, copy
 import asyncio
 from common.prompts import Prompt
 from common.model import retryModelForOutputType, getBulkModelResponses
@@ -111,25 +111,25 @@ class transformationHandler:
         if promptType is None:
             return "PROMPT_NOT_GENERATED"
         
-        # print(dic)
+        print(dic)
             
         # construct the prompt from the provided input 
         prompt = Prompt.getPromptAfterProcessing(promptType, dic)
         if prompt is None:
             return "PROMPT_NOT_GENERATED"
-        # print(prompt)
+        print(prompt)
 
 
         #################   ASYNC OPENAI INVOCATION  ########################################
         overridePrompt = Prompt.getPromptAfterProcessing(Utility.TRANSFORM_PPT_OVERRIDE_PROMPT_TYPE, {
             'PROMPT': prompt
         })
-        # print("overridePrompt" + overridePrompt + "\n\n")
+        print("overridePrompt" + overridePrompt + "\n\n")
         # transform the text as per prompt and generate it in json format
         headingsJson = retryModelForOutputType(sl_role, \
                                 overridePrompt, 'json', 'gpt-3.5-turbo', 4096, 2)
 
-        # print ("headingsJson" + headingsJson + "\n\n")
+        print ("headingsJson" + headingsJson + "\n\n")
         # generate individual prompts for each slide.
         # generate a slide id
         slideID = str(uuid.uuid1())
@@ -141,29 +141,52 @@ class transformationHandler:
         
         prompts = []
         slideNumber = 1
-        for h in headings['headings']:
-            prompts.append(Prompt.getPromptAfterProcessing(Utility.TRANSFORM_PPT_SUBHEADING_PROMPT_TYPE,
-                        {
-                            'SLIDE_ID': slideID,
-                            'SLIDE_NUMBER': str(slideNumber),
-                            'SLIDE_HEADING': h,
-                            'PROMPT': prompt,
-                            'SAMPLE_JSON': sample_json,
-                        }))
-            slideNumber += 1
-            # print(prompts[len(prompts) - 1] + "\n\n")
-
-        tasks = asyncio.run(getBulkModelResponses(sl_role, prompts, 'gpt-3.5-turbo', 4096))
-        if tasks is None or len(tasks) != len(headings['headings']):
-            return None
+        iterationNo = 1
+        hList = copy.deepcopy(headings['headings'])
+        # hList = list(hCopy)
+        twoHeadings = []
         results = []
-        for task in tasks:
-            c = task.result()
-            c = c.replace("```json", "").replace("```", "") if c is not None else ""
-            # print (c)
-            results.append(json.loads(c))
-        
-        # print('results:: ' + str(results) + '\n\n')
+        while True:
+            
+            # get only 2 prompts in one iteration
+            startPosition = 2 * (iterationNo - 1)
+            if startPosition >= len(hList):
+                break
+
+            twoHeadings.clear()
+            twoHeadings.append(hList[startPosition])
+
+            if (startPosition + 1) <= (len(hList) - 1):
+                twoHeadings.append(hList[startPosition + 1])
+
+            prompts.clear()
+            for h in twoHeadings:
+                prompts.append(Prompt.getPromptAfterProcessing(Utility.TRANSFORM_PPT_SUBHEADING_PROMPT_TYPE,
+                            {
+                                'SLIDE_ID': slideID,
+                                'SLIDE_NUMBER': str(slideNumber),
+                                'SLIDE_HEADING': h,
+                                'PROMPT': prompt,
+                                'SAMPLE_JSON': sample_json,
+                            }))
+                slideNumber += 1
+                print(prompts[len(prompts) - 1] + "\n\n")
+
+            tasks = None
+            tasks = asyncio.run(getBulkModelResponses(sl_role, prompts, 'gpt-3.5-turbo', 4096))
+            if tasks is None or len(tasks) != len(twoHeadings):
+                print ("length of headings:: " + str(len(twoHeadings)))
+                print ("length of tasks:: " + str(len(tasks)))
+                return None
+            for task in tasks:
+                c = task.result()
+                c = c.replace("```json", "").replace("```", "") if c is not None else ""
+                # print (c)
+                results.append(json.loads(c))
+                print ("iteration no: " + str(iterationNo) + " results::" + str(results))
+            
+            iterationNo += 1
+        print('results:: ' + str(results) + '\n\n')
 
         # consolidate results
         finalJson = {

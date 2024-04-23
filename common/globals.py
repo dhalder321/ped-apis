@@ -170,7 +170,7 @@ class Utility:
   @staticmethod
   def initiate():
     #if Utility.PROMPT_LOCATION != 'dev':
-    Utility.EFS_LOCATION = Utility.Efs_Path
+    Utility.EFS_LOCATION = Utility.Local_Location
 
 
   @staticmethod
