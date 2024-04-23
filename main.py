@@ -110,19 +110,19 @@ from verifyDoc4Transformation import verifyDocument
 # print(json.loads(data['body'])['Response'])
 
 
-# data = generateQuickText({
-#         "httpMethod" : "POST",
-#         "body": """{
-#         "transactionId": "728364293kjhfsd98r73",
-#         "priorTranIds": "iwehriwe74924234,jhkjh78687124x9x123,",
-#         "userid": "123456",
-#         "role": "astronomy professor",
-#         "topic": "Pluto's role in solar system",
-#         "essaySize": "s",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }"""
-# }, {})
-# print(data)
+data = generateQuickText({
+        "httpMethod" : "POST",
+        "body": """{
+        "transactionId": "728364293kjhfsd98r73",
+        "priorTranIds": "",
+        "userid": "123456",
+        "role": "hindi professor",
+        "topic": "Critical Analysis of tagore's work",
+        "essaySize": "l",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }"""
+}, {})
+print(data)
 # print(json.loads(data['body'])['Response'])
 
 # html = '''<!DOCTYPE html>
@@ -313,27 +313,27 @@ from verifyDoc4Transformation import verifyDocument
  
 
 #  read  file ppt file in base64 format
-with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\BritishCrueltyInIndia.docx", \
-            "rb") as f:
-    bytes = f.read()
-# print (base64.b64encode(bytes).decode('utf-8'))
-req = {
-        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-        "fileName": "GenghisKhan.docx", 
-        "userid": "23343",
-        "slideCount": "Default", # 5-10, 10-15
-        "contentType": "Summary", #"Full Text",
-        "format": "Text Only", #"List with headings", #"List with text", #"Text Only",
-        "notes": "y",
-        "transactionId": "98327402lkjsdf33effe",
-        "requesttimeinUTC": "4/12/2024 21:18"
-    }
-# print (req)
-data = generatePPTFromDocument({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\BritishCrueltyInIndia.docx", \
+#             "rb") as f:
+#     bytes = f.read()
+# # print (base64.b64encode(bytes).decode('utf-8'))
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "GenghisKhan.docx", 
+#         "userid": "23343",
+#         "slideCount": "Default", # 5-10, 10-15
+#         "contentType": "Summary", #"Full Text",
+#         "format": "Text Only", #"List with headings", #"List with text", #"Text Only",
+#         "notes": "y",
+#         "transactionId": "98327402lkjsdf33effe",
+#         "requesttimeinUTC": "4/12/2024 21:18"
+#     }
+# # print (req)
+# data = generatePPTFromDocument({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 #  read  file ppt file in base64 format
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Globalization.docx", \

@@ -1,1 +1,5 @@
-ESSAY number: {{ESSAY_NUNBER}} - This is part of the large essay that you are generating. You are given a sub-heading of the essay. Write short 200 words and strictly within 200 words paragraphs on heading "{{SUBHEADING}}" without repeating anything previously generated for the same essay number. Add stories, facts, mathametical formulas, equations, hypothisis, examples, critical analysis and anything that applies. DO NOT generate the sub heading at the begining of the paragraph. You will be generating paragraphs for other sub heading of this essay with same essay number shortly.
+ESSAY number: {{ESSAY_NUNBER}} - This is part of the large essay that you are generating based on the prompt given at the end here. You are given a sub-heading of the essay. Write short 200 words and strictly within 200 words paragraphs on heading "{{SUBHEADING}}" without repeating anything previously generated for the same essay number. Add stories, facts, mathametical formulas, equations, hypothisis, examples, critical analysis and anything that applies. DO NOT generate the sub heading at the begining of the paragraph. You will be generating paragraphs for other sub heading of this essay with same essay number shortly.
+
+
+Here is the original prompt for final essay till the end:
+
