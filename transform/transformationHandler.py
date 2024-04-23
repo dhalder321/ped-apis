@@ -73,6 +73,7 @@ class transformationHandler:
             slideCountText = slideCountText.replace("-", " and ")
         elif "Default" in slideCountText:
             slideCountText = " 10 and 15 "
+        dic['SLIDE_COUNT'] =  slideCountText
 
         if inputValue["contentType"] == "Summary":
             promptType = Utility.TRANSFORM_PPT_SUMMARY_PROMPT_TYPE
@@ -111,25 +112,25 @@ class transformationHandler:
         if promptType is None:
             return "PROMPT_NOT_GENERATED"
         
-        print(dic)
+        # print(dic)
             
         # construct the prompt from the provided input 
         prompt = Prompt.getPromptAfterProcessing(promptType, dic)
         if prompt is None:
             return "PROMPT_NOT_GENERATED"
-        print(prompt)
+        # print(prompt)
 
 
         #################   ASYNC OPENAI INVOCATION  ########################################
         overridePrompt = Prompt.getPromptAfterProcessing(Utility.TRANSFORM_PPT_OVERRIDE_PROMPT_TYPE, {
             'PROMPT': prompt
         })
-        print("overridePrompt" + overridePrompt + "\n\n")
+        # print("overridePrompt" + overridePrompt + "\n\n")
         # transform the text as per prompt and generate it in json format
         headingsJson = retryModelForOutputType(sl_role, \
                                 overridePrompt, 'json', 'gpt-3.5-turbo', 4096, 2)
 
-        print ("headingsJson" + headingsJson + "\n\n")
+        # print ("headingsJson" + headingsJson + "\n\n")
         # generate individual prompts for each slide.
         # generate a slide id
         slideID = str(uuid.uuid1())
@@ -149,6 +150,7 @@ class transformationHandler:
         while True:
             
             # get only 2 prompts in one iteration
+            # to avoid reaching Chatgpt's Token per Minute (TPM) threshold 
             startPosition = 2 * (iterationNo - 1)
             if startPosition >= len(hList):
                 break
@@ -170,23 +172,23 @@ class transformationHandler:
                                 'SAMPLE_JSON': sample_json,
                             }))
                 slideNumber += 1
-                print(prompts[len(prompts) - 1] + "\n\n")
+                # print(prompts[len(prompts) - 1] + "\n\n")
 
             tasks = None
             tasks = asyncio.run(getBulkModelResponses(sl_role, prompts, 'gpt-3.5-turbo', 4096))
             if tasks is None or len(tasks) != len(twoHeadings):
-                print ("length of headings:: " + str(len(twoHeadings)))
-                print ("length of tasks:: " + str(len(tasks)))
+                # print ("length of headings:: " + str(len(twoHeadings)))
+                # print ("length of tasks:: " + str(len(tasks)))
                 return None
             for task in tasks:
                 c = task.result()
                 c = c.replace("```json", "").replace("```", "") if c is not None else ""
                 # print (c)
                 results.append(json.loads(c))
-                print ("iteration no: " + str(iterationNo) + " results::" + str(results))
+                # print ("iteration no: " + str(iterationNo) + " results::" + str(results))
             
             iterationNo += 1
-        print('results:: ' + str(results) + '\n\n')
+        # print('results:: ' + str(results) + '\n\n')
 
         # consolidate results
         finalJson = {
