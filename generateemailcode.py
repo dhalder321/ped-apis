@@ -44,7 +44,7 @@ def generateEmailVerificationCode(event, context):
             return Utility.generateResponse(400, {
                         'errorCode': "999",
                         'error': 'No request object found',
-                    })
+                    }, origin)
         
         body = json.loads(event['body'])
 
@@ -70,7 +70,7 @@ def generateEmailVerificationCode(event, context):
                         'errorCode': "1001",
                         'error': 'Missing email or verification code in the verification code request',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), "-1", response)
                 return response
             
@@ -105,7 +105,7 @@ def generateEmailVerificationCode(event, context):
                                     'transactionId' : tran_id,
                                     'Response': 'success',
                                     'AnswerRetrieved': True
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), "-1", response)
             return response
 
@@ -121,7 +121,7 @@ def generateEmailVerificationCode(event, context):
                                     'errorCode': "5001",
                                     'error': 'Error processing your request',
                                     'AnswerRetrieved': False
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), "-1", response)
             return response
 

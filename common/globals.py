@@ -601,8 +601,7 @@ class Utility:
 
             {{CODE}} is your email verification code.
         
-        Please use above code to verify your email address during signup process. With this verification
-        you will confirm your email address with Pioneer Education Tech corporation. 
+        Please use above code to verify your email address during signup process. With this verification, you will confirm your email address with Pioneer Education Tech corporation. 
 
         If you dont recognize this email, please drop us an email - contact@pioneereducationtech.com 
 

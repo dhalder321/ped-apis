@@ -9,12 +9,14 @@ from email.mime.text import MIMEText
 SCOPES = ['https://mail.google.com/']
 SERVICE_ACCOUNT_FILE = "ped-apis-v2-gmail-720a468dc829.json"
 SERVICE_ACCOUNT_FILEPATH = "/mnt/ped"
+SERVICE_ACCOUNT_LOCALFILEPATH = ""
 
 def sendCompanyEmail(emailSender, emailReceiver, subject, emailBody):
 
   creds = None
   creds = service_account.Credentials.from_service_account_file (
     filename= str(Path(SERVICE_ACCOUNT_FILEPATH, SERVICE_ACCOUNT_FILE)),
+    # filename= str(Path(SERVICE_ACCOUNT_LOCALFILEPATH, SERVICE_ACCOUNT_FILE)),
     scopes = SCOPES,
     # subject = "ped-gmail-serv-acc@ped-apis-v2.iam.gserviceaccount.com"
     subject = emailSender

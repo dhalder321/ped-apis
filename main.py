@@ -202,28 +202,28 @@ from verifyemailcode import verifyEmailVerificationCode
 # }, {})
 # print(data)
 
-# req = {
-        # "email": "debjit.halder.bbsr@gmail.com",
-        # "transactionId": "91849184714o31rij3984",
-        # "requesttimeinUTC": "3/17/2024 21:18"
-#     }
-# data = generateEmailVerificationCode({
-#         "httpMethod": "POST",
-#         "body": json.dumps(req)
-# }, {})
-# print(data)
-
 req = {
         "email": "debjit.halder.bbsr@gmail.com",
-        "emailCode" : "460618",
         "transactionId": "91849184714o31rij3984",
         "requesttimeinUTC": "3/17/2024 21:18"
     }
-data = verifyEmailVerificationCode({
+data = generateEmailVerificationCode({
         "httpMethod": "POST",
         "body": json.dumps(req)
 }, {})
 print(data)
+
+# req = {
+#         "email": "debjit.halder.bbsr@gmail.com",
+#         "emailCode" : "460618",
+#         "transactionId": "91849184714o31rij3984",
+#         "requesttimeinUTC": "3/17/2024 21:18"
+#     }
+# data = verifyEmailVerificationCode({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 
 # req = {
@@ -232,6 +232,7 @@ print(data)
 #         "requesttimeinUTC": "3/14/2024 21:18"
 #     }
 # data = getAccessKey({
+#         "httpMethod": "POST",
 #         "body": json.dumps(req)
 # }, {})
 # print(data)

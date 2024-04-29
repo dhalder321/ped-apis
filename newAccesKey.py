@@ -45,7 +45,7 @@ def getAccessKey(event, context):
             return Utility.generateResponse(400, {
                         'errorCode': "999",
                         'error': 'No request object found',
-                    })
+                    }, origin)
         
         body = json.loads(event['body'])
 
@@ -75,7 +75,7 @@ def getAccessKey(event, context):
                         'errorCode': "1001",
                         'error': 'Missing userid in the access key request',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
@@ -89,7 +89,7 @@ def getAccessKey(event, context):
                         'errorCode': "2001",
                         'error': 'user has not signed up',
                         'AnswerRetrieved': False
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
@@ -101,7 +101,7 @@ def getAccessKey(event, context):
                         'transactionId' : tran_id,
                         'accessKey': userRecord['accessKey'],
                         'AnswerRetrieved': True
-                    })
+                    }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
@@ -115,7 +115,7 @@ def getAccessKey(event, context):
                                     'errorCode': "2002",
                                     'error': 'unique access key cound not be generated',
                                     'AnswerRetrieved': True
-                                })
+                                }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
@@ -135,7 +135,7 @@ def getAccessKey(event, context):
                                     'errorCode': "2003",
                                     'error': 'Error processing your request',
                                     'AnswerRetrieved': True
-                                })
+                                }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
@@ -144,7 +144,7 @@ def getAccessKey(event, context):
                                     'transactionId' : tran_id,
                                     'accessKey': accesskey,
                                     'AnswerRetrieved': True
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)
             return response
 
@@ -160,7 +160,7 @@ def getAccessKey(event, context):
                                     'errorCode': "5001",
                                     'error': 'Error processing your request',
                                     'AnswerRetrieved': False
-                                })
+                                }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)
             return response
 
