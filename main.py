@@ -25,6 +25,8 @@ from quickText import generateQuickText
 from doc2PPT import generatePPTFromDocument
 from doc2quiz import generateQuizFromDocument
 from verifyDoc4Transformation import verifyDocument
+from generateemailcode import generateEmailVerificationCode
+from verifyemailcode import verifyEmailVerificationCode
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -110,19 +112,19 @@ from verifyDoc4Transformation import verifyDocument
 # print(json.loads(data['body'])['Response'])
 
 
-data = generateQuickText({
-        "httpMethod" : "POST",
-        "body": """{
-        "transactionId": "728364293kjhfsd98r73",
-        "priorTranIds": "",
-        "userid": "123456",
-        "role": "hindi professor",
-        "topic": "Critical Analysis of tagore's work",
-        "essaySize": "l",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }"""
-}, {})
-print(data)
+# data = generateQuickText({
+#         "httpMethod" : "POST",
+#         "body": """{
+#         "transactionId": "728364293kjhfsd98r73",
+#         "priorTranIds": "",
+#         "userid": "123456",
+#         "role": "hindi professor",
+#         "topic": "Critical Analysis of tagore's work",
+#         "essaySize": "l",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }"""
+# }, {})
+# print(data)
 # print(json.loads(data['body'])['Response'])
 
 # html = '''<!DOCTYPE html>
@@ -199,6 +201,29 @@ print(data)
 #         "body": json.dumps(req)
 # }, {})
 # print(data)
+
+# req = {
+        # "email": "debjit.halder.bbsr@gmail.com",
+        # "transactionId": "91849184714o31rij3984",
+        # "requesttimeinUTC": "3/17/2024 21:18"
+#     }
+# data = generateEmailVerificationCode({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
+
+req = {
+        "email": "debjit.halder.bbsr@gmail.com",
+        "emailCode" : "460618",
+        "transactionId": "91849184714o31rij3984",
+        "requesttimeinUTC": "3/17/2024 21:18"
+    }
+data = verifyEmailVerificationCode({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)
 
 
 # req = {

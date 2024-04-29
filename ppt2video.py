@@ -1,5 +1,4 @@
 import logging
-import os, requests, shutil
 import json, uuid
 from pathlib import Path 
 from datetime import datetime, timezone
@@ -9,7 +8,6 @@ from transform.inputProcessor import inputProcessor
 from transform.outputGenerator import outputGenerator 
 from common.voiceOver import generateVoiceOverFiles 
 from common.video import generateVideo
-from ppt2image import getImagesFromPPT
 from common.lambdaFunction import invokeLambdaFunction
 
 
@@ -148,7 +146,10 @@ def generateVideoFromPresentation(event, context):
             
             # STEP 2: invoke the lambda function to get the images created
             # pass the local ppt file path
-            retVal = invokeLambdaFunction(Utility.PPT_2_IMAGE_GENERATION_API_URL, pptFilePath)
+            retVal = invokeLambdaFunction(Utility.PPT_2_IMAGE_GENERATION_API_URL, 
+                                            {
+                                                "pptFilePath": pptFilePath,
+                                                })
             logging.debug("output from ppt2image lambda function:" + str(retVal))
 
             # check for image file path            

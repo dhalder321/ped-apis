@@ -130,7 +130,7 @@ class transformationHandler:
         headingsJson = retryModelForOutputType(sl_role, \
                                 overridePrompt, 'json', 'gpt-3.5-turbo', 4096, 2)
 
-        # print ("headingsJson" + headingsJson + "\n\n")
+        print ("headingsJson" + headingsJson + "\n\n")
         # generate individual prompts for each slide.
         # generate a slide id
         slideID = str(uuid.uuid1())

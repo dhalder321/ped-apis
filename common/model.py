@@ -10,7 +10,7 @@ import ssl
 import certifi
 
 #client = OpenAI(os.environ["OPENAI_API_KEY"])
-API_KEY = "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"
+API_KEY = "sk-proj-2v580A6zW3Nt80kwv6AvT3BlbkFJPyD8rCGtI2XVrKtx8JIr"
 client = OpenAI(api_key=API_KEY)
 
 def getModelResponse(system_role, user_prompt, llm = "gpt-3.5-turbo", max_tokens=800):

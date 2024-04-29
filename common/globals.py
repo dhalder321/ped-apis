@@ -1,4 +1,5 @@
 import json, os, time
+from datetime import datetime
 import base64
 import logging
 from pathlib import Path
@@ -9,7 +10,8 @@ from docx import Document
 from pptx import Presentation
 from htmldocx import HtmlToDocx
 from common.s3File import uploadFile 
-
+from common.gmail import sendCompanyEmail 
+from random import randint
 
 class Utility:
   
@@ -114,6 +116,8 @@ class Utility:
   Efs_Path = '/mnt/ped'
   EFS_LOCATION = Local_Location
 
+  PED_EMAIL_SENDER = 'contact@pioneereducationtech.com'
+
   DOC2SFDT_LAMBDA_FUNCTION_NAME = 'arn:aws:lambda:us-east-2:464311745778:function:ped-doc2sfdt'
 
   S3BUCKE_NAME = 'pedbuc'
@@ -152,19 +156,22 @@ class Utility:
   USER_TABLE_NAME="ped-users"
   USERFILES_TABLE_NAME = "ped-userfiles" 
   USERACTIVITY_TABLE_NAME = "ped-useractivity" 
+  TEMPUSER_TABLE_NAME = "ped-temporaryusers" 
 
   #Environment: test
   #Table names:
   TEST_USER_TABLE_NAME="ped-users-test"
   TEST_USERFILES_TABLE_NAME = "ped-userfiles-test" 
   TEST_USERACTIVITY_TABLE_NAME = "ped-useractivity-test"
+  TEST_TEMPUSER_TABLE_NAME = "ped-temporaryusers-test" 
+
 
   #Environment: prod
   #Table names:
   PROD_USER_TABLE_NAME="ped-users-prod"
   PROD_USERFILES_TABLE_NAME = "ped-userfiles-prod" 
   PROD_USERACTIVITY_TABLE_NAME = "ped-useractivity-prod"
-
+  PROD_TEMPUSER_TABLE_NAME = "ped-temporaryusers-prod" 
   ######################################################
 
   @staticmethod
@@ -346,10 +353,12 @@ class Utility:
     # """
     
     if layoutType == 'TEXT':
-      prs = Presentation(Utility.BASIC_PPT_TEXT_TEMPLATE_FILE_NAME)
+      basePPTFilePath = str(Path(Utility.EFS_LOCATION, Utility.BASIC_PPT_TEXT_TEMPLATE_FILE_NAME))
+      prs = Presentation(basePPTFilePath)
       print("Text template picked up.")
     else:
-      prs = Presentation(Utility.BASIC_PPT_LIST_TEMPLATE_FILE_NAME)
+      basePPTFilePath = str(Path(Utility.EFS_LOCATION, Utility.BASIC_PPT_LIST_TEMPLATE_FILE_NAME))
+      prs = Presentation(basePPTFilePath)
       print("List template picked up.")
       
     if title is not None:
@@ -386,7 +395,7 @@ class Utility:
           body_shape = shapes.placeholders[1]
           tf = body_shape.text_frame
           tf.text = content
-          tf.fit_text(font_family="Arial", max_size=18)
+          # tf.fit_text(font_family="Arial", max_size=18)
 
       slideNo += 1
 
@@ -454,9 +463,9 @@ class Utility:
     tran_id_ = body['transactionId'] if 'transactionId' in body else None
     requestTime = body['requesttimeinUTC'] if 'requesttimeinUTC' in body else ""
     
-    if user_id is None and methodName not in ("signupNewUser", "loginUserWithemail", "loginUserWithAccessKey"):
+    if user_id is None and methodName not in ("signupNewUser", "loginUserWithemail", "loginUserWithAccessKey", "generateEmailVerificationCode", "verifyEmailVerificationCode"):
       raise ValueError("userid not sent in request")
-    elif user_id is None and methodName in ("signupNewUser", "loginUserWithemail", "loginUserWithAccessKey"):
+    elif user_id is None and methodName in ("signupNewUser", "loginUserWithemail", "loginUserWithAccessKey", "generateEmailVerificationCode", "verifyEmailVerificationCode"):
       user_id = "-1"
     else:
       if not user_id.isdigit():
@@ -573,6 +582,92 @@ class Utility:
 
     return msg.format(transactionId=tran_id, userID = userId, message=message)
 
+  @staticmethod
+  def randomNumberOfNDigits(n):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return randint(range_start, range_end)
+  
+  @staticmethod
+  def sendEmailConfirmationCodeInEmail(receiverEmail):
+
+    # generate a 6 digit code that expires in 10 mins
+    randomNumber = Utility.randomNumberOfNDigits(6)
+
+    subject = str(randomNumber) + " Pioneer Education - your email verification code"
+
+    body = '''
+      Hello there!
+
+            {{CODE}} is your email verification code.
+        
+        Please use above code to verify your email address during signup process. With this verification
+        you will confirm your email address with Pioneer Education Tech corporation. 
+
+        If you dont recognize this email, please drop us an email - contact@pioneereducationtech.com 
+
+    '''
+    body = body.replace('{{CODE}}', str(randomNumber))
+
+    if sendCompanyEmail(Utility.PED_EMAIL_SENDER, receiverEmail, subject, body) is None:
+      return False
+    
+    # log the email verification code
+    retVal = DBManager.addRecordInDynamoTableWithAutoIncrKey(DBTables.TempUser_Table_Name, "staticIndexColumn",
+                                                    "tempUserId", "staticIndexColumn-tempUserId-index",
+                                                    {
+                                                      "staticIndexColumn": 99,
+                                                      "email": receiverEmail,
+                                                      "emailVerificationCode": str(randomNumber),
+                                                      "verificationCodeGenerationTime" : datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                                      "verified": "n",
+                                                    })
+    if retVal is not None:
+      return True
+    else:
+      return False
+
+
+  @staticmethod
+  def verifyEmailVerificationCode(receiverEmail, emailCode):
+
+    # get the code from DB
+    record = DBManager.getDBItemByIndex(DBTables.TempUser_Table_Name, "email",
+                                            "email-index", receiverEmail)
+    if record is None:
+      return None
+    
+    # if there are multiple records, then match with any code
+
+    for r in record:
+    
+      tempUserId = r['tempUserId'] if 'tempUserId' in r else None
+      code = r['emailVerificationCode'] if 'emailVerificationCode' in r else None
+      codeGenerationTime = r['verificationCodeGenerationTime'] if 'verificationCodeGenerationTime' in r else None
+      isCodeVerified = r['verified'] if 'verified' in r else None
+
+      if code is None or codeGenerationTime is None:
+        continue
+
+      dtCodeGenerated = datetime.strptime(codeGenerationTime, "%Y-%m-%d %H:%M:%S")
+      minutesDiff = (datetime.now() - dtCodeGenerated).total_seconds() / 60
+
+      # it's a match if it is generated within last 15 mins
+      if code is not None and code == emailCode and \
+          isCodeVerified != 'y' and minutesDiff <= 15:
+        
+        # update the table 
+        DBManager.updateRecordInDynamoTable(DBTables.TempUser_Table_Name, "tempUserId",
+                                                str(tempUserId), "email", receiverEmail, 
+                                                {
+                                                  "verified": "y",
+                                                })
+
+        return True
+      else:
+        continue
+    
+    return False
 
 class PED_Module:
    
@@ -585,6 +680,7 @@ class DBTables:
    User_Table_Name = ""
    UserFiles_Table_Name = ""
    UserActivity_Table_Name = ""
+   TempUser_Table_Name = ""
 
    @staticmethod
    def GetTableName():
@@ -593,12 +689,16 @@ class DBTables:
         DBTables.User_Table_Name = Utility.USER_TABLE_NAME   
         DBTables.UserFiles_Table_Name = Utility.USERFILES_TABLE_NAME   
         DBTables.UserActivity_Table_Name = Utility.USERACTIVITY_TABLE_NAME
+        DBTables.TempUser_Table_Name = Utility.TEMPUSER_TABLE_NAME
       else:
         if Utility.ENVIRONMENT == "test":
           DBTables.User_Table_Name = Utility.TEST_USER_TABLE_NAME   
           DBTables.UserFiles_Table_Name = Utility.TEST_USERFILES_TABLE_NAME   
           DBTables.UserActivity_Table_Name = Utility.TEST_USERACTIVITY_TABLE_NAME
+          DBTables.TempUser_Table_Name = Utility.TEST_TEMPUSER_TABLE_NAME
+
         else:
           DBTables.User_Table_Name = Utility.PROD_USER_TABLE_NAME   
           DBTables.UserFiles_Table_Name = Utility.PROD_USERFILES_TABLE_NAME   
           DBTables.UserActivity_Table_Name = Utility.PROD_USERACTIVITY_TABLE_NAME 
+          DBTables.TempUser_Table_Name = Utility.PROD_TEMPUSER_TABLE_NAME

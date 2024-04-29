@@ -27,9 +27,15 @@ def getAccessKey(event, context):
     print(event)
     logging.debug(event)
 
+    # process OPTIONS method
+    origin = None
+    if 'headers' in event and event['headers'] != '' and \
+          'origin' in event['headers'] and event['headers']['origin'] != '':
+        origin = event['headers']['origin']
+
     #process OPTIONS method
     if 'httpMethod' in event and event['httpMethod'] == 'OPTIONS':
-      return Utility.generateResponse(200, {})
+      return Utility.generateResponse(200, {}, origin)
 
 
     #process only POST methods
