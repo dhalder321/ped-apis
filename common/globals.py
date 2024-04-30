@@ -466,9 +466,9 @@ class Utility:
     tran_id_ = body['transactionId'] if 'transactionId' in body else None
     requestTime = body['requesttimeinUTC'] if 'requesttimeinUTC' in body else ""
     
-    if user_id is None and methodName not in ("signupNewUser", "loginUserWithemail", "loginUserWithAccessKey", "generateEmailVerificationCode", "verifyEmailVerificationCode"):
+    if user_id is None and methodName not in ("signupNewUser", "loginUserWithemail", "loginUserWithAccessKey", "generateEmailVerificationCode", "verifyEmailVerificationCode", "getQuizJSON"):
       raise ValueError("userid not sent in request")
-    elif user_id is None and methodName in ("signupNewUser", "loginUserWithemail", "loginUserWithAccessKey", "generateEmailVerificationCode", "verifyEmailVerificationCode"):
+    elif user_id is None and methodName in ("signupNewUser", "loginUserWithemail", "loginUserWithAccessKey", "generateEmailVerificationCode", "verifyEmailVerificationCode", "getQuizJSON"):
       user_id = "-1"
     else:
       if not user_id.isdigit():

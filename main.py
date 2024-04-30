@@ -455,15 +455,14 @@ from getQuizJSON import getQuizJSON
 # print(data)
 
 
-# req = {
-#         "quizFileId": "307", 
-#         "userid": "90009",
-#         "transactionId": "sjdfh72394238c23",
-#         "requesttimeinUTC": "4/29/2024 21:18"
-#     }
-# # print (req)
-# data = getQuizJSON({
-#         "httpMethod": "POST",
-#         "body": json.dumps(req)
-# }, {})
-# print(data)
+req = {
+        "quizFileId": "307", 
+        "transactionId": "sjdfh72394238c23",
+        "requesttimeinUTC": "4/29/2024 21:18"
+    }
+# print (req)
+data = getQuizJSON({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)

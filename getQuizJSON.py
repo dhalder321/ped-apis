@@ -72,16 +72,19 @@ def getQuizJSON(event, context):
             quizFileId = body["quizFileId"] if 'quizFileId' in body else None
             userid = body["userid"]  if "userid" in body else None
 
-            if userid is None:
-                # Return a 400 Bad Request response if input is missing
-                response = Utility.generateResponse(400, {
-                        'transactionId' : tran_id,
-                        'errorCode': "1001",
-                        'error': 'Missing userid or quiz file id in the request',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), "-1", response)
-                return response
+            ##############################################################################
+            ##  NO USER ID NEEDED FOR THIS API
+            ##############################################################################
+            # if userid is None:
+            #     # Return a 400 Bad Request response if input is missing
+            #     response = Utility.generateResponse(400, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "1001",
+            #             'error': 'Missing userid or quiz file id in the request',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), "-1", response)
+            #     return response
 
             # check for valid and logged in user
             # CheckLoggedinUser(userid)
@@ -130,17 +133,6 @@ def getQuizJSON(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # check for matching userid - No way we can send one user's file to another
-            if 'userid' not in record or str(record['userid']) != userid:
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2005",
-                        'error': 'user id does not match',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
-
             # get the quiz JSON from s3 qzx file
             s3fileLocation = Utility.S3OBJECT_NAME_FOR_USER_FILES + "/" + Utility.ENVIRONMENT
             s3filePath = s3fileLocation + record['s3Filelocation']
