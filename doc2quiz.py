@@ -257,7 +257,7 @@ def generateQuizFromDocument(event, context):
             response = Utility.generateResponse(200, {
                                     'transactionId' : tran_id,
                                     'Response': trmsJSON,
-                                    'QuizFile': presignedURL,
+                                    'QuizFileId': retVal,
                                     'AnswerRetrieved': True
                                 }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)

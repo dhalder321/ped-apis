@@ -1,0 +1,67 @@
+You need to convert the quiz given at the end of this prompt in JSON format to exactly in simple HTML format. This HTML format will be displayed on the web browser. A sample of this conversion has been shown below. 
+
+Here is a sample Quiz in JSON format.
+{
+    "quizName": "Tagore's Timeless Legacy",
+    "questions": [
+        {
+            "questionNumber": "1",
+            "questionType": "Multiple Choice",
+            "questionText": "What type of education did Rabindranath Tagore emphasize?",
+            "answerOptions": [
+                {"optionNumber": "1", "optionText": "Rote memorization-based learning"},
+                {"optionNumber": "2", "optionText": "Holistic development and creativity"},
+                {"optionNumber": "3", "optionText": "Standardized testing"},
+                {"optionNumber": "4", "optionText": "Exclusive focus on academics"},
+                {"optionNumber": "5", "optionText": "Technical skills training"}
+            ],
+            "correctAnswerNumber": "2",
+            "answerHintText": "Tagore's approach focused on nurturing individuality and fostering creativity in students.",
+            "answerExplanation": "Tagore believed in the holistic development of individuals, emphasizing creativity and critical thinking over rote memorization, as mentioned in the text."
+        },
+        {
+            "questionNumber": "2",
+            "questionType": "Multiple Choice",
+            "questionText": "Which of the following themes are prevalent in Rabindranath Tagore's literary works?",
+            "answerOptions": [
+                {"optionNumber": "1", "optionText": "Science fiction and technology"},
+                {"optionNumber": "2", "optionText": "Gender equality and social justice"},
+                {"optionNumber": "3", "optionText": "Historical wars and conquests"},
+                {"optionNumber": "4", "optionText": "Love, nature, and human experience"},
+                {"optionNumber": "5", "optionText": "Political ideology and governance"}
+            ],
+            "correctAnswerNumber": "4",
+            "answerHintText": "Tagore's writing is known for its lyrical beauty and reflections on nature, love, and the human experience.",
+            "answerExplanation": "In his literary works, Tagore often explored themes of love, nature, and the human experience, as highlighted in the text."
+        },
+    ]
+}
+
+When above quiz JSON is converted into HTML format and shown on a web browser, it will look like following:
+
+
+Quiz: Tagore's Timeless Legacy
+
+[Multiple choise question]
+Q1. What type of education did Rabindranath Tagore emphasize?
+
+1. Rote memorization-based learning
+2. Holistic development and creativity
+3. Standardized testing
+4. Exclusive focus on academics
+5. Technical skills training
+
+[Multiple choise question]
+Q2. Which of the following themes are prevalent in Rabindranath Tagore's literary works?
+
+1. Science fiction and technology
+2. Gender equality and social justice
+3. Historical wars and conquests
+4. Love, nature, and human experience
+5. Political ideology and governance
+
+******End of Quiz*********
+
+Generate only the complete HTML with HTML, doctype, p, h, strong and b tags. The HTML have to render to the above format in the web browser strictly maintaining the gaps between lines and paragraphs and the new lines. Each question and answer option have to be on a new line. DO NOT Strictly generate any answer of any questions in the HTML. DO NOT STRICTLY generate any other text apart from the HTML.
+
+Here is the QUIZ JSON for your convertion:

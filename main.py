@@ -27,6 +27,8 @@ from doc2quiz import generateQuizFromDocument
 from verifyDoc4Transformation import verifyDocument
 from generateemailcode import generateEmailVerificationCode
 from verifyemailcode import verifyEmailVerificationCode
+from getQuizInDoc import getQuizInDocument
+from getQuizJSON import getQuizJSON
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -202,16 +204,16 @@ from verifyemailcode import verifyEmailVerificationCode
 # }, {})
 # print(data)
 
-req = {
-        "email": "debjit.halder.bbsr@gmail.com",
-        "transactionId": "91849184714o31rij3984",
-        "requesttimeinUTC": "3/17/2024 21:18"
-    }
-data = generateEmailVerificationCode({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# req = {
+#         "email": "debjit.halder.bbsr@gmail.com",
+#         "transactionId": "91849184714o31rij3984",
+#         "requesttimeinUTC": "3/17/2024 21:18"
+#     }
+# data = generateEmailVerificationCode({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 # req = {
 #         "email": "debjit.halder.bbsr@gmail.com",
@@ -368,13 +370,13 @@ print(data)
 # req = {
 #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
 #         "fileName": "humanrights.docx", 
-#         "userid": "334433",
-        # "qestionCount": "5-10", # 5-10, 10-15, if Default selected, set q count :- 15-20
-        # "difficulty": "simple", # "simple", "medium", "hard", "very hard"
-        # "questionType": "multiple choice, true/false, fill the blanks, ranking/ordering",
-        # "explanation": "y",
-#         "transactionId": "98327402lkjsdf33effe",
-#         "requesttimeinUTC": "4/12/2024 21:18"
+#         "userid": "90009",
+#         "qestionCount": "15-20", # 5-10, 10-15, if Default selected, set q count :- 15-20
+#         "difficulty": "simple", # "simple", "medium", "hard", "very hard"
+#         "questionType": "multiple choice, true/false, fill the blanks, ranking/ordering",
+#         "explanation": "y",
+#         "transactionId": "324723904780324314",
+#         "requesttimeinUTC": "4/29/2024 21:18"
 #     }
 # # print (req)
 # data = generateQuizFromDocument({
@@ -438,3 +440,30 @@ print(data)
 # response = requests.post(url, data=data, headers=headers)
 # print(response)
 
+
+# req = {
+#         "quizFileId": "307", 
+#         "userid": "90009",
+#         "transactionId": "sjdfh72394238c23",
+#         "requesttimeinUTC": "4/29/2024 21:18"
+#     }
+# # print (req)
+# data = getQuizInDocument({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
+
+
+# req = {
+#         "quizFileId": "307", 
+#         "userid": "90009",
+#         "transactionId": "sjdfh72394238c23",
+#         "requesttimeinUTC": "4/29/2024 21:18"
+#     }
+# # print (req)
+# data = getQuizJSON({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
