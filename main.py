@@ -228,16 +228,16 @@ from getQuizJSON import getQuizJSON
 # print(data)
 
 
-# req = {
-#         "userid": "1",
-#         "transactionId": "23984ewfkj928r23",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }
-# data = getAccessKey({
-#         "httpMethod": "POST",
-#         "body": json.dumps(req)
-# }, {})
-# print(data)
+req = {
+        "userid": "21",
+        "transactionId": "23984ewfkj928r23",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }
+data = getAccessKey({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)
 
 
 # req = {
@@ -455,14 +455,14 @@ from getQuizJSON import getQuizJSON
 # print(data)
 
 
-req = {
-        "quizFileId": "307", 
-        "transactionId": "sjdfh72394238c23",
-        "requesttimeinUTC": "4/29/2024 21:18"
-    }
-# print (req)
-data = getQuizJSON({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# req = {
+#         "quizFileId": "307", 
+#         "transactionId": "sjdfh72394238c23",
+#         "requesttimeinUTC": "4/29/2024 21:18"
+#     }
+# # print (req)
+# data = getQuizJSON({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)

@@ -1,4 +1,6 @@
 import json, os, time
+import random
+import string
 from datetime import datetime
 import base64
 import logging
@@ -671,6 +673,33 @@ class Utility:
     
     return False
 
+  @staticmethod
+  def generateAccessCode():
+    characters = string.ascii_uppercase + string.digits
+    for i in range(1, 10, 1):
+        unique_code = ''.join(random.choices(characters, k=6))
+        # Check if the generated code is unique 
+        if Utility.isCodeUnique(unique_code):
+            return unique_code
+    
+    return None
+    
+  @staticmethod
+  def isCodeUnique(code):
+      
+      try:
+          record = DBManager.getDBItemByIndex(DBTables.User_Table_Name, "accessKey", "accessKey-index", code)
+
+          if record is not None and len(record) > 0 \
+              and 'accessKey' in record and record['accessKey'] == code :
+              return False
+          return True
+      except Exception as e:
+          # Log the error with stack trace to CloudWatch Logs
+          logging.error(f"Error in isCodeUnique Function: {str(e)}")
+          logging.error("Stack Trace:", exc_info=True)
+          return False
+        
 class PED_Module:
    
    @staticmethod

@@ -1,6 +1,4 @@
-import random
-import string
-import os
+
 import logging
 import json, uuid
 from common.globals import Utility, DBTables
@@ -106,7 +104,7 @@ def getAccessKey(event, context):
                 return response
 
             # create a new and unique access key
-            accesskey = generateAccessCode()
+            accesskey = Utility.generateAccessCode()
 
             if accesskey is None:
                 # Return a 500 server error response
@@ -165,28 +163,5 @@ def getAccessKey(event, context):
             return response
 
 
-    def generateAccessCode():
-        characters = string.ascii_uppercase + string.digits
-        for i in range(1, 10, 1):
-            unique_code = ''.join(random.choices(characters, k=6))
-            # Check if the generated code is unique 
-            if isCodeUnique(unique_code):
-                return unique_code
-        
-        return None
 
-    def isCodeUnique(code):
-        
-        try:
-            record = DBManager.getDBItemByIndex(DBTables.User_Table_Name, "accessKey", "accessKey-index", code)
-
-            if record is not None and len(record) > 0 \
-                and 'accessKey' in record and record['accessKey'] == code :
-                return False
-            return True
-        except Exception as e:
-            # Log the error with stack trace to CloudWatch Logs
-            logging.error(f"Error in isCodeUnique Function: {str(e)}")
-            logging.error("Stack Trace:", exc_info=True)
-            return False
     
