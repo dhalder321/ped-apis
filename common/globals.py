@@ -119,6 +119,8 @@ class Utility:
   # Local_Location = 'C:\openai-sdk\ped-apis'
   Local_Location = './'
   Efs_Path = '/mnt/ped'
+  Ephemeral_Path = '/tmp'
+  root_path_type = 'eph'  #efs, eph, local
   EFS_LOCATION = Local_Location
 
   PED_EMAIL_SENDER = 'contact@pioneereducationtech.com'
@@ -182,7 +184,13 @@ class Utility:
   @staticmethod
   def initiate():
     #if Utility.PROMPT_LOCATION != 'dev':
-    Utility.EFS_LOCATION = Utility.Efs_Path
+    if Utility.root_path_type == 'local':
+      Utility.EFS_LOCATION = Utility.Local_Location
+    elif Utility.root_path_type == 'efs':
+      Utility.EFS_LOCATION = Utility.Efs_Path
+    else:
+      Utility.EFS_LOCATION = Utility.Ephemeral_Path
+      
 
 
   @staticmethod
