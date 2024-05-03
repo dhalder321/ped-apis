@@ -4,18 +4,32 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from email.mime.text import MIMEText
+from common.s3File import copyS3toEphemeral
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://mail.google.com/']
 SERVICE_ACCOUNT_FILE = "ped-apis-v2-gmail-720a468dc829.json"
 SERVICE_ACCOUNT_FILEPATH = "/mnt/ped"
+SERVICE_ACCOUNT_EPHEMERALPATH = "/tmp"
 SERVICE_ACCOUNT_LOCALFILEPATH = ""
+S3_BUCKET_NAME = 'pedbuc'
+
 
 def sendCompanyEmail(emailSender, emailReceiver, subject, emailBody):
 
+
+  # copy account file from s3 to ephemeral storage (/tmp)
+  if not Path(SERVICE_ACCOUNT_EPHEMERALPATH, SERVICE_ACCOUNT_FILE).exists():
+    result = copyS3toEphemeral(S3_BUCKET_NAME, SERVICE_ACCOUNT_FILE, SERVICE_ACCOUNT_EPHEMERALPATH, 
+                              SERVICE_ACCOUNT_FILE)
+    if result == False:
+      return None
+    else:
+      print("Service account file successfully copied from s3 to ephemeral storage")
+
   creds = None
   creds = service_account.Credentials.from_service_account_file (
-    filename= str(Path(SERVICE_ACCOUNT_FILEPATH, SERVICE_ACCOUNT_FILE)),
+    filename= str(Path(SERVICE_ACCOUNT_EPHEMERALPATH, SERVICE_ACCOUNT_FILE)),
     # filename= str(Path(SERVICE_ACCOUNT_LOCALFILEPATH, SERVICE_ACCOUNT_FILE)),
     scopes = SCOPES,
     # subject = "ped-gmail-serv-acc@ped-apis-v2.iam.gserviceaccount.com"

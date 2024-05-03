@@ -3,6 +3,7 @@ import logging
 import boto3
 from botocore.exceptions import ClientError
 import os
+from pathlib import Path
 
 def downloadFile(targetFileName, bucket, object_name=None):
 
@@ -36,6 +37,25 @@ def readFile(bucket, object_name=None):
     except ClientError as e:
         logging.error(e)
         return None
+
+def readFileBinary(bucket, object_name=None):
+
+    if bucket is None:
+        raise ClientError("Error in readFile method: bucket name not provided.")
+
+    try:
+        s3 = boto3.client('s3')
+        # Read an object from the bucket
+        response = s3.get_object(Bucket=bucket, Key=object_name)
+        if 'Body' in response:
+            object_content = response['Body'].read()
+            return object_content
+        
+        return None
+    except ClientError as e:
+        logging.error(e)
+        return None
+
 
 def uploadFile(file_name, bucket, object_name=None):
     
@@ -94,3 +114,38 @@ def createS3PresignedURL(bucket_name, object_name, expiration=3600):
 
     # The response contains the presigned URL
     return response
+
+def copyS3toEphemeral(s3BucketName, object_name, targetPath, targetFileName):
+
+    try:
+        fileContent = readFile(s3BucketName, object_name)
+        filePath = str(Path(targetPath, targetFileName))
+
+        with open(filePath, 'w') as f:
+            f.write(fileContent)
+        return True
+    
+    except Exception as e:
+        logging.error("Error copying file from s3 to target location: " + str(e))
+        return False
+    
+
+def copyBinaryS3toEphemeral(s3BucketName, object_name, targetPath, targetFileName):
+
+    try:
+        fileContent = readFileBinary(s3BucketName, object_name)
+        filePath = str(Path(targetPath, targetFileName))
+
+        with open(filePath, 'wb') as f:
+            f.write(fileContent)
+        return True
+    
+    except Exception as e:
+        logging.error("Error copying file from s3 to target location: " + str(e))
+        return False
+    
+
+if __name__ == "__main__":
+  copyBinaryS3toEphemeral("pedbuc", "BasicPresentationTextTemplate.pptx", "c:\\openai-sdk", 
+                          "BasicPresentationTextTemplate.pptx")
+  

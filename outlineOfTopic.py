@@ -42,7 +42,11 @@ def generateOutlineFromTopic(event, context):
         try:
 
             #initiate DB modules
-            PED_Module.initiate()
+            env = ''
+            stageVariables = event['stageVariables'] if 'stageVariables' in event else None
+            if stageVariables is not None:
+                env = stageVariables['Environment'] if 'Environment' in stageVariables else ""
+            PED_Module.initiate(env)
 
             #log user and transaction details
             activityId = Utility.logUserActivity(body, "generateOutlineFromTopic")
@@ -85,7 +89,7 @@ def generateOutlineFromTopic(event, context):
                 
 
             # Construct the chat messages with roles
-            prompt = Prompt.getPrompt(Utility.TEXT2TOPICOUTLINE_PROMPT_TYPE, Utility.PROMPT_LOCATION)
+            prompt = Prompt.getPrompt(Utility.TEXT2TOPICOUTLINE_PROMPT_TYPE)
             if prompt is None:
                 # Return a 400 Bad Request response if input is missing
                 response = Utility.generateResponse(400, {

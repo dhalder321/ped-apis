@@ -13,7 +13,7 @@ from signup import signupNewUser
 from newAccesKey import getAccessKey
 from login import loginUserWithemail
 from loginWithAccessKey import loginUserWithAccessKey
-from ppt2text import generateDocumentFromPresentation
+from ppt2Text import generateDocumentFromPresentation
 from doc2Text import generateDocumentFromDocument
 from text2text import generateDocumentFromText
 from pdf2text import generateDocumentFromPDF
@@ -68,19 +68,19 @@ from getQuizJSON import getQuizJSON
 # print(data)
 # print(json.loads(json.loads(data['body'])['Response']))
 
-# req = {
-#         "httpMethod" : "POST",
-#         "body": """{
-#         "transactionId": "6932874iruwe764283",
-#         "userid": "2",
-#         "role": "Economics professor",
-#         "topic": "recent research on globalization",
-#         "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape.",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }"""}
-# data = generateOutlineFromTopic(req, {})
-# print(data)
-# print(json.loads(data['body'])['Response'])
+req = {
+        "httpMethod" : "POST",
+        "body": """{
+        "transactionId": "6932874iruwe764283",
+        "userid": "2",
+        "role": "Economics professor",
+        "topic": "recent research on globalization",
+        "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape.",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }"""}
+data = generateOutlineFromTopic(req, {})
+print(data)
+print(json.loads(data['body'])['Response'])
 
 
 # data = generateTextOfTopicOutline({
@@ -228,16 +228,16 @@ from getQuizJSON import getQuizJSON
 # print(data)
 
 
-req = {
-        "userid": "21",
-        "transactionId": "23984ewfkj928r23",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
-data = getAccessKey({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# req = {
+#         "userid": "21",
+#         "transactionId": "23984ewfkj928r23",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# data = getAccessKey({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 
 # req = {
@@ -345,23 +345,23 @@ print(data)
 #             "rb") as f:
 #     bytes = f.read()
 # # print (base64.b64encode(bytes).decode('utf-8'))
-# req = {
-#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-#         "fileName": "GenghisKhan.docx", 
-#         "userid": "23343",
-#         "slideCount": "Default", # 5-10, 10-15
-#         "contentType": "Summary", #"Full Text",
-#         "format": "Text Only", #"List with headings", #"List with text", #"Text Only",
-#         "notes": "y",
-#         "transactionId": "98327402lkjsdf33effe",
-#         "requesttimeinUTC": "4/12/2024 21:18"
-#     }
-# # print (req)
-# data = generatePPTFromDocument({
-#         "httpMethod": "POST",
-#         "body": json.dumps(req)
-# }, {})
-# print(data)
+# # req = {
+# #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+# #         "fileName": "GenghisKhan.docx", 
+# #         "userid": "23343",
+# #         "slideCount": "Default", # 5-10, 10-15
+# #         "contentType": "Summary", #"Full Text",
+# #         "format": "Text Only", #"List with headings", #"List with text", #"Text Only",
+# #         "notes": "y",
+# #         "transactionId": "98327402lkjsdf33effe",
+# #         "requesttimeinUTC": "4/12/2024 21:18"
+# #     }
+# # # print (req)
+# # data = generatePPTFromDocument({
+# #         "httpMethod": "POST",
+# #         "body": json.dumps(req)
+# # }, {})
+# # print(data)
 
 #  read  file ppt file in base64 format
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Globalization.docx", \

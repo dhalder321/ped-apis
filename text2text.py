@@ -55,7 +55,11 @@ def generateDocumentFromText(event, context):
         try:
 
             #initiate DB modules
-            PED_Module.initiate()
+            env = ''
+            stageVariables = event['stageVariables'] if 'stageVariables' in event else None
+            if stageVariables is not None:
+                env = stageVariables['Environment'] if 'Environment' in stageVariables else ""
+            PED_Module.initiate(env)
 
             #log user and transaction details
             activityId = Utility.logUserActivity(body, "generateDocumentFromDocument")

@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from docx import Document
 from pptx import Presentation
 from htmldocx import HtmlToDocx
-from common.s3File import uploadFile 
+from common.s3File import uploadFile, copyBinaryS3toEphemeral
 from common.gmail import sendCompanyEmail 
 from random import randint
 
@@ -182,8 +182,17 @@ class Utility:
   ######################################################
 
   @staticmethod
-  def initiate():
+  def initiate(env):
+    
     #if Utility.PROMPT_LOCATION != 'dev':
+
+    if env == 'test':
+      Utility.ENVIRONMENT = 'test'
+    elif env == 'prod':
+      Utility.ENVIRONMENT = 'prod'
+    else:
+      Utility.ENVIRONMENT = 'dev'
+
     if Utility.root_path_type == 'local':
       Utility.EFS_LOCATION = Utility.Local_Location
     elif Utility.root_path_type == 'efs':
@@ -191,8 +200,6 @@ class Utility:
     else:
       Utility.EFS_LOCATION = Utility.Ephemeral_Path
       
-
-
   @staticmethod
   def generateResponse(responseCode, bodyJson, origin=None, headers=None):
       
@@ -366,10 +373,26 @@ class Utility:
     # """
     
     if layoutType == 'TEXT':
+      if not Path(Utility.EFS_LOCATION, Utility.BASIC_PPT_TEXT_TEMPLATE_FILE_NAME).exists():
+        result = copyBinaryS3toEphemeral(Utility.S3BUCKE_NAME, Utility.BASIC_PPT_TEXT_TEMPLATE_FILE_NAME, 
+                                      Utility.EFS_LOCATION, Utility.BASIC_PPT_TEXT_TEMPLATE_FILE_NAME)
+        if result == False:
+          return None
+        else:
+          print("Base PPT template has been successfully copied to ephemeral storage")
+
       basePPTFilePath = str(Path(Utility.EFS_LOCATION, Utility.BASIC_PPT_TEXT_TEMPLATE_FILE_NAME))
       prs = Presentation(basePPTFilePath)
       print("Text template picked up.")
     else:
+      if not Path(Utility.EFS_LOCATION, Utility.BASIC_PPT_LIST_TEMPLATE_FILE_NAME).exists():
+        result = copyBinaryS3toEphemeral(Utility.S3BUCKE_NAME, Utility.BASIC_PPT_LIST_TEMPLATE_FILE_NAME, 
+                                      Utility.EFS_LOCATION, Utility.BASIC_PPT_LIST_TEMPLATE_FILE_NAME)
+        if result == False:
+          return None
+        else:
+          print("Base PPT template has been successfully copied to ephemeral storage")
+
       basePPTFilePath = str(Path(Utility.EFS_LOCATION, Utility.BASIC_PPT_LIST_TEMPLATE_FILE_NAME))
       prs = Presentation(basePPTFilePath)
       print("List template picked up.")
@@ -711,9 +734,9 @@ class Utility:
 class PED_Module:
    
    @staticmethod
-   def initiate():
+   def initiate(env):
+      Utility.initiate(env)
       DBTables.GetTableName()
-      Utility.initiate()
 
 class DBTables:
    User_Table_Name = ""

@@ -53,7 +53,7 @@ class Prompt:
         return prompt
 
     @staticmethod
-    def getPromptAfterProcessing(promptType, dic, promp_location='local', env=None):
+    def getPromptAfterProcessing(promptType, dic, promp_location='s3', env=None):
 
         prompt = Prompt.getPrompt(promptType, promp_location, env)
 
