@@ -29,6 +29,8 @@ from generateemailcode import generateEmailVerificationCode
 from verifyemailcode import verifyEmailVerificationCode
 from getQuizInDoc import getQuizInDocument
 from getQuizJSON import getQuizJSON
+from common.rag  import pedRAG
+from common.file import extract_text_with_headings
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -68,19 +70,19 @@ from getQuizJSON import getQuizJSON
 # print(data)
 # print(json.loads(json.loads(data['body'])['Response']))
 
-req = {
-        "httpMethod" : "POST",
-        "body": """{
-        "transactionId": "6932874iruwe764283",
-        "userid": "2",
-        "role": "Economics professor",
-        "topic": "recent research on globalization",
-        "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape.",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }"""}
-data = generateOutlineFromTopic(req, {})
-print(data)
-print(json.loads(data['body'])['Response'])
+# req = {
+#         "httpMethod" : "POST",
+#         "body": """{
+#         "transactionId": "6932874iruwe764283",
+#         "userid": "2",
+#         "role": "Economics professor",
+#         "topic": "recent research on globalization",
+#         "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape.",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }"""}
+# data = generateOutlineFromTopic(req, {})
+# print(data)
+# print(json.loads(data['body'])['Response'])
 
 
 # data = generateTextOfTopicOutline({
@@ -289,14 +291,35 @@ print(json.loads(data['body'])['Response'])
 # print(data)
 
 # read  file ppt file in base64 format
-# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\The Modi Phenomenon and the Re making of India.pdf", \
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\docs\\CorruptionInIndia.docx", \
 #             "rb") as f:
 #     bytes = f.read()
 # #print(base64.b64encode(bytes).decode('utf-8'))
 # req = {
 #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
 #         "fileName": "humanrights.pdf", 
-#         "renderingType": "Critical analysis instruction",
+#         "renderingType": "Critical analysis",
+#         "instruction": "generate it for first year college students.",
+#         "userid": "12289",
+#         "transactionId": "8736423hk2j3483",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# # print (req)
+# data = generateDocumentFromDocument({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
+
+# read  file ppt file in base64 format
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\docs\\US Economic report.pdf",
+#             "rb") as f:
+#     bytes = f.read()
+# #print(base64.b64encode(bytes).decode('utf-8'))
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "humanrights.pdf", 
+#         "renderingType": "Critical analysis",
 #         "instruction": "generate it for first year college students.",
 #         "userid": "12289",
 #         "transactionId": "8736423hk2j3483",
@@ -466,3 +489,28 @@ print(json.loads(data['body'])['Response'])
 #         "body": json.dumps(req)
 # }, {})
 # print(data)
+
+rag = pedRAG(maxTokens=4095)
+col = rag.createVectorCollection("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\docs")
+while (True):
+
+        print("Ask a question(q for quit)")
+        prompt = input("Enter your query here: ")
+
+        if prompt == 'q':
+                rag.__del__()
+                break
+        if prompt:
+                answer = rag.executePrompt("generate the response even if context is not provided", prompt)
+                # print(answer)
+
+
+# Example usage
+# pdf_path = 'G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\docs\\US Economic report.pdf'
+# extracted_content = extract_text_with_headings(pdf_path)
+# if isinstance(extracted_content, dict):
+#     for heading, paragraph in extracted_content.items():
+#         print(f"Heading: {heading}")
+#         print(paragraph + "\n---\n")
+# else:
+#     print(extracted_content)

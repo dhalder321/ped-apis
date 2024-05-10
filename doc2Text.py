@@ -118,7 +118,7 @@ def generateDocumentFromDocument(event, context):
                             "userid": userid,
                             "tran_id": tran_id
                             }
-            retVal = inputProcessor.processInput("docContentBase64", \
+            retVal = inputProcessor.storeInput("docContentBase64", \
                                                         **inputValues)
             
             # get the text from ppt file
@@ -144,17 +144,17 @@ def generateDocumentFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # check for minimum length of the text- min 400 chars
-            if len(retVal) < 400:
+            # # check for minimum length of the text- min 400 chars
+            # if len(retVal) < 400:
                 
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2003",
-                        'error': 'text is too short for any transformation',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2003",
+            #             'error': 'text is too short for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
 
             # transform the input text 
             newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
@@ -164,7 +164,7 @@ def generateDocumentFromDocument(event, context):
                 # "renderingType": renderingType,
                 "instruction": newInst
             }
-            trmsText = transformationHandler.transformText(retVal, renderingType, **inputs)
+            trmsText = transformationHandler.transformTextwithContext(retVal, renderingType, **inputs)
 
             if trmsText is None:
                 response = Utility.generateResponse(500, {

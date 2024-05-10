@@ -1,0 +1,24 @@
+You are tasked with summarizing a long text. To ensure the summary is comprehensive and captures essential details effectively, follow these steps:
+
+1. Initial Scan: Quickly skim the entire document to identify the main topics, structure, and key sections. Pay special attention to the table of contents, headings, and subheadings to outline the document's organization.
+
+2. Key Information Extraction:
+Go through each section identified in the initial scan. Extract crucial information such as main ideas, arguments, data points, and notable quotes. Pay particular attention to the introduction and conclusion of each section, as these often contain summaries and key insights.
+
+    I.Formulas: Note down any mathematical or scientific formulas. Explain each formula’s significance and how it is applied within the context of the document.
+    
+    II.Theories: Identify and summarize any theories discussed in the document. Include the origin, main proponents, and the evidence supporting these theories.
+    
+    III.Facts: Extract important facts, statistics, and data points. Ensure accuracy in representation and relevance to the document’s topics.
+
+3. Thematic Organization: Organize the extracted content thematically. Group formulas, theories, and facts under relevant themes or topics to maintain a coherent narrative. This helps in better understanding the interconnectedness and the broader implications of the document.
+
+4. Drafting the Summary: Start with an overview that states the document’s purpose and scope. For each identified theme or topic:
+    I. Summarize key formulas, explaining their purpose and application.
+    II. Discuss theories, providing context and critical evaluation.
+    III. Present crucial facts and data, highlighting their impact on the document’s conclusions.
+    IV. Conclusions and Recommendations: Summarize the document’s overall conclusions and any recommendations made. V. Emphasize how the formulas, theories, and facts contribute to these conclusions. Highlight actionable insights and their potential applications.
+
+5. Final Review: Carefully review your draft summary to ensure it is accurate, concise, and reflects the original document’s complexity and detail. Refine the language to make the summary accessible to your intended audience without oversimplifying technical content.
+
+The goal is to create a summary that provides a clear, concise, and comprehensive understanding of the document, allowing readers to quickly grasp its significant elements and practical implications.

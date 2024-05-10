@@ -8,6 +8,7 @@ from docx import Document
 from htmldocx import HtmlToDocx
 from common.prompts import Prompt
 from common.model import retryModelForOutputType
+from common.file import deleteDirWithFiles
 from common.globals import Utility, PED_Module, DBTables
 from transform.inputProcessor import inputProcessor 
 from transform.transformationHandler import transformationHandler 
@@ -118,7 +119,7 @@ def generateDocumentFromPDF(event, context):
                             "userid": userid,
                             "tran_id": tran_id
                             }
-            retVal = inputProcessor.processInput("pdfContentBase64", \
+            retVal = inputProcessor.storeInput("pdfContentBase64", \
                                                         **inputValues)
             
             # get the text from ppt file
@@ -148,17 +149,17 @@ def generateDocumentFromPDF(event, context):
             print(retVal)
             print("*********************************************")
             
-            # check for minimum length of the text- min 400 chars
-            if len(retVal) < 400:
+            # # check for minimum length of the text- min 400 chars
+            # if len(retVal) < 400:
                 
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2003",
-                        'error': 'text is too short for any transformation',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2003",
+            #             'error': 'text is too short for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
 
             # transform the input text 
             newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
@@ -168,7 +169,7 @@ def generateDocumentFromPDF(event, context):
                 # "renderingType": renderingType,
                 "instruction": newInst
             }
-            trmsText = transformationHandler.transformText(retVal, renderingType, **inputs)
+            trmsText, outputType = transformationHandler.transformTextwithContext(retVal, renderingType, **inputs)
 
             if trmsText is None:
                 response = Utility.generateResponse(500, {
@@ -199,7 +200,7 @@ def generateDocumentFromPDF(event, context):
             localDocFileName = "Document_"+ tran_id + "_" + datetimestring + ".docx"
             localDocFilePath = str(Path(localDocFileLocation, localDocFileName))
             s3filePath = "/" + userid + "/" + localDocFileName
-            presignedURL = outputGenerator.storeOutputFile(trmsText, "DOC", "HTML", \
+            presignedURL = outputGenerator.storeOutputFile(trmsText, "DOC", outputType, \
                                                            localDocFileName, localDocFileLocation,\
                                                             s3filePath)
             
@@ -242,10 +243,8 @@ def generateDocumentFromPDF(event, context):
                 return response
             
             # delete the local files and folders
-            Path(localDocFilePath).unlink()
-            localFolder = Path(localDocFileLocation)
-            if localFolder is not None and not any(localFolder.iterdir()):
-                localFolder.rmdir()
+            deleteDirWithFiles(localDocFileLocation)
+            
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {
