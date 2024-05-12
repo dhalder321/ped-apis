@@ -68,19 +68,19 @@ from getQuizJSON import getQuizJSON
 # print(data)
 # print(json.loads(json.loads(data['body'])['Response']))
 
-req = {
-        "httpMethod" : "POST",
-        "body": """{
-        "transactionId": "6932874iruwe764283",
-        "userid": "2",
-        "role": "Economics professor",
-        "topic": "recent research on globalization",
-        "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape.",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }"""}
-data = generateOutlineFromTopic(req, {})
-print(data)
-print(json.loads(data['body'])['Response'])
+# req = {
+#         "httpMethod" : "POST",
+#         "body": """{
+#         "transactionId": "6932874iruwe764283",
+#         "userid": "2",
+#         "role": "Economics professor",
+#         "topic": "recent research on globalization",
+#         "summary": "From a political perspective, studies show that globalization has challenged traditional notions of state sovereignty and governance, leading to both increased cooperation and conflict among nations in efforts to navigate the complex global economic landscape.",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }"""}
+# data = generateOutlineFromTopic(req, {})
+# print(data)
+# print(json.loads(data['body'])['Response'])
 
 
 # data = generateTextOfTopicOutline({

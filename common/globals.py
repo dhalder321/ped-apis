@@ -147,7 +147,7 @@ class Utility:
   PROMPT_LOCATION = "local"  # or s3
 
   # CORS allowed origin
-  CORS_ALLOWED_ORIGIN = "http://localhost:3000" 
+  CORS_ALLOWED_ORIGIN = "https://www.pedtech.app" 
 
   # Windows PPT to Image generation API URL
   PPT_2_IMAGE_GENERATION_API_URL = "ped-getimagesfromppt"
@@ -192,6 +192,8 @@ class Utility:
       Utility.ENVIRONMENT = 'prod'
     else:
       Utility.ENVIRONMENT = 'dev'
+
+    print("Environment::" + Utility.ENVIRONMENT)
 
     if Utility.root_path_type == 'local':
       Utility.EFS_LOCATION = Utility.Local_Location

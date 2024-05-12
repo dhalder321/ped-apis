@@ -26,6 +26,11 @@ def signupNewUser(event, context):
           'origin' in event['headers'] and event['headers']['origin'] != '':
         origin = event['headers']['origin']
 
+    if origin is not None:
+        print("origin::" + origin)
+    else:
+        print("origin is none")
+        
     #process OPTIONS method
     if 'httpMethod' in event and event['httpMethod'] == 'OPTIONS':
       return Utility.generateResponse(200, {}, origin)
@@ -49,6 +54,7 @@ def signupNewUser(event, context):
             stageVariables = event['stageVariables'] if 'stageVariables' in event else None
             if stageVariables is not None:
                 env = stageVariables['Environment'] if 'Environment' in stageVariables else ""
+            
             PED_Module.initiate(env)
 
             #log user and transaction details
