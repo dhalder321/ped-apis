@@ -32,7 +32,7 @@ from transform.outputGenerator import outputGenerator
 ############################################################
 def generateDocumentFromPDF(event, context):
 
-    #print(event)
+    print(event)
     logging.debug(event)
 
     origin = None
@@ -55,6 +55,7 @@ def generateDocumentFromPDF(event, context):
                     }, origin)
         
         body = json.loads(event['body'])
+        fileLocationToDelete = ''
         try:
 
             #initiate DB modules
@@ -144,6 +145,8 @@ def generateDocumentFromPDF(event, context):
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
+            
+            fileLocationToDelete = str(Path(retVal).parent)
             
             print("text:::*********************************************")
             print(retVal)
@@ -242,10 +245,6 @@ def generateDocumentFromPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # delete the local files and folders
-            deleteDirWithFiles(localDocFileLocation)
-            
-
             # Return the response in JSON format
             response = Utility.generateResponse(200, {
                                     'transactionId' : tran_id,
@@ -270,3 +269,5 @@ def generateDocumentFromPDF(event, context):
                                 }, origin)
             Utility.updateUserActivity(str(activityId), -1, response)
             return response
+        finally:
+            deleteDirWithFiles(fileLocationToDelete)

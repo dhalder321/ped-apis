@@ -164,6 +164,8 @@ def getFolderSize(folder_path):
 
 
 def deleteDirWithFiles(folderPath):
+    if folderPath is None or folderPath == '':
+        return
     dir_path = Path(folderPath)
     if dir_path.exists():
         # Delete the directory and its contents

@@ -4,6 +4,7 @@ import json, uuid
 from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
+from common.file import deleteDirWithFiles
 from docx import Document
 from htmldocx import HtmlToDocx
 from common.prompts import Prompt
@@ -54,6 +55,7 @@ def generateDocumentFromDocument(event, context):
                     }, origin)
         
         body = json.loads(event['body'])
+        foldertoDelete = ''
         try:
 
             #initiate DB modules
@@ -65,7 +67,7 @@ def generateDocumentFromDocument(event, context):
 
             #log user and transaction details
             bodyCurtailed = Utility.curtailObject4Logging(body, "fileContentBase64")
-            activityId = Utility.logUserActivity(body, "generateDocumentFromDocument")
+            activityId = Utility.logUserActivity(bodyCurtailed, "generateDocumentFromDocument")
 
             tran_id = body["transactionId"]
             if tran_id is None:
@@ -144,6 +146,11 @@ def generateDocumentFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
+            foldertoDelete = str(Path(retVal).parent)
+            print("text:::*********************************************")
+            print(retVal)
+            print("*********************************************")
+            
             # # check for minimum length of the text- min 400 chars
             # if len(retVal) < 400:
                 
@@ -164,7 +171,7 @@ def generateDocumentFromDocument(event, context):
                 # "renderingType": renderingType,
                 "instruction": newInst
             }
-            trmsText = transformationHandler.transformTextwithContext(retVal, renderingType, **inputs)
+            trmsText, outputType = transformationHandler.transformTextwithContext(retVal, renderingType, **inputs)
 
             if trmsText is None:
                 response = Utility.generateResponse(500, {
@@ -195,7 +202,7 @@ def generateDocumentFromDocument(event, context):
             localDocFileName = "Document_"+ tran_id + "_" + datetimestring + ".docx"
             localDocFilePath = str(Path(localDocFileLocation, localDocFileName))
             s3filePath = "/" + userid + "/" + localDocFileName
-            presignedURL = outputGenerator.storeOutputFile(trmsText, "DOC", "HTML", \
+            presignedURL = outputGenerator.storeOutputFile(trmsText, "DOC", outputType, \
                                                            localDocFileName, localDocFileLocation,\
                                                             s3filePath)
             
@@ -237,12 +244,6 @@ def generateDocumentFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # delete the local files and folders
-            Path(localDocFilePath).unlink()
-            localFolder = Path(localDocFileLocation)
-            if localFolder is not None and not any(localFolder.iterdir()):
-                localFolder.rmdir()
-
             # Return the response in JSON format
             response = Utility.generateResponse(200, {
                                     'transactionId' : tran_id,
@@ -267,3 +268,6 @@ def generateDocumentFromDocument(event, context):
                                 }, origin)
             Utility.updateUserActivity(str(activityId), -1, response)
             return response
+        
+        finally:
+            deleteDirWithFiles(foldertoDelete)

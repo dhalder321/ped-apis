@@ -23,6 +23,7 @@ from ppt2image import getImagesFromPPT
 from docOfTopicOutline import generateDocOfTopicOutline
 from quickText import generateQuickText
 from doc2PPT import generatePPTFromDocument
+from pdf2ppt import generatePPTFromPDF
 from doc2quiz import generateQuizFromDocument
 from verifyDoc4Transformation import verifyDocument
 from generateemailcode import generateEmailVerificationCode
@@ -291,25 +292,25 @@ from common.file import extract_text_with_headings
 # print(data)
 
 # read  file ppt file in base64 format
-# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\docs\\CorruptionInIndia.docx", \
-#             "rb") as f:
-#     bytes = f.read()
-# #print(base64.b64encode(bytes).decode('utf-8'))
-# req = {
-#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-#         "fileName": "humanrights.pdf", 
-#         "renderingType": "Critical analysis",
-#         "instruction": "generate it for first year college students.",
-#         "userid": "12289",
-#         "transactionId": "8736423hk2j3483",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }
-# # print (req)
-# data = generateDocumentFromDocument({
-#         "httpMethod": "POST",
-#         "body": json.dumps(req)
-# }, {})
-# print(data)
+with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Pluto-6k.docx", \
+            "rb") as f:
+    bytes = f.read()
+#print(base64.b64encode(bytes).decode('utf-8'))
+req = {
+        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+        "fileName": "humanrights.pdf", 
+        "renderingType": "Executive Summary", #'Critical analysis', "Executive Summary", "Online References", "Subjestive Questions and Answers", "Objestive Questions and Answers", "Improvement Suggestions"
+        "instruction": "generate it for first year college students.",
+        "userid": "12289",
+        "transactionId": "8736423hk2j3483",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }
+# print (req)
+data = generateDocumentFromDocument({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)
 
 # read  file ppt file in base64 format
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\docs\\US Economic report.pdf",
@@ -368,34 +369,56 @@ from common.file import extract_text_with_headings
 #             "rb") as f:
 #     bytes = f.read()
 # # print (base64.b64encode(bytes).decode('utf-8'))
-# # req = {
-# #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-# #         "fileName": "GenghisKhan.docx", 
-# #         "userid": "23343",
-# #         "slideCount": "Default", # 5-10, 10-15
-# #         "contentType": "Summary", #"Full Text",
-# #         "format": "Text Only", #"List with headings", #"List with text", #"Text Only",
-# #         "notes": "y",
-# #         "transactionId": "98327402lkjsdf33effe",
-# #         "requesttimeinUTC": "4/12/2024 21:18"
-# #     }
-# # # print (req)
-# # data = generatePPTFromDocument({
-# #         "httpMethod": "POST",
-# #         "body": json.dumps(req)
-# # }, {})
-# # print(data)
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "GenghisKhan.docx", 
+#         "userid": "34453",
+#         "slideCount": "5-10", # 5-10, 10-15
+#         "contentType": "Full Text", #"Summary", #"Full Text",
+#         "format": "List with text", #"List with headings", #"List with text", #"Text Only",
+#         "notes": "y",
+#         "transactionId": "98327402lkjsdf33effe",
+#         "requesttimeinUTC": "4/12/2024 21:18"
+#     }
+# # print (req)
+# data = generatePPTFromDocument({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
+
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\IndianPoetry.pdf", \
+#             "rb") as f:
+#     bytes = f.read()
+# # print (base64.b64encode(bytes).decode('utf-8'))
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "modi.pdf", 
+#         "userid": "34453",
+#         "slideCount": "15-20", # 5-10, 10-15
+#         "contentType": "Full Text", #"Summary", #"Full Text",
+#         "format": "List with text", #"List with headings", #"List with text", #"Text Only",
+#         "notes": "y",
+#         "transactionId": "dkfwiefh82745923",
+#         "requesttimeinUTC": "5/12/2024 21:18"
+#     }
+# # print (req)
+# data = generatePPTFromPDF({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 #  read  file ppt file in base64 format
-# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Globalization.docx", \
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\GenghisKhan-6k.docx", \
 #             "rb") as f:
 #     bytes = f.read()
 # req = {
 #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-#         "fileName": "humanrights.docx", 
+#         "fileName": "GenghisKhan-6k.docx", 
 #         "userid": "90009",
 #         "qestionCount": "15-20", # 5-10, 10-15, if Default selected, set q count :- 15-20
-#         "difficulty": "simple", # "simple", "medium", "hard", "very hard"
+#         "difficulty": "hard", # "simple", "medium", "hard", "very hard"
 #         "questionType": "multiple choice, true/false, fill the blanks, ranking/ordering",
 #         "explanation": "y",
 #         "transactionId": "324723904780324314",
@@ -490,19 +513,19 @@ from common.file import extract_text_with_headings
 # }, {})
 # print(data)
 
-rag = pedRAG(maxTokens=4095)
-col = rag.createVectorCollection("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\docs")
-while (True):
+# rag = pedRAG(maxTokens=4095)
+# col = rag.createVectorCollection("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\docs")
+# while (True):
 
-        print("Ask a question(q for quit)")
-        prompt = input("Enter your query here: ")
+#         print("Ask a question(q for quit)")
+#         prompt = input("Enter your query here: ")
 
-        if prompt == 'q':
-                rag.__del__()
-                break
-        if prompt:
-                answer = rag.executePrompt("generate the response even if context is not provided", prompt)
-                # print(answer)
+#         if prompt == 'q':
+#                 rag.__del__()
+#                 break
+#         if prompt:
+#                 answer = rag.executePrompt("generate the response even if context is not provided", prompt)
+#                 # print(answer)
 
 
 # Example usage
