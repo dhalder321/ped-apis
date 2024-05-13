@@ -113,34 +113,67 @@ class transformationHandler:
                 return "PROMPT_NOT_GENERATED"
             # print(prompt)
 
-            # transform the text as per prompt and generate it in html format
-            ragModel = pedRAG(maxTokens=4096, maxModelRetry=2, temperature=0.6, top_p=1.0, 
-                              presence_penalty=0.0, frequency_penalty=0.0)
-            colName = ragModel.createVectorCollection(Path(filePath).parent)
-            if colName is None:
-                return None
+            
             
             retVal = ''
             outputType = ''
+            ragModel = None
             if transformType == 'Critical analysis':
+                # transform the text as per prompt and generate it in text format
+                ragModel = pedRAG(maxTokens=4096, maxModelRetry=2, temperature=0.8, top_p=1.0, 
+                                presence_penalty=0.0, frequency_penalty=0.0)
+                colName = ragModel.createVectorCollection(Path(filePath).parent)
+                if colName is None:
+                    return None
                 retVal = transformModel.generateCriticalAnalysis(ragModel, sl_role, prompt, maxRetry=2)
                 outputType = 'TEXT'
             elif transformType == "Executive Summary":
+                # transform the text as per prompt and generate it in text format
+                ragModel = pedRAG(maxTokens=4096, maxModelRetry=2, temperature=0.6, top_p=1.0, 
+                                presence_penalty=0.0, frequency_penalty=0.0)
+                colName = ragModel.createVectorCollection(Path(filePath).parent)
+                if colName is None:
+                    return None
                 retVal = transformModel.generateExecutiveSummary(ragModel, sl_role, prompt, maxRetry=2)
                 outputType = 'TEXT'
             elif transformType == "Online References":
+                # transform the text as per prompt and generate it in text format
+                ragModel = pedRAG(maxTokens=4096, maxModelRetry=2, temperature=0.5, top_p=1.0, 
+                                presence_penalty=0.0, frequency_penalty=0.0)
+                colName = ragModel.createVectorCollection(Path(filePath).parent)
+                if colName is None:
+                    return None
                 retVal = transformModel.generateOnlineReferences(ragModel, sl_role, prompt, maxRetry=2)
                 outputType = 'TEXT'
             elif transformType == "Subjestive Questions and Answers":
+                # transform the text as per prompt and generate it in text format
+                ragModel = pedRAG(maxTokens=4096, maxModelRetry=2, temperature=0.6, top_p=1.0, 
+                                presence_penalty=0.0, frequency_penalty=0.0)
+                colName = ragModel.createVectorCollection(Path(filePath).parent)
+                if colName is None:
+                    return None
                 retVal = transformModel.generateQuestionsNAnswers(ragModel, sl_role, prompt, maxRetry=2)
                 outputType = 'TEXT'
             elif transformType == "Objestive Questions and Answers":
+                # transform the text as per prompt and generate it in text format
+                ragModel = pedRAG(maxTokens=4096, maxModelRetry=2, temperature=0.6, top_p=1.0, 
+                                presence_penalty=0.0, frequency_penalty=0.0)
+                colName = ragModel.createVectorCollection(Path(filePath).parent)
+                if colName is None:
+                    return None
                 retVal = transformModel.generateObjectiveQuestionsNAnswers(ragModel, sl_role, prompt, maxRetry=2)
                 outputType = 'TEXT'
             elif transformType == "Improvement Suggestions":
-                retVal = transformModel.generateImprovementSuggestions(ragModel, sl_role, prompt, maxRetry=2)
+                
+                retVal = transformModel.generateImprovementSuggestions(None, str(Path(filePath).parent), sl_role, prompt, maxRetry=2)
                 outputType = 'TEXT'
             else:
+                # transform the text as per prompt and generate it in text format
+                ragModel = pedRAG(maxTokens=4096, maxModelRetry=2, temperature=0.5, top_p=1.0, 
+                                presence_penalty=0.0, frequency_penalty=0.0)
+                colName = ragModel.createVectorCollection(Path(filePath).parent)
+                if colName is None:
+                    return None
                 retVal = retryRAGModelForOutputType(ragModel, sl_role, prompt, maxRetry=2)
                 outputType = 'HTML'
 

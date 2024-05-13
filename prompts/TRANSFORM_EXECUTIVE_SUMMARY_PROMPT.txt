@@ -4,17 +4,17 @@
     {
       "step": 1,
       "description": "Generate an exhaustive list of key points from the document.",
-      "prompt": "Review the document and generate an exhaustive list of key points (minimum 10 key points) presented in the document. Format your response in JSON with following format with each key point clearly enumerated. Each key point should be in full english sentences. DO NOT Strictly generate any other text apart from the JSON.  { 'key points':[ 'FinaiCRS serves as nonpartisan shared staff to congressional committees and Members of Congress',  'Information in a CRS Report should not be relied upon for purposes other than public understanding',   ...  ]     }",
+      "prompt": "Review the document and generate an exhaustive list of key points (minimum 10 key points) presented in the document. Format your response in JSON with following format with each key point clearly enumerated. Each key point should be in full english sentences. DO NOT Strictly generate any other text apart from the JSON.  { 'key points':[ 'FinaiCRS serves as nonpartisan shared staff to congressional committees and Members of Congress',  'Information in a CRS Report should not be relied upon for purposes other than public understanding',   ...  ]     }"
     },
     {
       "step": 2,
       "description": "Elaborate on each key point with detailed sentences.",
-      "prompt": "Given the following key point extracted from the document: '{{KEY_POINT}}'. For this key point, provide a detailed explanation from the document with at least 20 full English sentences. Format your response in plain text, with the section labeled by the corresponding key point.",
+      "prompt": "Given the following key point extracted from the document: '{{KEY_POINT}}'. For this key point, provide a detailed explanation from the document in full English sentences. Format your response in plain text, with the section labeled by the corresponding key point."
     },
     {
       "step": 3,
       "description": "Generate a concise summary of all key points.",
-      "prompt": "Based on the list of key points provided: KEY points-----------------------------{{KEY_POINTS}}      ----------------------------   Generate a concise summary consisting of minimum 10 sentences that encapsulate all the above key points and their significance. Format your response in plain text.",
+      "prompt": "Based on the list of key points provided: KEY points-----------------------------{{KEY_POINTS}}      ----------------------------   Generate a concise summary consisting of minimum 10 sentences that encapsulate all the above key points and their significance. Format your response in plain text."
     }
   ]
 }

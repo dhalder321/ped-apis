@@ -292,16 +292,17 @@ from common.file import extract_text_with_headings
 # print(data)
 
 # read  file ppt file in base64 format
-with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Pluto-6k.docx", \
+
+with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\BritishPoliticsIndia.docx", \
             "rb") as f:
     bytes = f.read()
 #print(base64.b64encode(bytes).decode('utf-8'))
 req = {
         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
         "fileName": "humanrights.pdf", 
-        "renderingType": "Executive Summary", #'Critical analysis', "Executive Summary", "Online References", "Subjestive Questions and Answers", "Objestive Questions and Answers", "Improvement Suggestions"
+        "renderingType": "Objestive Questions and Answers", #'Critical analysis', "Executive Summary", "Online References", "Subjestive Questions and Answers", "Objestive Questions and Answers", "Improvement Suggestions"
         "instruction": "generate it for first year college students.",
-        "userid": "12289",
+        "userid": "32233",
         "transactionId": "8736423hk2j3483",
         "requesttimeinUTC": "3/14/2024 21:18"
     }

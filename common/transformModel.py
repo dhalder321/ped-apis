@@ -80,10 +80,10 @@ class transformModel:
                 logging.error(f"Error in def generateExecutiveSummary Function: input not provided.")
                 return None
 
-            prompts = json.loads(json_prompt)
+            prompts = json.loads(json_prompt, strict=False)
 
             # step 1: get the key points
-            prompt = prompts[0]['prompt']
+            prompt = prompts['steps'][0]['prompt']
             response = retryRAGModelForOutputType(llmObject, system_role, prompt, outputType='json')
             if response is None:
                 return None
@@ -92,7 +92,7 @@ class transformModel:
 
             # step 2: elaborate key points
             keysText = ''
-            keyElaborationPrompt = prompts[1]['prompt']
+            keyElaborationPrompt = prompts['steps'][1]['prompt']
             outputText = ''
             for key in keyPoints['key points']:
                 keysText += key + "\n"
@@ -102,11 +102,12 @@ class transformModel:
                 if response is None:
                     continue
 
-                outputText += response 
-                time.sleep(7)
+                outputText += key + "\n\n" 
+                outputText += response + "\n\n\n" 
+                time.sleep(2)
 
             # step 3: summarize
-            summary_prompt = prompts[2]['prompt']
+            summary_prompt = prompts['steps'][2]['prompt']
             summary_prompt = summary_prompt.replace('{{KEY_POINTS}}', keysText)
             response = retryRAGModelForOutputType(llmObject, system_role, prompt, outputType='text')
             if response is not None:
@@ -136,14 +137,14 @@ class transformModel:
             prompts = json.loads(json_prompt)
 
             # step 1: get the key points
-            prompt = prompts[0]['prompt']
+            prompt = prompts['steps'][0]['prompt']
             response = retryRAGModelForOutputType(llmObject, system_role, prompt, outputType='text')
             if response is None:
                 return None
             
 
             # step 2: generate questions and answers
-            prompt = prompts[1]['prompt'].replace('{{SUMMARY}}', response)
+            prompt = prompts['steps'][1]['prompt'].replace('{{SUMMARY}}', response)
             outputText = retryRAGModelForOutputType(llmObject, system_role, prompt, outputType='text')
             if outputText is None:
                 return None
@@ -172,14 +173,14 @@ class transformModel:
             prompts = json.loads(json_prompt)
 
             # step 1: get the key points
-            prompt = prompts[0]['prompt']
+            prompt = prompts['steps'][0]['prompt']
             response = retryRAGModelForOutputType(llmObject, system_role, prompt, outputType='text')
             if response is None:
                 return None
             
 
             # step 2: generate questions and answers
-            prompt = prompts[1]['prompt'].replace('{{SUMMARY}}', response)
+            prompt = prompts['steps'][1]['prompt'].replace('{{SUMMARY}}', response)
             outputText = retryRAGModelForOutputType(llmObject, system_role, prompt, outputType='text')
             if outputText is None:
                 return None
@@ -207,7 +208,7 @@ class transformModel:
             prompts = json.loads(json_prompt)
 
             # step 1: get the key points
-            prompt = prompts[0]['prompt']
+            prompt = prompts['steps'][0]['prompt']
             response = retryRAGModelForOutputType(llmObject, system_role, prompt, outputType='json')
             if response is None:
                 return None
@@ -215,11 +216,11 @@ class transformModel:
             resources = json.loads(response)
 
             resourceText = ''
-            prompt = prompts[1]['prompt']
+            prompt = prompts['steps'][1]['prompt']
             outputText = ''
             for r in resources['Online_Resources']:
 
-                resourceText = f"Resource link: {r['link']} \nresource type: {r['type']} \n"
+                resourceText = f"Resource name: {r['resource name']} \nResource type: {r['type']} \n"
                 resourceTextWithDesc = resourceText + "description: {r['description']} \n"
                 prompt = prompt.replace('{{ONLINE_RESOURCE}}', resourceTextWithDesc)
 
@@ -227,7 +228,7 @@ class transformModel:
                 if response is None:
                     continue
 
-                outputText += resourceText + "\n\n" +response
+                outputText += resourceText + "\n\n" +response + "\n\n\n\n"
                 
             return outputText
         
@@ -268,41 +269,41 @@ class transformModel:
             # step 1: get and generate sugggestions for the introduction
             outputText = ''
             prompt = prompts['Introduction']
-            extractionPrompt = prompt['Extraction']
-            improvementPrompt = prompt['Improvement']
+            extractionPrompt = prompt['Extraction']['prompt']
+            improvementPrompt = prompt['Improvement']['prompt']
 
             introduction = retryRAGModelForOutputType(extractionRAG, system_role, extractionPrompt, outputType='text')
             if introduction is None:
                 return None
             
             improvementPrompt = improvementPrompt.replace('{{INTRODUCTION}}', introduction)
-            introImprovementSuggestion = retryRAGModelForOutputType(improvementRAG, system_role, improvementPrompt, outputType='text')
+            introImprovementSuggestion = retryRAGModelForOutputType(extractionRAG, system_role, improvementPrompt, outputType='text')
 
             if introImprovementSuggestion is not None:
                 outputText += "Introduction\n\n"
-                outputText += introImprovementSuggestion + "\n\n"
+                outputText += introImprovementSuggestion + "\n\n\n\n"
 
             # step 2: get and generate sugggestions for the thesis section
             prompt = prompts['Thesis Statement']
-            extractionPrompt = prompt['Extraction']
-            improvementPrompt = prompt['Improvement']
+            extractionPrompt = prompt['Extraction']['prompt']
+            improvementPrompt = prompt['Improvement']['prompt']
 
             thesis = retryRAGModelForOutputType(extractionRAG, system_role, extractionPrompt, outputType='text')
             if thesis is None:
                 return None
             
             improvementPrompt = improvementPrompt.replace('{{THESIS_STATEMENT}}', thesis)
-            thesisImprovementSuggestion = retryRAGModelForOutputType(improvementRAG, system_role, improvementPrompt, outputType='text')
+            thesisImprovementSuggestion = retryRAGModelForOutputType(extractionRAG, system_role, improvementPrompt, outputType='text')
 
             if introImprovementSuggestion is not None:
                 outputText += "Thesis Statement\n\n"
-                outputText += thesisImprovementSuggestion + "\n\n"
+                outputText += thesisImprovementSuggestion + "\n\n\n\n"
 
             
             # step 3: get and generate sugggestions for each key arguments
             prompt = prompts['Key Arguments']
-            extractionPrompt = prompt['Extraction']
-            improvementPrompt = prompt['Improvement']
+            extractionPrompt = prompt['Extraction']['prompt']
+            improvementPrompt = prompt['Improvement']['prompt']
 
             arg = retryRAGModelForOutputType(extractionRAG, system_role, extractionPrompt, outputType='json')
             if arg is None:
@@ -316,23 +317,23 @@ class transformModel:
             for a in argList:
 
                 improvementPrompt = improvementPrompt.replace('{{KEY_ARGUMENT}}', a)
-                argImprovementSuggestion = retryRAGModelForOutputType(improvementRAG, system_role, improvementPrompt, outputType='text')
+                argImprovementSuggestion = retryRAGModelForOutputType(extractionRAG, system_role, improvementPrompt, outputType='text')
 
                 if argImprovementSuggestion is not None:
                     outputText += "Key argument: " + a + "\n\n"
-                    outputText += argImprovementSuggestion + "\n\n"
+                    outputText += argImprovementSuggestion + "\n\n\n\n"
 
             # step 4: get and generate sugggestions for the conclusion section
             prompt = prompts['Conclusion']
-            extractionPrompt = prompt['Extraction']
-            improvementPrompt = prompt['Improvement']
+            extractionPrompt = prompt['Extraction']['prompt']
+            improvementPrompt = prompt['Improvement']['prompt']
 
             conclusion = retryRAGModelForOutputType(extractionRAG, system_role, extractionPrompt, outputType='text')
             if conclusion is None:
                 return None
             
             improvementPrompt = improvementPrompt.replace('{{CONCLUSION}}', conclusion)
-            conclusionImprovementSuggestion = retryRAGModelForOutputType(improvementRAG, system_role, improvementPrompt, outputType='text')
+            conclusionImprovementSuggestion = retryRAGModelForOutputType(extractionRAG, system_role, improvementPrompt, outputType='text')
 
             if conclusionImprovementSuggestion is not None:
                 outputText += "Conclusion\n\n"

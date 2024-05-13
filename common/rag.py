@@ -29,6 +29,7 @@ class pedRAG:
                           frequency_penalty = frequency_penalty,
                           presence_penalty = presence_penalty,
                           max_retries=maxModelRetry)
+        
         self.embed_model = OpenAIEmbedding(model="text-embedding-3-large", 
                                            api_key="sk-proj-2v580A6zW3Nt80kwv6AvT3BlbkFJPyD8rCGtI2XVrKtx8JIr")
 
@@ -111,6 +112,7 @@ class pedRAG:
     def utilizeVectorCollection(self, collection_name):
         try:
 
+            self.collection_name = collection_name
             vector_store = QdrantVectorStore(client=self.qdClient, 
                                              collection_name=collection_name)
 
@@ -118,7 +120,8 @@ class pedRAG:
             storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
             # Create a VectorStoreIndex
-            self.index = VectorStoreIndex.from_vector_store(storage_context=storage_context)
+            self.index = VectorStoreIndex.from_vector_store(storage_context=storage_context, 
+                                                            vector_store=vector_store)
 
             return self.collection_name
 

@@ -3,18 +3,12 @@
     {
       "step": 1,
       "description": "Extract key topics from the document.",
-      "prompt": "Read the text from the document and identify the main topics and themes. Provide a brief summary of each topic that could serve as a foundation for deeper inquiry. Generate plain text output",
+      "prompt": "Read the text and identify minimum 15 main topics and themes. Provide a brief summary of each topic that could serve as a foundation for deeper inquiry. Generate plain text output"
     },
     {
       "step": 2,
       "description": "Generate subjective questions based on the topics.",
-      "prompt": "Based on the topics summarized below from the text: 
-       Key points and summary--------------------------
-        
-        {{SUMMARY}}
-
-       ------------------------------------------------
-       generate in plain text an exhaustive list of objective questions with answers from the document that could help explore these topics in depth. Aim for questions that require opinion-based answers, analysis, or interpretation. Just generate questions and answers and DO NOT STRICTLY generate any other text.",
+      "prompt": "Based on the topics summarized below from the text:   Key points and summary--------------------------        {{SUMMARY}} ------------------------------------------------       generate in plain text minimum 20 multiple choise, true/false, multi-select, fill in the blacks questions with answers from the document that could help explore these topics in depth. Aim for questions that require opinion-based answers, analysis, or interpretation. Do NOT add any superficial questions. Just generate questions and answers and DO NOT STRICTLY generate any other text."
     }
   ]
 }
