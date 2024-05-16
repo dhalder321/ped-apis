@@ -255,11 +255,7 @@ def generateQuizFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # delete the local files and folders
-            Path(localDocFilePath).unlink()
-            localFolder = Path(localDocFileLocation)
-            if localFolder is not None and not any(localFolder.iterdir()):
-                localFolder.rmdir()
+
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {

@@ -124,26 +124,26 @@ def verifyPPT(event, context):
                 return response
             
             # check for minimum length of the text- min 400 chars and max 35000
-            if len(retVal) < 400:
+            # if len(retVal) < 400:
                 
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2003",
-                        'error': 'text is too short for any transformation',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2003",
+            #             'error': 'text is too short for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
 
-            if len(retVal) > 35000:
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2004",
-                        'error': 'text is too long for any transformation',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
+            # if len(retVal) > 35000:
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2004",
+            #             'error': 'text is too long for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {

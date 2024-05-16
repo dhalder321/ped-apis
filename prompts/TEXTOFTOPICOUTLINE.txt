@@ -1,6 +1,6 @@
-You need to generate a 1500 word essay strictly in HTML format on "{{TOPIC}}" focused on following perspective: "{{SUMMARY}}". 
+You need to generate a 1500 word essay strictly in plain text format on "{{TOPIC}}" focused on following perspective: "{{SUMMARY}}". 
 
-The strucuture of the essay will be strictly based on the outline in HTML format given below. Outline of the essay has been provided at the end.  Be as detailed as possible while generating the essay. Please provide the essay in HTML format. output HTML shold not contain any meta tags and it should at minimum contain doctype, html, head, body tags.  DO NOT generate any other text apart from the HTML. 
+The strucuture of the essay will be strictly based on the outline in HTML format given at the end.  Be as detailed as possible while generating the essay. Please provide the essay in plain text format. 
 
 Here is the outline in HTML format. The generated essay will strictly follow this outline structure. --------------------------------------------------------------------------------------------------------------------------
 {{OUTLINE}}

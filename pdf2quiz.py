@@ -1,8 +1,14 @@
+
 import logging
+import os
 import json, uuid
 from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
+from common.file import deleteDirWithFiles
+from docx import Document
+from htmldocx import HtmlToDocx
+from common.prompts import Prompt
 from common.globals import Utility, PED_Module, DBTables
 from transform.inputProcessor import inputProcessor 
 from transform.transformationHandler import transformationHandler 
@@ -24,7 +30,7 @@ from transform.outputGenerator import outputGenerator
 # 2007 - document record could not be updated in database
 # 5001 - Method level error
 ############################################################
-def verifyPDF(event, context):
+def generateQuizFromPDF(event, context):
 
     # print(event)
     logging.debug(event)
@@ -49,6 +55,7 @@ def verifyPDF(event, context):
                     }, origin)
         
         body = json.loads(event['body'])
+        foldertoDelete = ''
         try:
 
             #initiate DB modules
@@ -60,15 +67,20 @@ def verifyPDF(event, context):
 
             #log user and transaction details
             bodyCurtailed = Utility.curtailObject4Logging(body, "fileContentBase64")
-            activityId = Utility.logUserActivity(body, "verifyPDF")
+            activityId = Utility.logUserActivity(bodyCurtailed, "generateQuizFromPDF")
 
             tran_id = body["transactionId"]
             if tran_id is None:
                 tran_id = str(uuid.uuid1())
         
             # Parse the incoming JSON payload
+            priorTranIds = body["priorTranIds"] if 'priorTranIds' in body else ""
             fileContent = body["fileContentBase64"] if 'fileContentBase64' in body else None
             fileName = body["fileName"] if 'fileName' in body else None
+            questionCount = body["qestionCount"]  if "qestionCount" in body else None
+            difficulty = body["difficulty"]  if "difficulty" in body else None
+            questionType = body["questionType"]  if "questionType" in body else None
+            explanation = body["explanation"]  if "explanation" in body else None
             userid = body["userid"]  if "userid" in body else None
 
             if userid is None:
@@ -84,6 +96,13 @@ def verifyPDF(event, context):
 
             # check for valid and logged in user
             # CheckLoggedinUser(userid)
+
+            # if priorTranIds is not empty, locate the privious 
+            # successful transactions
+            if priorTranIds != "":
+                priorResponse = Utility.handlePriorTransactionIds(userid, priorTranIds)
+                if priorResponse is not None:
+                    return priorResponse 
             
             if fileName is None or fileContent is None:
                 # Return a 400 Bad Request response if input is missing
@@ -96,17 +115,15 @@ def verifyPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
-            # get the text from the ppt content
+            # get the text from the file content
             inputValues = {
                             "fileContentBase64": fileContent,
                             "pdfFilename": fileName,
                             "userid": userid,
                             "tran_id": tran_id
                             }
-            retVal = inputProcessor.processInput("pdfContentBase64", \
+            retVal = inputProcessor.storeInput("pdfContentBase64", \
                                                         **inputValues)
-            
-            # get the text from ppt file
             if retVal is None:
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
@@ -129,20 +146,22 @@ def verifyPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # check for minimum length of the text- min 400 chars and no max
-            if len(retVal) < 400:
+            foldertoDelete = str(Path(retVal).parent)
+            
+            # # check for minimum length of the text- min 400 chars and max 35000 chars
+            # if len(retVal) < 400:
                 
-                response = Utility.generateResponse(200, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2003",
-                        'Response': 'failure',
-                        'errors': ['Text is too short for any transformation. Please add larger file that is less than 1 MB in size'],
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
-
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2003",
+            #             'error': 'text is too short for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
+            
             # if len(retVal) > 35000:
+                
             #     response = Utility.generateResponse(500, {
             #             'transactionId' : tran_id,
             #             'errorCode': "2004",
@@ -152,10 +171,97 @@ def verifyPDF(event, context):
             #     Utility.updateUserActivity(str(activityId), userid, response)
             #     return response
 
+            # transform the input text 
+            # newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
+            #     if instruction is not None else Utility.PROMPT_EXTENSION_4_HTML_OUTPUT
+            inputs = {
+                "questionCount" : questionCount,
+                "difficulty" : difficulty,
+                "questionTypes" : questionType,
+                "explanation" : explanation,
+                # "instruction": newInst
+            }
+            trmsJSON = transformationHandler.transformTextForQuizGenerationWithContext \
+                                        (Path(retVal).parent, **inputs)
+
+            if trmsJSON is None:
+                response = Utility.generateResponse(500, {
+                        'transactionId' : tran_id,
+                        'errorCode': "2004",
+                        'error': 'model response could not be obtained',
+                        'AnswerRetrieved': False
+                    }, origin)
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
+            
+            if trmsJSON == "PROMPT_NOT_GENERATED":
+                
+                response = Utility.generateResponse(500, {
+                        'transactionId' : tran_id,
+                        'errorCode': "2005",
+                        'error': 'prompt could not be retrieved',
+                        'AnswerRetrieved': False
+                    }, origin)
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
+            
+            # save json in ppt 
+            # upload the ppt to S3 and generate pre-signed URL
+            localDocFileLocation = str(Path(Utility.EFS_LOCATION, userid))
+            datetimestring = datetime.now().replace(tzinfo=timezone.utc).strftime("%m%d%Y%H%M%S")
+            datetimeFormattedString = datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S")
+            localDocFileName = "Quiz_"+ tran_id + "_" + datetimestring + ".qzx"
+            localDocFilePath = str(Path(localDocFileLocation, localDocFileName))
+            s3filePath = "/" + userid + "/" + localDocFileName
+            presignedURL = outputGenerator.storeOutputFile(trmsJSON, "QUIZ", "JSON", \
+                                                           localDocFileName, localDocFileLocation,\
+                                                            s3filePath)
+            
+            if presignedURL is None:
+                # Return a 500 server error response
+                response = Utility.generateResponse(500, {
+                                    'transactionId' : tran_id,
+                                    'errorCode': "2006",
+                                    'error': 'quiz could not be stored',
+                                }, origin)
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
+            
+            # add record in userfiles table
+            retVal = DBManager.addRecordInDynamoTableWithAutoIncrKey(DBTables.UserFiles_Table_Name, \
+                                                                    "staticIndexColumn", "fileid",\
+                                                                    "staticIndexColumn-fileid-index",  \
+                                                                    {
+                "userid": int(userid),
+                "transactionId": tran_id,
+                "staticIndexColumn": 99, #for global sec. index column
+                "fileName": localDocFileName,
+                "s3Filelocation": s3filePath,
+                "s3bucketName": Utility.S3BUCKE_NAME,
+                "initials3PresignedURLGenerated": presignedURL,
+                "fileCreationDateTime": datetimeFormattedString,
+                "fileType": "qzx",
+                "fileStatus": "complete",
+                "user-fileName": "",
+            })
+
+            if retVal is None:
+                # Return a 500 server error response
+                response = Utility.generateResponse(500, {
+                                    'transactionId' : tran_id,
+                                    'errorCode': "2007",
+                                    'error': 'document record could not be updated in database',
+                                }, origin)
+                Utility.updateUserActivity(str(activityId), userid, response)
+                return response
+            
+
+
             # Return the response in JSON format
             response = Utility.generateResponse(200, {
                                     'transactionId' : tran_id,
-                                    'Response': 'success',
+                                    'Response': trmsJSON,
+                                    'QuizFileId': retVal,
                                     'AnswerRetrieved': True
                                 }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)
@@ -164,9 +270,8 @@ def verifyPDF(event, context):
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
             logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                        f"Error in verifyPDF Function: {str(e)}"))
-            logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                                   "Stack Trace:", exc_info=True))
+                                                   message=f"Error in generateQuizFromPDF Function: {str(e)}"))
+            logging.error("Stack Trace:", exc_info=True)
             
             # Return a 500 server error response
             response = Utility.generateResponse(500, {
@@ -177,3 +282,9 @@ def verifyPDF(event, context):
                                 }, origin)
             Utility.updateUserActivity(str(activityId), -1, response)
             return response
+        
+        finally:
+            deleteDirWithFiles(foldertoDelete)
+
+
+

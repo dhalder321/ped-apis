@@ -121,10 +121,11 @@ def verifyWeb(event, context):
             # check for minimum length of the text- min 400 chars
             if len(retVal) < 400:
                 
-                response = Utility.generateResponse(500, {
+                response = Utility.generateResponse(200, {
                         'transactionId' : tran_id,
                         'errorCode': "2003",
-                        'error': 'text is too short for any transformation',
+                        'Response': 'failure',
+                        'errors': ['Text is too short for any transformation. Please add larger file that is less than 1 MB in size'],
                         'AnswerRetrieved': False
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
@@ -133,10 +134,11 @@ def verifyWeb(event, context):
             # check for max length of the text- max 35000 chars
             if len(retVal) > 35000:
                 
-                response = Utility.generateResponse(500, {
+                response = Utility.generateResponse(200, {
                         'transactionId' : tran_id,
                         'errorCode': "2004",
-                        'error': 'text is too large for processing',
+                        'Response': 'failure',
+                        'errors': ['Text is too large for any transformation. Please add smaller file that is less than 1 MB in size'],
                         'AnswerRetrieved': False
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)

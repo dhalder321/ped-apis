@@ -25,13 +25,14 @@ from quickText import generateQuickText
 from doc2PPT import generatePPTFromDocument
 from pdf2ppt import generatePPTFromPDF
 from doc2quiz import generateQuizFromDocument
+from pdf2quiz import generateQuizFromPDF
 from verifyDoc4Transformation import verifyDocument
 from generateemailcode import generateEmailVerificationCode
 from verifyemailcode import verifyEmailVerificationCode
 from getQuizInDoc import getQuizInDocument
 from getQuizJSON import getQuizJSON
 from common.rag  import pedRAG
-from common.file import extract_text_with_headings
+# from common.file import extract_text_with_headings
 
 # text = getModelResponse("You are a biology professor", "write 20 words on acroporus")
 # print(text)
@@ -293,25 +294,25 @@ from common.file import extract_text_with_headings
 
 # read  file ppt file in base64 format
 
-with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\BritishPoliticsIndia.docx", \
-            "rb") as f:
-    bytes = f.read()
-#print(base64.b64encode(bytes).decode('utf-8'))
-req = {
-        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-        "fileName": "humanrights.pdf", 
-        "renderingType": "Objestive Questions and Answers", #'Critical analysis', "Executive Summary", "Online References", "Subjestive Questions and Answers", "Objestive Questions and Answers", "Improvement Suggestions"
-        "instruction": "generate it for first year college students.",
-        "userid": "32233",
-        "transactionId": "8736423hk2j3483",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
-# print (req)
-data = generateDocumentFromDocument({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\BritishPoliticsIndia.docx", \
+#             "rb") as f:
+#     bytes = f.read()
+# #print(base64.b64encode(bytes).decode('utf-8'))
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "humanrights.pdf", 
+#         "renderingType": "Objestive Questions and Answers", #'Critical analysis', "Executive Summary", "Online References", "Subjestive Questions and Answers", "Objestive Questions and Answers", "Improvement Suggestions"
+#         "instruction": "generate it for first year college students.",
+#         "userid": "32233",
+#         "transactionId": "8736423hk2j3483",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# # print (req)
+# data = generateDocumentFromDocument({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 # read  file ppt file in base64 format
 # with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\docs\\US Economic report.pdf",
@@ -427,6 +428,29 @@ print(data)
 #     }
 # # print (req)
 # data = generateQuizFromDocument({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
+
+
+#  read  file ppt file in base64 format
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\IndianCongress.pdf", \
+#             "rb") as f:
+#     bytes = f.read()
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "IndianCongress.pdf", 
+#         "userid": "90009",
+#         "qestionCount": "15-20", # 5-10, 10-15, if Default selected, set q count :- 15-20
+#         "difficulty": "hard", # "simple", "medium", "hard", "very hard"
+#         "questionType": "multiple choice, true/false, fill the blanks, ranking/ordering",
+#         "explanation": "y",
+#         "transactionId": "324723904780324314",
+#         "requesttimeinUTC": "4/29/2024 21:18"
+#     }
+# # print (req)
+# data = generateQuizFromPDF({
 #         "httpMethod": "POST",
 #         "body": json.dumps(req)
 # }, {})
