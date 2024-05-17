@@ -148,7 +148,7 @@ def generateDocumentFromPDF(event, context):
             
             fileLocationToDelete = str(Path(retVal).parent)
             
-            print("text:::*********************************************")
+            print("File saved successfully::*******************")
             print(retVal)
             print("*********************************************")
             
@@ -195,6 +195,10 @@ def generateDocumentFromPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
+            print("*************************************")
+            print("Output text has been generated successfully.")
+            print("*************************************")
+
             # save html text in word document
             # upload the document to S3 and generate pre-signed URL
             localDocFileLocation = str(Path(Utility.EFS_LOCATION, userid))

@@ -177,7 +177,7 @@ class transformationHandler:
                 retVal = retryRAGModelForOutputType(ragModel, sl_role, prompt, maxRetry=2)
                 outputType = 'HTML'
 
-            # print(str(retVal))
+            print("Output text::" + str(retVal))
             return retVal, outputType
         finally:
             if ragModel is not None:

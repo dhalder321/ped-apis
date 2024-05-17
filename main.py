@@ -315,14 +315,14 @@ from common.rag  import pedRAG
 # print(data)
 
 # read  file ppt file in base64 format
-# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\docs\\US Economic report.pdf",
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\IndianCongress.pdf",
 #             "rb") as f:
 #     bytes = f.read()
-# #print(base64.b64encode(bytes).decode('utf-8'))
+# print(base64.b64encode(bytes).decode('utf-8'))
 # req = {
 #         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
 #         "fileName": "humanrights.pdf", 
-#         "renderingType": "Critical analysis",
+#         "renderingType": "Subjestive Questions and Answers",
 #         "instruction": "generate it for first year college students.",
 #         "userid": "12289",
 #         "transactionId": "8736423hk2j3483",

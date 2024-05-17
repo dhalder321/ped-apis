@@ -105,7 +105,7 @@ class pedRAG:
             return self.collection_name
         
         except Exception as e:
-            logging.error("Error in executePromptwithContext method in rag file::" + str(e))
+            logging.error("Error in createVectorCollection method in rag file::" + str(e))
 
         return None
 
@@ -154,5 +154,5 @@ class pedRAG:
 
     def __del__(self):
         # delete the index
-        if self.qdClient.collection_exists(self.collection_name):
+        if hasattr(self, 'collection_name') and self.qdClient.collection_exists(self.collection_name):
             self.qdClient.delete_collection(self.collection_name)
