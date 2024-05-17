@@ -8,6 +8,7 @@ from transform.inputProcessor import inputProcessor
 from transform.outputGenerator import outputGenerator 
 from common.voiceOver import generateVoiceOverFiles 
 from common.video import generateVideo
+from ppt2image import getImagesFromPPT
 from common.lambdaFunction import invokeLambdaFunction
 
 
@@ -57,7 +58,7 @@ def generateVideoFromPresentation(event, context):
 
             #log user and transaction details
             bodyCurtailed = Utility.curtailObject4Logging(body, "fileContentBase64")
-            activityId = Utility.logUserActivity(body, "generateVideoFromPresentation")
+            activityId = Utility.logUserActivity(bodyCurtailed, "generateVideoFromPresentation")
 
             tran_id = body["transactionId"]
             if tran_id is None:
@@ -150,11 +151,13 @@ def generateVideoFromPresentation(event, context):
             
             # STEP 2: invoke the lambda function to get the images created
             # pass the local ppt file path
-            retVal = invokeLambdaFunction(Utility.PPT_2_IMAGE_GENERATION_API_URL, 
-                                            {
-                                                "pptFilePath": pptFilePath,
-                                                })
-            logging.debug("output from ppt2image lambda function:" + str(retVal))
+            # retVal = invokeLambdaFunction(Utility.PPT_2_IMAGE_GENERATION_API_URL, 
+            #                                 {
+            #                                     "pptFilePath": pptFilePath,
+            #                                     })
+            imgPath = getImagesFromPPT(pptFilePath)
+
+            # logging.debug("output from ppt2image lambda function:" + str(retVal))
 
             # check for image file path            
             imageFilePath = str(Path(Path(pptFilePath).parent, "images"))
@@ -186,11 +189,10 @@ def generateVideoFromPresentation(event, context):
             print("***************audio files generated successfully**************************")
 
             # STEP 4: generate the video
-            backgroundMusicPath = workingDir / Utility.VIDEO_GENERATION_BACKGROUND_MUSIC_FILE_NAME
+            backgroundMusicPath = Path(Utility.EFS_LOCATION, Utility.VIDEO_GENERATION_BACKGROUND_MUSIC_FILE_NAME)
             videoFilePath = generateVideo(imageFilePath, audioFilePath, \
                                           str(backgroundMusicPath), str(workingDir))
             
-            videoFilePath = None
             if videoFilePath is None or videoFilePath == '':
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,

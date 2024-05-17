@@ -405,25 +405,25 @@ from getQuizJSON import getQuizJSON
 
 
 #  read  file ppt file in base64 format
-# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\Mastering Crowd Funding.pptx", \
-#             "rb") as f:
-#     bytes = f.read()
+with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\VideoGen\\British Politics in India.pptx", \
+            "rb") as f:
+    bytes = f.read()
 # print(base64.b64encode(bytes).decode('utf-8'))
-# req = {
-#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-#         "fileName": "humanrights.pptx", 
-#         "userid": "67745",
-#         "transactionId": "8736423hk2j3483",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }
-# # print (req)
-# data = generateVideoFromPresentation({
-#         "httpMethod": "POST",
-#         "body": json.dumps(req)
-# }, {})
-# print(data)
+req = {
+        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+        "fileName": "humanrights.pptx", 
+        "userid": "67745",
+        "transactionId": "8736423hk2j3483",
+        "requesttimeinUTC": "3/14/2024 21:18"
+    }
+# print (req)
+data = generateVideoFromPresentation({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)
 
-# getImagesFromPPT("c:\\users\\dhalde\\Brazil's Top Tourist Destinations.pptx")
+# getImagesFromPPT("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\British Politics in India.pptx")
 
 
 
