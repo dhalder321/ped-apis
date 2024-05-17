@@ -1,0 +1,74 @@
+{
+  "Introduction": {
+    "Extraction": {
+      "prompt": "Please read the text and identify the introduction in the text. Provide the extracted introduction text in minimum 20 full english sentences.",
+      "temperature": 0.3,
+      "max_tokens": 1000,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0
+    },
+    "Improvement": {
+      "prompt": "Hello, I have the introduction of an academic essay and I need help improving it. Could you provide specific suggestions on how to enhance the clarity, structure, and engagement of this introduction for the text? Please DO NOT make generic suggestions and strictly provide suggestions for this introduction and for the text. if the introduction is well written, you can say why this introduction is well written. Please make it extensive and elaborate with details on why you are recommending some suggestions and how it wil benefit the readers.               Here is the introduction:       Introduction text--------------  {{INTRODUCTION}}              -------------------------------              I appreciate your detailed feedback!",
+      "temperature": 0.7,
+      "max_tokens": 500,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0
+    }
+  },
+  "Thesis Statement": {
+    "Extraction": {
+      "prompt": "Please read the text and identify the thesis statement. Provide the extracted thesis statement in minimum 20 full english sentences.",
+      "temperature": 0.3,
+      "max_tokens": 300,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0
+    },
+    "Improvement": {
+      "prompt": "Hello, I have the thesis statement of an academic essay and I need help refining it. Could you provide specific suggestions on how to make this thesis statement clearer and more compelling? Please DO NOT make generic suggestions and strictly provide suggestions for this thesis statement and for the text. If the thesis statement is well written, you can say why this thesis statement is well written. Please make it extnsive and elaborate with details on why you are recommending some suggestions and how it wil benefit the readers.              Here is the thesis statement-------------------------------------              {{THESIS_STATEMENT}}              -------------------------------------------------------------------       Thank you for your suggestions!",
+      "temperature": 0.7,
+      "max_tokens": 300,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0
+    }
+  },
+  "Key Arguments": {
+    "Extraction": {
+      "prompt": "Please read the text and identify the key arguments presented. Provide the extracted key arguments in JSON list format provided below                {          \"key arguments\": [            \"key argument 1\",            \"key argument 2\",            \"key argument 3\",            ...          ]        }                ",
+      "temperature": 0.3,
+      "max_tokens": 800,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0
+    },
+    "Improvement": {
+      "prompt": "Hello, I have a key argument section from the text and I need help improving it. Could you provide specific suggestions on how to enhance the argumentation, clarity, and persuasive power of this argument section? Please DO NOT make generic suggestions and strictly provide suggestions for this key argument and for the text. If the key argument is well written, you can say why this key argument is well written. Please make it extnsive and elaborate with details on why you are recommending some suggestions and how it wil benefit the readers                Here is the argument section------------------------------------------------------------                {{KEY_ARGUMENT}}                ----------------------------------------------------------------------------------------        I look forward to your feedback!",
+      "temperature": 0.7,
+      "max_tokens": 500,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0
+    }
+  },
+  "Conclusion": {
+    "Extraction": {
+      "prompt": "Please read the text and identify the conclusion section. Provide the extracted conclusion text in minimum 20 full english sentences.",
+      "temperature": 0.3,
+      "max_tokens": 800,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0
+    },
+    "Improvement": {
+      "prompt": "Hello, I have the conclusion of the text and I need help improving it. Could you provide specific suggestions on how to effectively summarize the main points and create a strong final impression? Please DO NOT make generic suggestions and strictly provide suggestions for this conclusion and for the text. If the conclusion is well written, you can say why this conclusion is well written. Please make it extnsive and elaborate with details on why you are recommending some suggestions and how it wil benefit the readers                Here is the conclusion----------------------------------------------------------------  {{CONCLUSION}}                --------------------------------------------------------------------------------------        Thank you for your feedback!",
+      "temperature": 0.7,
+      "max_tokens": 500,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0
+    }
+  }
+}

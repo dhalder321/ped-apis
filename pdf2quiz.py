@@ -1,14 +1,14 @@
+
 import logging
 import os
 import json, uuid
 from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
+from common.file import deleteDirWithFiles
 from docx import Document
 from htmldocx import HtmlToDocx
 from common.prompts import Prompt
-from common.model import retryModelForOutputType
-from common.file import deleteDirWithFiles
 from common.globals import Utility, PED_Module, DBTables
 from transform.inputProcessor import inputProcessor 
 from transform.transformationHandler import transformationHandler 
@@ -30,9 +30,9 @@ from transform.outputGenerator import outputGenerator
 # 2007 - document record could not be updated in database
 # 5001 - Method level error
 ############################################################
-def generateDocumentFromPDF(event, context):
+def generateQuizFromPDF(event, context):
 
-    print(event)
+    # print(event)
     logging.debug(event)
 
     origin = None
@@ -55,7 +55,7 @@ def generateDocumentFromPDF(event, context):
                     }, origin)
         
         body = json.loads(event['body'])
-        fileLocationToDelete = ''
+        foldertoDelete = ''
         try:
 
             #initiate DB modules
@@ -67,7 +67,7 @@ def generateDocumentFromPDF(event, context):
 
             #log user and transaction details
             bodyCurtailed = Utility.curtailObject4Logging(body, "fileContentBase64")
-            activityId = Utility.logUserActivity(bodyCurtailed, "generateDocumentFromPDF")
+            activityId = Utility.logUserActivity(bodyCurtailed, "generateQuizFromPDF")
 
             tran_id = body["transactionId"]
             if tran_id is None:
@@ -77,8 +77,10 @@ def generateDocumentFromPDF(event, context):
             priorTranIds = body["priorTranIds"] if 'priorTranIds' in body else ""
             fileContent = body["fileContentBase64"] if 'fileContentBase64' in body else None
             fileName = body["fileName"] if 'fileName' in body else None
-            renderingType = body["renderingType"]  if "renderingType" in body else None
-            instruction = body["instruction"]  if "instruction" in body else None
+            questionCount = body["qestionCount"]  if "qestionCount" in body else None
+            difficulty = body["difficulty"]  if "difficulty" in body else None
+            questionType = body["questionType"]  if "questionType" in body else None
+            explanation = body["explanation"]  if "explanation" in body else None
             userid = body["userid"]  if "userid" in body else None
 
             if userid is None:
@@ -113,7 +115,7 @@ def generateDocumentFromPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
-            # get the text from the ppt content
+            # get the text from the file content
             inputValues = {
                             "fileContentBase64": fileContent,
                             "pdfFilename": fileName,
@@ -122,8 +124,6 @@ def generateDocumentFromPDF(event, context):
                             }
             retVal = inputProcessor.storeInput("pdfContentBase64", \
                                                         **inputValues)
-            
-            # get the text from ppt file
             if retVal is None:
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
@@ -146,13 +146,9 @@ def generateDocumentFromPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            fileLocationToDelete = str(Path(retVal).parent)
+            foldertoDelete = str(Path(retVal).parent)
             
-            print("File saved successfully::*******************")
-            print(retVal)
-            print("*********************************************")
-            
-            # # check for minimum length of the text- min 400 chars
+            # # check for minimum length of the text- min 400 chars and max 35000 chars
             # if len(retVal) < 400:
                 
             #     response = Utility.generateResponse(500, {
@@ -163,18 +159,32 @@ def generateDocumentFromPDF(event, context):
             #         }, origin)
             #     Utility.updateUserActivity(str(activityId), userid, response)
             #     return response
+            
+            # if len(retVal) > 35000:
+                
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2004",
+            #             'error': 'text is too long for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
 
             # transform the input text 
-            newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
-                if instruction is not None else Utility.PROMPT_EXTENSION_4_HTML_OUTPUT
+            # newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
+            #     if instruction is not None else Utility.PROMPT_EXTENSION_4_HTML_OUTPUT
             inputs = {
-                # "wordCount": wordCount,
-                # "renderingType": renderingType,
-                "instruction": newInst
+                "questionCount" : questionCount,
+                "difficulty" : difficulty,
+                "questionTypes" : questionType,
+                "explanation" : explanation,
+                # "instruction": newInst
             }
-            trmsText, outputType = transformationHandler.transformTextwithContext(retVal, renderingType, **inputs)
+            trmsJSON = transformationHandler.transformTextForQuizGenerationWithContext \
+                                        (Path(retVal).parent, **inputs)
 
-            if trmsText is None:
+            if trmsJSON is None:
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
                         'errorCode': "2004",
@@ -184,7 +194,7 @@ def generateDocumentFromPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            if trmsText == "PROMPT_NOT_GENERATED":
+            if trmsJSON == "PROMPT_NOT_GENERATED":
                 
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
@@ -195,19 +205,15 @@ def generateDocumentFromPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            print("*************************************")
-            print("Output text has been generated successfully.")
-            print("*************************************")
-
-            # save html text in word document
-            # upload the document to S3 and generate pre-signed URL
+            # save json in ppt 
+            # upload the ppt to S3 and generate pre-signed URL
             localDocFileLocation = str(Path(Utility.EFS_LOCATION, userid))
             datetimestring = datetime.now().replace(tzinfo=timezone.utc).strftime("%m%d%Y%H%M%S")
             datetimeFormattedString = datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S")
-            localDocFileName = "Document_"+ tran_id + "_" + datetimestring + ".docx"
+            localDocFileName = "Quiz_"+ tran_id + "_" + datetimestring + ".qzx"
             localDocFilePath = str(Path(localDocFileLocation, localDocFileName))
             s3filePath = "/" + userid + "/" + localDocFileName
-            presignedURL = outputGenerator.storeOutputFile(trmsText, "DOC", outputType, \
+            presignedURL = outputGenerator.storeOutputFile(trmsJSON, "QUIZ", "JSON", \
                                                            localDocFileName, localDocFileLocation,\
                                                             s3filePath)
             
@@ -216,7 +222,7 @@ def generateDocumentFromPDF(event, context):
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
                                     'errorCode': "2006",
-                                    'error': 'document could not be stored',
+                                    'error': 'quiz could not be stored',
                                 }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
@@ -234,7 +240,7 @@ def generateDocumentFromPDF(event, context):
                 "s3bucketName": Utility.S3BUCKE_NAME,
                 "initials3PresignedURLGenerated": presignedURL,
                 "fileCreationDateTime": datetimeFormattedString,
-                "fileType": "docx",
+                "fileType": "qzx",
                 "fileStatus": "complete",
                 "user-fileName": "",
             })
@@ -249,10 +255,13 @@ def generateDocumentFromPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
+
+
             # Return the response in JSON format
             response = Utility.generateResponse(200, {
                                     'transactionId' : tran_id,
-                                    'Response': presignedURL,
+                                    'Response': trmsJSON,
+                                    'QuizFileId': retVal,
                                     'AnswerRetrieved': True
                                 }, origin)
             Utility.updateUserActivity(str(activityId), userid, response)
@@ -261,7 +270,7 @@ def generateDocumentFromPDF(event, context):
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
             logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                                   message=f"Error in generateDocumentFromPDF Function: {str(e)}"))
+                                                   message=f"Error in generateQuizFromPDF Function: {str(e)}"))
             logging.error("Stack Trace:", exc_info=True)
             
             # Return a 500 server error response
@@ -273,5 +282,9 @@ def generateDocumentFromPDF(event, context):
                                 }, origin)
             Utility.updateUserActivity(str(activityId), -1, response)
             return response
+        
         finally:
-            deleteDirWithFiles(fileLocationToDelete)
+            deleteDirWithFiles(foldertoDelete)
+
+
+

@@ -3,6 +3,7 @@ import json, uuid
 from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
+from common.file import deleteDirWithFiles
 from common.globals import Utility, PED_Module, DBTables
 from transform.inputProcessor import inputProcessor 
 from transform.transformationHandler import transformationHandler 
@@ -60,7 +61,7 @@ def generatePPTFromDocument(event, context):
 
             #log user and transaction details
             bodyCurtailed = Utility.curtailObject4Logging(body, "fileContentBase64")
-            activityId = Utility.logUserActivity(body, "generatePPTFromDocument")
+            activityId = Utility.logUserActivity(bodyCurtailed, "generatePPTFromDocument")
 
             tran_id = body["transactionId"]
             if tran_id is None:
@@ -115,7 +116,7 @@ def generatePPTFromDocument(event, context):
                             "userid": userid,
                             "tran_id": tran_id
                             }
-            retVal = inputProcessor.processInput("docContentBase64", \
+            retVal = inputProcessor.storeInput("docContentBase64", \
                                                         **inputValues)
             
             # get the text from ppt file
@@ -141,27 +142,27 @@ def generatePPTFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # check for minimum length of the text- min 400 chars and max 35000
-            if len(retVal) < 400:
+            # # check for minimum length of the text- min 400 chars and max 35000
+            # if len(retVal) < 400:
                 
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2003",
-                        'error': 'text is too short for any transformation',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2003",
+            #             'error': 'text is too short for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
 
-            if len(retVal) > 35000:
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2004",
-                        'error': 'text is too long for any transformation',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
+            # if len(retVal) > 35000:
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2004",
+            #             'error': 'text is too long for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
 
             # transform the input text 
             # newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
@@ -173,8 +174,8 @@ def generatePPTFromDocument(event, context):
                 "notes" : notes,
                 # "instruction": newInst
             }
-            trmsJSON = transformationHandler.transformTextForPPTGeneration \
-                                        (retVal, **inputs)
+            trmsJSON = transformationHandler.transformTextForPPTGenerationWithContext \
+                                        (Path(retVal).parent, **inputs)
 
             if trmsJSON is None:
                 response = Utility.generateResponse(500, {
@@ -250,10 +251,7 @@ def generatePPTFromDocument(event, context):
                 return response
             
             # delete the local files and folders
-            Path(localDocFilePath).unlink()
-            localFolder = Path(localDocFileLocation)
-            if localFolder is not None and not any(localFolder.iterdir()):
-                localFolder.rmdir()
+            deleteDirWithFiles(localDocFileLocation)
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {

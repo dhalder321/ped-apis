@@ -107,6 +107,60 @@ def retryModelForOutputType(system_role, user_prompt, outputType = "text", llm= 
             continue
     return None
 
+## This method invokes chat gpt with RAG pipeline and returns a response.
+## In case response is not received or in incorrect format, it will retry
+def retryRAGModelForOutputType(llmObject, system_role, user_prompt, outputType = "text", maxRetry= 3):
+    
+    #validate inputs
+    if system_role is None or user_prompt is None:
+        # Log the error with stack trace to CloudWatch Logs
+        logging.error(f"Error in def retryRAGModelForOutputType Function: input not provided.")
+        return None
+
+    # response = getModelResponse(system_role, user_prompt, llm, max_tokens)
+    response = llmObject.executePrompt(system_role, user_prompt)
+
+    # print(response)
+    # logging.debug(response)
+
+    #for output type = text, do not validate
+    if outputType == "text":
+        return response
+
+    #check for valid json
+    for i in range(maxRetry):
+        try:
+
+            #check for null output
+            if response is None:
+                continue
+
+            #check for JSON payload
+            if outputType == "json":
+                response = response.replace("```json", "")
+                response = response.replace("```", "")
+                jsonval = json.loads(response)
+                return response
+            
+            elif outputType == "html":
+                #remove commonly incorrect text in HTML
+                response = response.replace("```html", "")
+                response = response.replace("```", "")
+                if validateHTML(response):
+                    return response
+                else:
+                    response = llmObject.executePrompt(system_role, user_prompt)
+                    continue
+
+        except Exception as e:
+            logging.error(f"Error in retryRAGModelForOutputType Function: {str(e)}")
+            #fix the JSON
+            response = llmObject.executePrompt(system_role, user_prompt)
+            continue
+    return None
+
+
+
 # Call ChatGPT with the given prompt, asynchronously.
 async def getModelResponseAsync(session, system_role, user_prompt, llm = "gpt-3.5-turbo", max_tokens=800):
     payload = {
@@ -151,8 +205,7 @@ async def getBulkModelResponses(system_role, prompts, llm = "gpt-3.5-turbo", max
 def validateHTML(html):
 
     try:
-    
-    
+      
         # etree.fromstring(html)
         return True
     

@@ -1,4 +1,4 @@
-Generate a output JSON for given main prompt in following format. DO NOT generate any other text apart from the JSON------------
+Generate a output JSON for given main prompt in following format. Make sure you generate at least {{SLIDE_COUNT}} headings in the JSON. DO NOT generate any other text apart from the JSON------------
 {
     "title": "title of the slide",
     "headings": [

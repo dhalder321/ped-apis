@@ -1,4 +1,4 @@
-generate a quiz of question count between {{QUESTION_COUNT}} only and only from the text given below. The difficulty level of the questions have to be {{DIFFICULTY_LEVEL}}. The allowed question types are {{QUESTION_TYPES_COMMA_SEPARATED}}. Make sure that generated questions are comprehensible to students. Generate a hint for the correct answer for each question.
+generate a quiz of question count between {{QUESTION_COUNT}} only and only from the text. The difficulty level of the questions have to be {{DIFFICULTY_LEVEL}}. The allowed question types are {{QUESTION_TYPES_COMMA_SEPARATED}}. Make sure that generated questions are comprehensible to students. Generate a hint for the correct answer for each question.
 
 {{EXPLANATION_INSTRUCTION}}
 
@@ -29,6 +29,3 @@ Output JSON format---------------------------------
     ]
 
 }
-
-Test is given below-------------------
-{{TEXT}}

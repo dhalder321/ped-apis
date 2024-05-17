@@ -1,13 +1,8 @@
 import logging
-import os
 import json, uuid
 from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
-from docx import Document
-from htmldocx import HtmlToDocx
-from common.prompts import Prompt
-from common.model import retryModelForOutputType
 from common.file import deleteDirWithFiles
 from common.globals import Utility, PED_Module, DBTables
 from transform.inputProcessor import inputProcessor 
@@ -30,9 +25,9 @@ from transform.outputGenerator import outputGenerator
 # 2007 - document record could not be updated in database
 # 5001 - Method level error
 ############################################################
-def generateDocumentFromPDF(event, context):
+def generatePPTFromPDF(event, context):
 
-    print(event)
+    # print(event)
     logging.debug(event)
 
     origin = None
@@ -55,7 +50,6 @@ def generateDocumentFromPDF(event, context):
                     }, origin)
         
         body = json.loads(event['body'])
-        fileLocationToDelete = ''
         try:
 
             #initiate DB modules
@@ -67,7 +61,7 @@ def generateDocumentFromPDF(event, context):
 
             #log user and transaction details
             bodyCurtailed = Utility.curtailObject4Logging(body, "fileContentBase64")
-            activityId = Utility.logUserActivity(bodyCurtailed, "generateDocumentFromPDF")
+            activityId = Utility.logUserActivity(bodyCurtailed, "generatePPTFromPDF")
 
             tran_id = body["transactionId"]
             if tran_id is None:
@@ -77,8 +71,10 @@ def generateDocumentFromPDF(event, context):
             priorTranIds = body["priorTranIds"] if 'priorTranIds' in body else ""
             fileContent = body["fileContentBase64"] if 'fileContentBase64' in body else None
             fileName = body["fileName"] if 'fileName' in body else None
-            renderingType = body["renderingType"]  if "renderingType" in body else None
-            instruction = body["instruction"]  if "instruction" in body else None
+            slideCount = body["slideCount"]  if "slideCount" in body else None
+            contentType = body["contentType"]  if "contentType" in body else None
+            format = body["format"]  if "format" in body else None
+            notes = body["notes"]  if "notes" in body else None
             userid = body["userid"]  if "userid" in body else None
 
             if userid is None:
@@ -146,13 +142,7 @@ def generateDocumentFromPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            fileLocationToDelete = str(Path(retVal).parent)
-            
-            print("File saved successfully::*******************")
-            print(retVal)
-            print("*********************************************")
-            
-            # # check for minimum length of the text- min 400 chars
+            # # check for minimum length of the text- min 400 chars and max 35000
             # if len(retVal) < 400:
                 
             #     response = Utility.generateResponse(500, {
@@ -164,59 +154,70 @@ def generateDocumentFromPDF(event, context):
             #     Utility.updateUserActivity(str(activityId), userid, response)
             #     return response
 
-            # transform the input text 
-            newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
-                if instruction is not None else Utility.PROMPT_EXTENSION_4_HTML_OUTPUT
-            inputs = {
-                # "wordCount": wordCount,
-                # "renderingType": renderingType,
-                "instruction": newInst
-            }
-            trmsText, outputType = transformationHandler.transformTextwithContext(retVal, renderingType, **inputs)
+            # if len(retVal) > 35000:
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2004",
+            #             'error': 'text is too long for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
 
-            if trmsText is None:
+            # transform the input text 
+            # newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
+            #     if instruction is not None else Utility.PROMPT_EXTENSION_4_HTML_OUTPUT
+            inputs = {
+                "slideCount" : slideCount,
+                "contentType" : contentType,
+                "format" : format,
+                "notes" : notes,
+                # "instruction": newInst
+            }
+            trmsJSON = transformationHandler.transformTextForPPTGenerationWithContext \
+                                        (Path(retVal).parent, **inputs)
+
+            if trmsJSON is None:
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
-                        'errorCode': "2004",
+                        'errorCode': "2005",
                         'error': 'model response could not be obtained',
                         'AnswerRetrieved': False
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            if trmsText == "PROMPT_NOT_GENERATED":
+            if trmsJSON == "PROMPT_NOT_GENERATED":
                 
                 response = Utility.generateResponse(500, {
                         'transactionId' : tran_id,
-                        'errorCode': "2005",
+                        'errorCode': "2006",
                         'error': 'prompt could not be retrieved',
                         'AnswerRetrieved': False
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
+            # print (trmsJSON)
             
-            print("*************************************")
-            print("Output text has been generated successfully.")
-            print("*************************************")
-
-            # save html text in word document
-            # upload the document to S3 and generate pre-signed URL
+            # save json in ppt 
+            # upload the ppt to S3 and generate pre-signed URL
             localDocFileLocation = str(Path(Utility.EFS_LOCATION, userid))
             datetimestring = datetime.now().replace(tzinfo=timezone.utc).strftime("%m%d%Y%H%M%S")
             datetimeFormattedString = datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S")
-            localDocFileName = "Document_"+ tran_id + "_" + datetimestring + ".docx"
+            localDocFileName = "PPT_"+ tran_id + "_" + datetimestring + ".pptx"
             localDocFilePath = str(Path(localDocFileLocation, localDocFileName))
             s3filePath = "/" + userid + "/" + localDocFileName
-            presignedURL = outputGenerator.storeOutputFile(trmsText, "DOC", outputType, \
+            presignedURL = outputGenerator.storeOutputFile(trmsJSON, "PPT", "JSON", \
                                                            localDocFileName, localDocFileLocation,\
-                                                            s3filePath)
+                                                            s3filePath, \
+                                                            'LIST' if "List".upper() in format.upper() else 'TEXT')
             
             if presignedURL is None:
                 # Return a 500 server error response
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
-                                    'errorCode': "2006",
-                                    'error': 'document could not be stored',
+                                    'errorCode': "2007",
+                                    'error': 'ppt could not be stored',
                                 }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
@@ -234,7 +235,7 @@ def generateDocumentFromPDF(event, context):
                 "s3bucketName": Utility.S3BUCKE_NAME,
                 "initials3PresignedURLGenerated": presignedURL,
                 "fileCreationDateTime": datetimeFormattedString,
-                "fileType": "docx",
+                "fileType": "pptx",
                 "fileStatus": "complete",
                 "user-fileName": "",
             })
@@ -243,12 +244,15 @@ def generateDocumentFromPDF(event, context):
                 # Return a 500 server error response
                 response = Utility.generateResponse(500, {
                                     'transactionId' : tran_id,
-                                    'errorCode': "2007",
+                                    'errorCode': "2008",
                                     'error': 'document record could not be updated in database',
                                 }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
+            # delete the local files and folders
+            deleteDirWithFiles(localDocFileLocation)
+
             # Return the response in JSON format
             response = Utility.generateResponse(200, {
                                     'transactionId' : tran_id,
@@ -261,7 +265,7 @@ def generateDocumentFromPDF(event, context):
         except Exception as e:
             # Log the error with stack trace to CloudWatch Logs
             logging.error(Utility.formatLogMessage(tran_id, userid, \
-                                                   message=f"Error in generateDocumentFromPDF Function: {str(e)}"))
+                                        message=f"Error in generatePPTFromPDF Function: {str(e)}"))
             logging.error("Stack Trace:", exc_info=True)
             
             # Return a 500 server error response
@@ -273,5 +277,3 @@ def generateDocumentFromPDF(event, context):
                                 }, origin)
             Utility.updateUserActivity(str(activityId), -1, response)
             return response
-        finally:
-            deleteDirWithFiles(fileLocationToDelete)

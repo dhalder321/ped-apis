@@ -129,27 +129,28 @@ def verifyPDF(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # check for minimum length of the text- min 400 chars and max 35000
+            # check for minimum length of the text- min 400 chars and no max
             if len(retVal) < 400:
                 
-                response = Utility.generateResponse(500, {
+                response = Utility.generateResponse(200, {
                         'transactionId' : tran_id,
                         'errorCode': "2003",
-                        'error': 'text is too short for any transformation',
+                        'Response': 'failure',
+                        'errors': ['Text is too short for any transformation. Please add larger file that is less than 1 MB in size'],
                         'AnswerRetrieved': False
                     }, origin)
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
 
-            if len(retVal) > 35000:
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2004",
-                        'error': 'text is too long for any transformation',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
+            # if len(retVal) > 35000:
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2004",
+            #             'error': 'text is too long for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {

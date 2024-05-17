@@ -1,0 +1,15 @@
+{
+  "steps": [
+    {
+      "step": 1,
+      "description": "Suggest online resources related to the topics.",
+      "prompt": "Given the document, suggest a list of 15 potential online resources (like academic articles, websites, databases) that provide additional information on these topics. Describe the type of each resource. generate the output in the following JSON format and DO NOT STRICTLY generate any other text apart from the JSON.                {          \"Online_Resources\":[                      {                          \"resource name\": \"name and/or URL of the website or any other pointer\",                          \"type\": \"type of the resource e.g. article, database etc\",                          \"description\": \"description of the resource\"                      },                      {                          \"resource name\": \"name and/or URL of the website or any other pointer\",                          \"type\": \"type of the resource e.g. article, database etc\",                          \"description\": \"description of the resource\"                      },                      ...          ]        }"
+
+    },
+    {
+      "step": 2,
+      "description": "Describe each resource's relevance and utility.",
+      "prompt": "For the following online resource:                 Online resource-----------------------------          {{ONLINE_RESOURCE}}        --------------------------------------------        provide a detailed description for the resource explaining why it is important for the topic in the document and how details from the resource can be useful for the topic."
+    }
+  ]
+}

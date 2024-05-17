@@ -1,45 +1,84 @@
-Based on the text provided below, generate a Critical Response Essay that adheres to the following guidelines and sections:
-
-Introduction:
-
-Briefly introduce the text you are responding to, including its title, author, and the main thesis or argument. Provide context about why this text is significant within its field of study.
-State your own thesis for the response essay, outlining the stance you will take in your critique or analysis of the original text.
-
-Summary of the Original Text:
-
-Provide a concise summary of the key points, arguments, and findings of the original text. Highlight the methodology used (if applicable) and the conclusions drawn by the author.
-
-This summary should be objective, aiming to give readers a clear understanding of the text's content without your personal bias.
-
-Critical Analysis:
-
-Engage in a detailed analysis of the text, focusing on aspects such as its arguments, evidence, theoretical framework, and methodology.
-
-Identify strengths and weaknesses in the text's approach and argumentation. Discuss the adequacy of the evidence provided, the robustness of the arguments, and the validity of the conclusions drawn.
-Consider the text's contributions to its field, its originality, and its impact on ongoing debates or research areas.
-
-Your Perspective:
-
-Offer your perspective on the text, building on the critical analysis. This might include agreeing or disagreeing with the author's arguments, suggesting alternative interpretations, or highlighting overlooked aspects.
-
-Support your perspective with evidence from the text itself, other scholarly sources, or your own research. This section should demonstrate your ability to engage critically and constructively with the text.
-
-Broader Implications:
-
-Discuss the broader implications of the text's arguments and findings. Consider how it fits within the wider academic discourse, its relevance to real-world issues, and its potential to influence future research or policy.
-
-Suggest areas for further research or exploration that emerge from your critique of the text.
-Conclusion:
-
-Summarize the main points of your response essay, reinforcing your thesis and the critical stance you've taken.
-
-Reflect on the importance of engaging with texts critically, especially at the graduate level, and the value of academic discourse in advancing knowledge and understanding within your field.
-
-References:
-
-Include a list of references cited in your essay, formatted according to the appropriate academic style (e.g., APA, MLA, Chicago).
-
-{{INSTRUCTION}}
-
-Text for Analysis:
-{{TEXT}}
+[
+    {
+        "task": "Introduction",
+        "prompt": "Read the entire text to understand its main themes, arguments, and objectives. Identify the author's thesis and summarize the methods used to support it. Generate a detailed one-page output on these key points, and provide a brief summary in following JSON format. Do not strictly generate anything apart from the JSON."
+    },
+    {
+        "output": {
+            "text": "",
+            "summary": ""
+        }
+    },
+    {
+        "task": "Contextual Background",
+        "prompt": "Using the summary from the previous task, research and provide a detailed overview of the author’s background, the context in which the text was written, its intended audience, and its purpose. Produce a one-page output on this background information, and summarize it concisely  in following JSON format. Do not strictly generate anything apart from the JSON."
+    },
+    {
+        "output": {
+            "text": "",
+            "summary": ""
+        }
+    },
+    {
+        "task": "Analytical Framework",
+        "prompt": "Based on the summaries from previous tasks, select a critical approach (e.g., feminist, Marxist, post-structuralist) and outline which aspects of the text (arguments, methodologies, theoretical perspectives) will be critically reviewed. Provide a one-page detailed output on this framework, and summarize it  in following JSON format. Do not strictly generate anything apart from the JSON."
+    },
+    {
+        "output": {
+            "text": "",
+            "summary": ""
+        }
+    },
+    {
+        "task": "Detailed Analysis",
+        "prompt": "Incorporate the summaries from previous tasks to critically analyze the arguments and methodologies in the text. Assess the logic, coherence, and persuasiveness of the evidence. Highlight any biases or limitations. Create a one-page detailed output of your findings, and provide a summary  in following JSON format. Do not strictly generate anything apart from the JSON."
+    },
+    {
+        "output": {
+            "text": "",
+            "summary": ""
+        }
+    },
+    {
+        "task": "Comparative Analysis",
+        "prompt": "Using the accumulated summaries, compare the text with other similar works in the field. Discuss its uniqueness or commonality and how it aligns or conflicts with current trends or theories. Generate a one-page detailed output on these comparisons, and provide a summary  in following JSON format. Do not strictly generate anything apart from the JSON."
+    },
+    {
+        "output": {
+            "text": "",
+            "summary": ""
+        }
+    },
+    {
+        "task": "Synthesis of Analysis",
+        "prompt": "Utilizing all previous summaries, synthesize insights from the critical analysis to assess the text’s value, impact, and relevance. Suggest implications for the field and potential areas for further research or debate. Provide a one-page detailed output of these synthesized insights, and summarize them  in following JSON format. Do not strictly generate anything apart from the JSON."
+    },
+    {
+        "output": {
+            "text": "",
+            "summary": ""
+        }
+    },
+    {
+        "task": "Conclusion",
+        "summaryConsolidated" : "y",
+        "prompt": "Using all previous summaries, provide a comprehensive conclusion of the overall text analysis, highlighting its strengths and weaknesses. This should be a detailed one-page output reflecting all critical insights gathered, with a concise summary  in following JSON format. Do not strictly generate anything apart from the JSON."
+    },
+    {
+        "output": {
+            "text": "",
+            "summary": ""
+        }
+    },
+    {
+        "task": "Final Thoughts",
+        "summaryConsolidated" : "y",
+        "prompt": "Review the comprehensive conclusion to ensure coherence, balance, and clarity. Adjust the language for an academic or professional audience, and provide a one-page detailed output of your final adjustments and the overall critique, along with a summary  in following JSON format. Do not strictly generate anything apart from the JSON."
+    },
+    {
+        "output": {
+            "text": "",
+            "summary": ""
+        }
+    }
+]

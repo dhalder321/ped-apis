@@ -20,6 +20,10 @@ class outputGenerator:
             return Utility.uploadDocumentinHTMLtoS3(text, fileName, \
                                                 localFileLocation, s3Path)
         
+        elif outputFormat == "DOC" and textType == "TEXT":
+            return Utility.uploadDocumentinTexttoS3(text, fileName, \
+                                                localFileLocation, s3Path)
+        
         elif outputFormat == 'PPT' and textType == 'JSON':
             return Utility.uploadPPTinJSONtoS3(text, fileName, \
                                                 localFileLocation, s3Path, anyObject)

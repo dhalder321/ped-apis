@@ -5,6 +5,7 @@ import json, uuid
 from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
+from common.file import deleteDirWithFiles
 from docx import Document
 from htmldocx import HtmlToDocx
 from common.prompts import Prompt
@@ -54,6 +55,7 @@ def generateQuizFromDocument(event, context):
                     }, origin)
         
         body = json.loads(event['body'])
+        foldertoDelete = ''
         try:
 
             #initiate DB modules
@@ -65,7 +67,7 @@ def generateQuizFromDocument(event, context):
 
             #log user and transaction details
             bodyCurtailed = Utility.curtailObject4Logging(body, "fileContentBase64")
-            activityId = Utility.logUserActivity(body, "generateQuizFromDocument")
+            activityId = Utility.logUserActivity(bodyCurtailed, "generateQuizFromDocument")
 
             tran_id = body["transactionId"]
             if tran_id is None:
@@ -120,7 +122,7 @@ def generateQuizFromDocument(event, context):
                             "userid": userid,
                             "tran_id": tran_id
                             }
-            retVal = inputProcessor.processInput("docContentBase64", \
+            retVal = inputProcessor.storeInput("docContentBase64", \
                                                         **inputValues)
             if retVal is None:
                 response = Utility.generateResponse(500, {
@@ -144,28 +146,30 @@ def generateQuizFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # check for minimum length of the text- min 400 chars and max 35000 chars
-            if len(retVal) < 400:
-                
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2003",
-                        'error': 'text is too short for any transformation',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
+            foldertoDelete = str(Path(retVal).parent)
             
-            if len(retVal) > 35000:
+            # # check for minimum length of the text- min 400 chars and max 35000 chars
+            # if len(retVal) < 400:
                 
-                response = Utility.generateResponse(500, {
-                        'transactionId' : tran_id,
-                        'errorCode': "2004",
-                        'error': 'text is too long for any transformation',
-                        'AnswerRetrieved': False
-                    }, origin)
-                Utility.updateUserActivity(str(activityId), userid, response)
-                return response
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2003",
+            #             'error': 'text is too short for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
+            
+            # if len(retVal) > 35000:
+                
+            #     response = Utility.generateResponse(500, {
+            #             'transactionId' : tran_id,
+            #             'errorCode': "2004",
+            #             'error': 'text is too long for any transformation',
+            #             'AnswerRetrieved': False
+            #         }, origin)
+            #     Utility.updateUserActivity(str(activityId), userid, response)
+            #     return response
 
             # transform the input text 
             # newInst = instruction + " " + Utility.PROMPT_EXTENSION_4_HTML_OUTPUT \
@@ -177,8 +181,8 @@ def generateQuizFromDocument(event, context):
                 "explanation" : explanation,
                 # "instruction": newInst
             }
-            trmsJSON = transformationHandler.transformTextForQuizGeneration \
-                                        (retVal, **inputs)
+            trmsJSON = transformationHandler.transformTextForQuizGenerationWithContext \
+                                        (Path(retVal).parent, **inputs)
 
             if trmsJSON is None:
                 response = Utility.generateResponse(500, {
@@ -251,11 +255,7 @@ def generateQuizFromDocument(event, context):
                 Utility.updateUserActivity(str(activityId), userid, response)
                 return response
             
-            # delete the local files and folders
-            Path(localDocFilePath).unlink()
-            localFolder = Path(localDocFileLocation)
-            if localFolder is not None and not any(localFolder.iterdir()):
-                localFolder.rmdir()
+
 
             # Return the response in JSON format
             response = Utility.generateResponse(200, {
@@ -282,6 +282,9 @@ def generateQuizFromDocument(event, context):
                                 }, origin)
             Utility.updateUserActivity(str(activityId), -1, response)
             return response
+        
+        finally:
+            deleteDirWithFiles(foldertoDelete)
 
 
 
