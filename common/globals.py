@@ -136,6 +136,8 @@ class Utility:
   root_path_type = 'eph'  #efs, eph, local
   EFS_LOCATION = Local_Location
 
+  WINDOWS_LOCAL_PATH = "/tmp"
+
   PED_EMAIL_SENDER = 'contact@pioneereducationtech.com'
 
   DOC2SFDT_LAMBDA_FUNCTION_NAME = 'arn:aws:lambda:us-east-2:464311745778:function:ped-doc2sfdt'

@@ -4,6 +4,7 @@ import boto3
 from botocore.exceptions import ClientError
 import os
 from pathlib import Path
+from genericpath import isfile
 
 def downloadFile(targetFileName, bucket, object_name=None):
 
@@ -81,6 +82,80 @@ def uploadFile(file_name, bucket, object_name=None):
         logging.error(e)
         return None
     
+def upload_file(bucketName, file_name, object_name=None):
+    if object_name is None:
+        object_name = os.path.basename(file_name)
+    s3_client = boto3.client('s3')
+    try:
+        s3_client.upload_file(file_name, bucketName, object_name)
+    except ClientError as e:
+        print(e)
+        return False
+    return True
+
+def uploadDirInRecursive(bucketName, localDir, awsInitDir, space=""):
+
+    print(space+"Processing dir: "+localDir)
+    for file in os.listdir(localDir):
+        file_path = str(Path(localDir,file))
+        if file != "logs":
+            if isfile(file_path):
+                upload_file(bucketName, file_path, awsInitDir+"/"+file)
+            else:
+                uploadDirInRecursive(bucketName, file_path, awsInitDir+"/"+file, space+"  ")
+    print(space+"... Done")
+    
+def getFileDirectories(bucket_name, prefix=""):
+    file_names = []
+    folders = []
+
+    default_kwargs = {
+        "Bucket": bucket_name,
+        # "Marker": s3path, 
+        "Prefix": prefix
+    }
+    next_token = ""
+    s3_client = boto3.client('s3')
+    while next_token is not None:
+        updated_kwargs = default_kwargs.copy()
+        if next_token != "":
+            updated_kwargs["ContinuationToken"] = next_token
+
+        response = s3_client.list_objects_v2(**default_kwargs)
+        contents = response.get("Contents")
+
+        if contents is not None:
+            keys = list(filter(lambda x: x.get("Key", '').startswith(prefix), contents))
+            for result in keys:
+                key = result.get("Key")
+                if key[-1] == "/":
+                    folders.append(key)
+                else:
+                    file_names.append(key)
+
+        next_token = response.get("NextContinuationToken")
+
+    return file_names, folders
+
+
+def downloadDirectory(bucket_name, local_path, file_names, folders):
+
+    local_path = Path(local_path)
+    s3_client = boto3.client('s3')
+
+    for folder in folders:
+        folder_path = Path.joinpath(local_path, folder)
+        folder_path.mkdir(parents=True, exist_ok=True)
+
+    for file_name in file_names:
+        file_path = Path.joinpath(local_path, file_name)
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        s3_client.download_file(
+            bucket_name,
+            file_name,
+            str(file_path)
+        )
+
 def deleteFile(bucket, object_name=None):
 
     try:

@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 from common.db import DBManager
 from common.globals import Utility, PED_Module, DBTables
+from common.s3File import upload_file, uploadDirInRecursive, getFileDirectories, downloadDirectory
 from transform.inputProcessor import inputProcessor
 from transform.outputGenerator import outputGenerator 
 from common.voiceOver import generateVoiceOverFiles 
@@ -149,13 +150,24 @@ def generateVideoFromPresentation(event, context):
             print("***************Script files generated successfully**************************")
 
             
-            # STEP 2: invoke the lambda function to get the images created
+            # STEP 2: Invoke Windows API for Image conversion
+            # invoke the lambda function to get the images created
             # pass the local ppt file path
             # retVal = invokeLambdaFunction(Utility.PPT_2_IMAGE_GENERATION_API_URL, 
             #                                 {
             #                                     "pptFilePath": pptFilePath,
             #                                     })
-            imgPath = getImagesFromPPT(pptFilePath)
+            #Updload the ppt file in S3 /tmp folder
+            if not upload_file(str(Path(pptFilePath).name), Utility.S3BUCKE_NAME, 
+                               Utility.S3OBJECT_NAME_FOR_TEMPORARY_FILES + "/" + userid):
+                logging.debug("File could not be uploaded in S3 for image conversion.")
+                return None
+            
+            # s3ImgPath = InvokeRestAPIForImageConversion(Utility.S3OBJECT_NAME_FOR_TEMPORARY_FILES + "/" + userid, 
+                                                    #   str(Path(pptFilePath).name))
+            
+            # download images into local image path
+
 
             # logging.debug("output from ppt2image lambda function:" + str(retVal))
 

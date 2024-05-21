@@ -3,7 +3,7 @@ from common.model import retryModelForOutputType
 from common.globals import Utility
 from pptx import Presentation
 from docx import Document
-import os, re
+import os, re, shutil
 from pathlib import Path
 import logging
 import fitz
@@ -173,7 +173,8 @@ def deleteDirWithFiles(folderPath):
             if file.is_file():
                 file.unlink()
             elif file.is_dir():
-                file.rmdir()
+                # file.rmdir()
+                shutil.rmtree(file)
         dir_path.rmdir()
         print(f"Directory '{dir_path}' and its contents have been deleted.")
     else:

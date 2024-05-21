@@ -19,7 +19,7 @@ from text2text import generateDocumentFromText
 from pdf2text import generateDocumentFromPDF
 from web2text import generateDocumentFromWebContent
 from ppt2video import generateVideoFromPresentation
-from ppt2image import getImagesFromPPT
+from ppt2image import getImagesFromS3PPT
 from docOfTopicOutline import generateDocOfTopicOutline
 from quickText import generateQuickText
 from doc2PPT import generatePPTFromDocument
@@ -476,23 +476,23 @@ from common.rag  import pedRAG
 
 
 #  read  file ppt file in base64 format
-with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\VideoGen\\British Politics in India.pptx", \
-            "rb") as f:
-    bytes = f.read()
+# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\VideoGen\\British Politics in India.pptx", \
+#             "rb") as f:
+#     bytes = f.read()
 # print(base64.b64encode(bytes).decode('utf-8'))
-req = {
-        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-        "fileName": "humanrights.pptx", 
-        "userid": "67745",
-        "transactionId": "8736423hk2j3483",
-        "requesttimeinUTC": "3/14/2024 21:18"
-    }
-# print (req)
-data = generateVideoFromPresentation({
-        "httpMethod": "POST",
-        "body": json.dumps(req)
-}, {})
-print(data)
+# req = {
+#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+#         "fileName": "humanrights.pptx", 
+#         "userid": "67745",
+#         "transactionId": "8736423hk2j3483",
+#         "requesttimeinUTC": "3/14/2024 21:18"
+#     }
+# # print (req)
+# data = generateVideoFromPresentation({
+#         "httpMethod": "POST",
+#         "body": json.dumps(req)
+# }, {})
+# print(data)
 
 # getImagesFromPPT("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\British Politics in India.pptx")
 
@@ -562,3 +562,6 @@ print(data)
 #         print(paragraph + "\n---\n")
 # else:
 #     print(extracted_content)
+
+
+# getImagesFromS3PPT(Utility.S3BUCKE_NAME, "tmp/334400", "/tmp", "British Politics in India.pptx")
