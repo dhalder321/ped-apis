@@ -564,4 +564,4 @@ from common.rag  import pedRAG
 #     print(extracted_content)
 
 
-# getImagesFromS3PPT(Utility.S3BUCKE_NAME, "tmp/334400", "/tmp", "British Politics in India.pptx")
+getImagesFromS3PPT(Utility.S3BUCKE_NAME, "tmp/334400", "/tmp", "British Politics in India.pptx")

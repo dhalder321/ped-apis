@@ -11,18 +11,19 @@ def getImagesFromS3PPT(s3Bucket, s3DirPath, targetDirPath, fileName):
 
         folderToDelete = ''
 
-        file_names, folders = getFileDirectories(s3Bucket, s3DirPath + "/")
-        downloadDirectory(s3Bucket, targetDirPath, file_names, folders)
+        file_names, folder_names = getFileDirectories(s3Bucket, s3DirPath + "/")
 
-        folderToDelete = Path(targetDirPath, Path(s3DirPath).parts[0])
+        localPath = downloadDirectory(s3Bucket, targetDirPath, file_names, folder_names)
 
-        imgPath = getImagesFromPPT(str(Path(targetDirPath, folders[0], fileName)))
+        folderToDelete = localPath # Path(targetDirPath, Path(s3DirPath).parts[0])
+
+        imgPath = getImagesFromPPT(str(Path(localPath, fileName)))
 
         if Path(imgPath).exists():
-            uploadDirInRecursive(s3Bucket, str(Path(targetDirPath, folders[0])), s3DirPath)
-            
+            uploadDirInRecursive(s3Bucket, localPath, s3DirPath)
 
         return 
+
     except Exception as e:
         logging.error("Error in getImagesFromS3PPT method::" + str(e) )
         return None

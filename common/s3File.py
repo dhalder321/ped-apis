@@ -125,8 +125,8 @@ def getFileDirectories(bucket_name, prefix=""):
         contents = response.get("Contents")
 
         if contents is not None:
-            keys = list(filter(lambda x: x.get("Key", '').startswith(prefix), contents))
-            for result in keys:
+            # keys = list(filter(lambda x: x.get("Key", '').startswith(prefix), contents))
+            for result in contents:
                 key = result.get("Key")
                 if key[-1] == "/":
                     folders.append(key)
@@ -137,24 +137,35 @@ def getFileDirectories(bucket_name, prefix=""):
 
     return file_names, folders
 
-
-def downloadDirectory(bucket_name, local_path, file_names, folders):
+# use only for PPT 2 image generation in windows fastAPI 
+def downloadDirectory(bucket_name, local_path, files, folders):
 
     local_path = Path(local_path)
     s3_client = boto3.client('s3')
 
+    # derive local folder and file from s3 path 
     for folder in folders:
-        folder_path = Path.joinpath(local_path, folder)
+        if folder.startswith('\\') or folder.startswith('/'):
+            local_folder = Path(*Path(folder).parts[2:])
+        else:
+            local_folder = Path(*Path(folder).parts[1:])
+        folder_path = Path.joinpath(local_path, local_folder)
         folder_path.mkdir(parents=True, exist_ok=True)
 
-    for file_name in file_names:
-        file_path = Path.joinpath(local_path, file_name)
+    for file_name in files:
+        if file_name.startswith('\\') or file_name.startswith('/'):
+            local_file_name = Path(*Path(file_name).parts[2:])
+        else:
+            local_file_name = Path(*Path(file_name).parts[1:])
+        file_path = Path.joinpath(local_path, local_file_name)
         file_path.parent.mkdir(parents=True, exist_ok=True)
         s3_client.download_file(
             bucket_name,
             file_name,
             str(file_path)
         )
+    
+    return str(folder_path)
 
 def deleteFile(bucket, object_name=None):
 
