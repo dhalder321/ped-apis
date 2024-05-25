@@ -138,7 +138,7 @@ def getFileDirectories(bucket_name, prefix=""):
     return file_names, folders
 
 # use only for PPT 2 image generation in windows fastAPI 
-def downloadDirectory(bucket_name, local_path, files, folders):
+def downloadDirectory(bucket_name, local_path, files, folders, fileName = ''):
 
     local_path = Path(local_path)
     s3_client = boto3.client('s3')
@@ -159,13 +159,18 @@ def downloadDirectory(bucket_name, local_path, files, folders):
             local_file_name = Path(*Path(file_name).parts[1:])
         file_path = Path.joinpath(local_path, local_file_name)
         file_path.parent.mkdir(parents=True, exist_ok=True)
+        if fileName != '' and str(file_path).endswith(fileName):
+            returnPath = Path(file_path).parent
+
         s3_client.download_file(
             bucket_name,
             file_name,
             str(file_path)
         )
-    
-    return str(folder_path)
+    if len(files) > 0:
+        return returnPath
+    else:
+        return None
 
 def deleteFile(bucket, object_name=None):
 

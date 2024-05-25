@@ -476,23 +476,23 @@ from common.rag  import pedRAG
 
 
 #  read  file ppt file in base64 format
-# with open("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\VideoGen\\British Politics in India.pptx", \
-#             "rb") as f:
-#     bytes = f.read()
+with open("C:\\tmp\\British Politics in India.pptx", \
+            "rb") as f:
+    bytes = f.read()
 # print(base64.b64encode(bytes).decode('utf-8'))
-# req = {
-#         "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
-#         "fileName": "humanrights.pptx", 
-#         "userid": "67745",
-#         "transactionId": "8736423hk2j3483",
-#         "requesttimeinUTC": "3/14/2024 21:18"
-#     }
-# # print (req)
-# data = generateVideoFromPresentation({
-#         "httpMethod": "POST",
-#         "body": json.dumps(req)
-# }, {})
-# print(data)
+req = {
+        "fileContentBase64": base64.b64encode(bytes).decode('utf-8'),
+        "fileName": "British Politics in India.pptx", 
+        "userid": "4321",
+        "transactionId": "iuyiu1y2498127492421",
+        "requesttimeinUTC": "5/14/2024 21:18"
+    }
+# print (req)
+data = generateVideoFromPresentation({
+        "httpMethod": "POST",
+        "body": json.dumps(req)
+}, {})
+print(data)
 
 # getImagesFromPPT("G:\\My Drive\\GEMBA Course Content\\Final Project\\Pitch-V2\\Materials\\British Politics in India.pptx")
 
@@ -564,4 +564,4 @@ from common.rag  import pedRAG
 #     print(extracted_content)
 
 
-getImagesFromS3PPT(Utility.S3BUCKE_NAME, "tmp/334400", "/tmp", "British Politics in India.pptx")
+# getImagesFromS3PPT(Utility.S3BUCKE_NAME, "tmp/334400", "c:\\tmp", "British Politics in India.pptx")

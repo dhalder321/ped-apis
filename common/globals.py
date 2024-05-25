@@ -136,16 +136,20 @@ class Utility:
   root_path_type = 'eph'  #efs, eph, local
   EFS_LOCATION = Local_Location
 
-  WINDOWS_LOCAL_PATH = "/tmp"
+  WINDOWS_LOCAL_PATH = "c:\\tmp"
 
   PED_EMAIL_SENDER = 'contact@pioneereducationtech.com'
 
   DOC2SFDT_LAMBDA_FUNCTION_NAME = 'arn:aws:lambda:us-east-2:464311745778:function:ped-doc2sfdt'
 
+  PPT2IMAGE_REQUEST_Q_URL = 'https://sqs.us-east-2.amazonaws.com/464311745778/ped-ppt2image-q'
+  PPT2IMAGE_RESPONSE_Q_URL = 'https://sqs.us-east-2.amazonaws.com/464311745778/ped-response-q-v2'
+
+
   S3BUCKE_NAME = 'pedbuc'
   S3OBJECT_NAME_FOR_USER_FILES = 'user-files'
   S3OBJECT_NAME_FOR_PROMPT_FILES = 'prompts'
-  S3OBJECT_NAME_FOR_TEMPORARY_FILES = 'temp'
+  S3OBJECT_NAME_FOR_TEMPORARY_FILES = 'tmp'
 
   TRASFORMATION_USER_ROLE = "You are a seasoned and experienced academician"
   PROMPT_EXTENSION_4_HTML_OUTPUT = "Generate the output strictly and strictly in HTML format with at minimum doctype, html, head and body tags and other basic HTML tags. Do NOT add any meta tags."

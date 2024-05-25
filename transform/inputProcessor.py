@@ -237,7 +237,7 @@ class inputProcessor:
         
         #process the ppt file
         return inputProcessor.processPPTFile4Video(inputValue["fileContentBase64"], \
-                inputValue["pptFilename"], inputValue["userid"], inputValue["tran_id"])
+                inputValue["pptFilename"], inputValue["userid"], inputValue["tran_id"], inputValue['win'])
 
 
     def processPPTFileContentBase64(fileContentBase64, pptFileName, userid, tran_id):
@@ -266,10 +266,14 @@ class inputProcessor:
         return text
 
     
-    def processPPTFile4Video(fileContentBase64, pptFileName, userid, tran_id):
+    def processPPTFile4Video(fileContentBase64, pptFileName, userid, tran_id, win=False):
 
         # save the ppt file locally
-        localFileLocation = str(Path(Utility.EFS_LOCATION, userid))
+        if win:
+            localFileLocation = str(Path(Utility.WINDOWS_LOCAL_PATH, userid))
+        else:
+            localFileLocation = str(Path(Utility.EFS_LOCATION, userid))
+        
         datetimestring = datetime.now().replace(tzinfo=timezone.utc).strftime("%m%d%Y%H%M%S")
         # datetimeFormattedString = datetime.now().replace(tzinfo=timezone.utc).strftime("%m/%d/%Y %H:%M:%S")
         localFileName = "Uploaded-PPT_"+ tran_id + "_" + datetimestring + ".pptx"

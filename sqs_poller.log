@@ -1,0 +1,123 @@
+2024-05-24 19:30:34,785:INFO:SQS Polling script started
+2024-05-24 19:30:34,863:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 19:32:01,782:ERROR:Error processing message: Expecting value: line 1 column 1 (char 0)
+2024-05-24 19:34:17,920:INFO:SQS Polling script started
+2024-05-24 19:34:17,999:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 19:39:15,459:INFO:SQS Polling script started
+2024-05-24 19:39:15,568:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 19:40:22,017:INFO:SQS Polling script ended
+2024-05-24 19:40:40,055:INFO:SQS Polling script started
+2024-05-24 19:40:40,133:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 19:41:33,378:INFO:SQS Polling script ended
+2024-05-24 19:42:55,818:INFO:SQS Polling script started
+2024-05-24 19:42:55,880:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 19:47:24,701:INFO:SQS Polling script started
+2024-05-24 19:47:24,747:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 19:48:12,620:ERROR:Error processing message: Expecting value: line 1 column 1 (char 0)
+2024-05-24 19:55:26,782:INFO:SQS Polling script started
+2024-05-24 19:55:26,902:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 19:55:55,272:INFO:SQS Polling script started
+2024-05-24 19:55:55,350:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 19:56:38,515:INFO:Processing message with subject: d1a442e2-1a03-11ef-9a18-0a4b50b88b95 and ID: d1a442e2-1a03-11ef-9a18-0a4b50b88b95
+2024-05-24 19:58:57,378:INFO:SQS Polling script started
+2024-05-24 19:58:57,523:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 20:01:48,588:INFO:SQS Polling script ended
+2024-05-24 20:05:32,610:INFO:SQS Polling script started
+2024-05-24 20:05:32,672:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 20:16:01,575:INFO:SQS Polling script started
+2024-05-24 20:16:01,669:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 20:16:20,799:INFO:Processing message with subject: d1a442e2-1a03-11ef-9a18-0a4b50b88b95 and ID: d1a442e2-1a03-11ef-9a18-0a4b50b88b95
+2024-05-24 20:18:45,371:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 20:18:45,922:INFO:Processing message with subject: 3193e7e1-1a05-11ef-81f3-0a4b50b88b95 and ID: 3193e7e1-1a05-11ef-81f3-0a4b50b88b95
+2024-05-24 20:19:43,714:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 20:20:00,268:INFO:Processing message with subject: bb123a11-1a05-11ef-bac4-0a4b50b88b95 and ID: bb123a11-1a05-11ef-bac4-0a4b50b88b95
+2024-05-24 20:21:15,204:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 20:21:15,746:INFO:Processing message with subject: 3935b2f4-1a06-11ef-b3ba-0a4b50b88b95 and ID: 3935b2f4-1a06-11ef-b3ba-0a4b50b88b95
+2024-05-24 20:21:42,767:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 20:21:42,787:INFO:Processing message with subject: 5755b4fd-1a06-11ef-8f10-0a4b50b88b95 and ID: 5755b4fd-1a06-11ef-8f10-0a4b50b88b95
+2024-05-24 20:25:56,417:INFO:SQS Polling script started
+2024-05-24 20:25:56,480:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 20:31:22,892:INFO:Processing message with subject: d1a442e2-1a03-11ef-9a18-0a4b50b88b95 and ID: d1a442e2-1a03-11ef-9a18-0a4b50b88b95
+2024-05-24 20:32:48,283:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 20:33:08,131:INFO:Processing message with subject: 3193e7e1-1a05-11ef-81f3-0a4b50b88b95 and ID: 3193e7e1-1a05-11ef-81f3-0a4b50b88b95
+2024-05-24 20:34:14,508:INFO:SQS Polling script started
+2024-05-24 20:34:14,570:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 20:41:29,952:INFO:SQS Polling script started
+2024-05-24 20:41:30,061:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 20:49:18,438:INFO:Processing message with subject: d1a442e2-1a03-11ef-9a18-0a4b50b88b95 and ID: d1a442e2-1a03-11ef-9a18-0a4b50b88b95
+2024-05-24 20:56:46,535:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 20:59:28,216:INFO:SQS Polling script started
+2024-05-24 20:59:28,279:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 21:01:36,509:INFO:Processing message with subject: d1a442e2-1a03-11ef-9a18-0a4b50b88b95 and ID: d1a442e2-1a03-11ef-9a18-0a4b50b88b95
+2024-05-24 21:07:18,814:INFO:SQS Polling script started
+2024-05-24 21:07:18,878:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 21:16:58,117:INFO:Processing message with subject: d1a442e2-1a03-11ef-9a18-0a4b50b88b95 and ID: d1a442e2-1a03-11ef-9a18-0a4b50b88b95
+2024-05-24 21:20:12,195:INFO:ppt2ImageProcessor.py completed successfully
+2024-05-24 21:20:30,638:INFO:Processing message with subject: 3193e7e1-1a05-11ef-81f3-0a4b50b88b95 and ID: 3193e7e1-1a05-11ef-81f3-0a4b50b88b95
+2024-05-24 21:35:01,206:INFO:SQS Polling script started
+2024-05-24 21:35:01,363:INFO:Found credentials in shared credentials file: ~/.aws/credentials
+2024-05-24 21:35:07,304:INFO:Processing message with subject: d1a442e2-1a03-11ef-9a18-0a4b50b88b95 and ID: d1a442e2-1a03-11ef-9a18-0a4b50b88b95
+2024-05-24 21:45:57,228:INFO:ppt2ImageProcessor.py completed successfully
+2024-05-24 21:45:59,434:INFO:Processing message with subject: 3193e7e1-1a05-11ef-81f3-0a4b50b88b95 and ID: 3193e7e1-1a05-11ef-81f3-0a4b50b88b95
+2024-05-24 22:35:59,380:INFO:SQS Polling script started
+2024-05-24 22:36:15,851:INFO:Processing message with subject: 613efb61-1a1b-11ef-9c93-0a4b50b88b95 and ID: 613efb61-1a1b-11ef-9c93-0a4b50b88b95
+2024-05-24 22:49:27,308:INFO:SQS Polling script started
+2024-05-24 22:49:43,095:INFO:Processing message with subject: 613efb61-1a1b-11ef-9c93-0a4b50b88b95 and ID: 613efb61-1a1b-11ef-9c93-0a4b50b88b95
+2024-05-24 22:53:04,654:INFO:ppt2ImageProcessor.py completed successfully
+2024-05-24 22:53:13,161:INFO:Processing message with subject: f46ccba1-1a1d-11ef-9c90-0a4b50b88b95 and ID: f46ccba1-1a1d-11ef-9c90-0a4b50b88b95
+2024-05-24 22:53:58,447:INFO:ppt2ImageProcessor.py completed successfully
+2024-05-24 22:57:54,327:INFO:SQS Polling script started
+2024-05-24 22:58:00,615:INFO:Processing message with subject: 029d838c-1a21-11ef-90bd-0a4b50b88b95 and ID: 029d838c-1a21-11ef-90bd-0a4b50b88b95
+2024-05-24 23:00:46,549:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 23:21:40,976:INFO:SQS Polling script started
+2024-05-24 23:22:42,460:INFO:Processing message with subject: 7ae0f500-1a24-11ef-a120-0a4b50b88b95 and ID: 7ae0f500-1a24-11ef-a120-0a4b50b88b95
+2024-05-24 23:26:16,114:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 23:28:19,497:INFO:SQS Polling script started
+2024-05-24 23:28:32,688:INFO:Processing message with subject: 4cc3664c-1a25-11ef-b8fd-0a4b50b88b95 and ID: 4cc3664c-1a25-11ef-b8fd-0a4b50b88b95
+2024-05-24 23:32:23,661:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 23:35:51,519:INFO:SQS Polling script started
+2024-05-24 23:36:23,297:INFO:Processing message with subject: 64c6ad67-1a26-11ef-89a1-0a4b50b88b95 and ID: 64c6ad67-1a26-11ef-89a1-0a4b50b88b95
+2024-05-24 23:40:22,830:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 23:44:07,221:INFO:SQS Polling script started
+2024-05-24 23:44:20,660:INFO:Processing message with subject: 5bf53b53-1a27-11ef-ad7a-0a4b50b88b95 and ID: 5bf53b53-1a27-11ef-ad7a-0a4b50b88b95
+2024-05-24 23:46:37,795:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-24 23:50:44,278:INFO:SQS Polling script started
+2024-05-24 23:50:58,362:INFO:Processing message with subject: 6b06603f-1a28-11ef-9ec2-0a4b50b88b95 and ID: 6b06603f-1a28-11ef-9ec2-0a4b50b88b95
+2024-05-25 00:00:44,184:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-25 00:02:15,557:INFO:SQS Polling script started
+2024-05-25 00:02:47,518:INFO:Processing message with subject: 0ff96b77-1a2a-11ef-9f08-0a4b50b88b95 and ID: 0ff96b77-1a2a-11ef-9f08-0a4b50b88b95
+2024-05-25 00:05:27,791:INFO:SQS Polling script started
+2024-05-25 00:05:35,975:INFO:Processing message with subject: 0ff96b77-1a2a-11ef-9f08-0a4b50b88b95 and ID: 0ff96b77-1a2a-11ef-9f08-0a4b50b88b95
+2024-05-25 00:08:34,619:INFO:SQS Polling script started
+2024-05-25 00:08:39,784:INFO:Processing message with subject: 0ff96b77-1a2a-11ef-9f08-0a4b50b88b95 and ID: 0ff96b77-1a2a-11ef-9f08-0a4b50b88b95
+2024-05-25 00:10:57,281:INFO:ppt2ImageProcessor.py completed successfully
+2024-05-25 00:13:04,359:INFO:SQS Polling script started
+2024-05-25 00:13:08,461:INFO:Processing message with subject: 7ff40ba5-1a2b-11ef-922d-0a4b50b88b95 and ID: 7ff40ba5-1a2b-11ef-922d-0a4b50b88b95
+2024-05-25 00:15:15,372:INFO:ppt2ImageProcessor.py completed successfully
+2024-05-25 00:38:44,350:INFO:SQS Polling script started
+2024-05-25 00:43:48,809:INFO:Processing message with subject: ce176282-1a2f-11ef-835c-0a4b50b88b95 and ID: ce176282-1a2f-11ef-835c-0a4b50b88b95
+2024-05-25 00:44:09,916:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-25 00:48:01,693:INFO:Processing message with subject: 693ef5ad-1a30-11ef-98bc-0a4b50b88b95 and ID: 693ef5ad-1a30-11ef-98bc-0a4b50b88b95
+2024-05-25 00:48:13,618:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-25 00:52:47,948:INFO:SQS Polling script started
+2024-05-25 00:53:38,385:INFO:Processing message with subject: 318650f4-1a31-11ef-a7d0-0a4b50b88b95 and ID: 318650f4-1a31-11ef-a7d0-0a4b50b88b95
+2024-05-25 00:54:08,474:INFO:Processing message with subject: 318650f4-1a31-11ef-a7d0-0a4b50b88b95 and ID: 318650f4-1a31-11ef-a7d0-0a4b50b88b95
+2024-05-25 00:54:21,745:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-25 00:54:30,556:INFO:ppt2ImageProcessor.py completed successfully
+2024-05-25 00:56:23,058:INFO:SQS Polling script ended
+2024-05-25 01:06:33,327:INFO:Processing message with subject: eef937e6-1a32-11ef-946d-0a4b50b88b95 and ID: eef937e6-1a32-11ef-946d-0a4b50b88b95
+2024-05-25 01:06:51,870:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-25 01:08:13,081:INFO:Processing message with subject: 34fbe458-1a33-11ef-8971-0a4b50b88b95 and ID: 34fbe458-1a33-11ef-8971-0a4b50b88b95
+2024-05-25 01:08:30,773:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-25 01:15:43,659:INFO:Processing message with subject: 3e4dfd1f-1a34-11ef-b2b3-0a4b50b88b95 and ID: 3e4dfd1f-1a34-11ef-b2b3-0a4b50b88b95
+2024-05-25 01:15:55,408:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-25 01:18:41,309:INFO:SQS Polling script started
+2024-05-25 01:28:43,086:INFO:Processing message with subject: 1297e92f-1a36-11ef-89cc-0a4b50b88b95 and ID: 1297e92f-1a36-11ef-89cc-0a4b50b88b95
+2024-05-25 01:28:51,770:ERROR:ppt2ImageProcessor.py encountered an error
+2024-05-25 01:36:51,634:INFO:SQS Polling script started
+2024-05-25 01:37:52,221:INFO:Processing message with subject: 608f1570-1a37-11ef-92a7-0a4b50b88b95 and ID: 608f1570-1a37-11ef-92a7-0a4b50b88b95
+2024-05-25 01:38:15,471:INFO:ppt2ImageProcessor.py completed successfully
+2024-05-25 01:46:05,052:INFO:SQS Polling script started
+2024-05-25 01:48:35,069:INFO:SQS Polling script ended
+2024-05-25 01:48:44,586:INFO:Processing message with subject: e54baa29-1a38-11ef-9d1f-0a4b50b88b95 and ID: e54baa29-1a38-11ef-9d1f-0a4b50b88b95
+2024-05-25 01:48:54,183:ERROR:ppt2ImageProcessor.py encountered an error

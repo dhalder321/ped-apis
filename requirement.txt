@@ -22,4 +22,4 @@ llama-index-embeddings-openai
 llama-index-readers-file
 docx2txt
 fastapi
-pydentic
+pydantic

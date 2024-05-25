@@ -11,6 +11,7 @@ from common.voiceOver import generateVoiceOverFiles
 from common.video import generateVideo
 from ppt2image import getImagesFromPPT
 from common.lambdaFunction import invokeLambdaFunction
+from ppt2ImageHandler import generateImagesFromS3PPT
 
 
 ############################################################
@@ -109,7 +110,8 @@ def generateVideoFromPresentation(event, context):
                             "fileContentBase64": fileContent,
                             "pptFilename": fileName,
                             "userid": userid,
-                            "tran_id": tran_id
+                            "tran_id": tran_id,
+                            'win' : True
                             }
             pptFilePath = inputProcessor.processPPTInput4Video(**inputValues)
             
@@ -150,23 +152,11 @@ def generateVideoFromPresentation(event, context):
             print("***************Script files generated successfully**************************")
 
             
-            # STEP 2: Invoke Windows API for Image conversion
-            # invoke the lambda function to get the images created
-            # pass the local ppt file path
-            # retVal = invokeLambdaFunction(Utility.PPT_2_IMAGE_GENERATION_API_URL, 
-            #                                 {
-            #                                     "pptFilePath": pptFilePath,
-            #                                     })
-            #Updload the ppt file in S3 /tmp folder
-            if not upload_file(str(Path(pptFilePath).name), Utility.S3BUCKE_NAME, 
-                               Utility.S3OBJECT_NAME_FOR_TEMPORARY_FILES + "/" + userid):
-                logging.debug("File could not be uploaded in S3 for image conversion.")
-                return None
+            # STEP 2: use AWS infra to get the images created
+            retVal = generateImagesFromS3PPT(pptFilePath, Utility.S3OBJECT_NAME_FOR_TEMPORARY_FILES + "/" + userid,
+                                            fileName)
+
             
-            # s3ImgPath = InvokeRestAPIForImageConversion(Utility.S3OBJECT_NAME_FOR_TEMPORARY_FILES + "/" + userid, 
-                                                    #   str(Path(pptFilePath).name))
-            
-            # download images into local image path
 
 
             # logging.debug("output from ppt2image lambda function:" + str(retVal))
