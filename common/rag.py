@@ -19,10 +19,10 @@ class pedRAG:
                         top_p = 1.0, frequency_penalty=0.0, presence_penalty=0.0):
         self.qdClient = QdrantClient(
                                 url="https://2832bf98-d911-4b70-b3a5-f7fcc0e4dc78.us-east4-0.gcp.cloud.qdrant.io:6333",
-                                api_key="BoXq_LawQQSOvPDPQtv4l5P8aCd8PzBBaztmpQpQ6n0Q-3W36yring",
+                                api_key="",
                             )
         self.llm = OpenAI(model=llmModel, 
-                          api_key= "sk-proj-2v580A6zW3Nt80kwv6AvT3BlbkFJPyD8rCGtI2XVrKtx8JIr", 
+                          api_key= "", 
                           max_tokens=maxTokens, 
                           temperature= temperature,
                           top_p= top_p,
@@ -31,10 +31,10 @@ class pedRAG:
                           max_retries=maxModelRetry)
         
         self.embed_model = OpenAIEmbedding(model="text-embedding-3-large", 
-                                           api_key="sk-proj-2v580A6zW3Nt80kwv6AvT3BlbkFJPyD8rCGtI2XVrKtx8JIr")
+                                           api_key="")
 
         # self.aclient = AsyncQdrantClient( url="https://2832bf98-d911-4b70-b3a5-f7fcc0e4dc78.us-east4-0.gcp.cloud.qdrant.io:6333",
-        #     api_key="BoXq_LawQQSOvPDPQtv4l5P8aCd8PzBBaztmpQpQ6n0Q-3W36yring",
+        #     api_key="",
         # )
 
     # Create an index using a chat model, so that we can use the chat prompts!
