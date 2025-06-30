@@ -1,13 +1,13 @@
 {
   "type": "service_account",
   "project_id": "ped-apis-v2",
-  "private_key_id": "720a468dc82975efd50ff5dc24c5bbaaada89348",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDm6JZIaWCZ6O1S\n1TKR9E7jPgdcNA9aGxUjhvunaGck9e39skHfolwmWwsRaYTOqYS2yoOXw4mv4Mc7\nJ/fy8bQdU8RJ6S88UaFPWdikxO3aR1V9JrD9Gyg9gY6cVb8PhasK0k6C4PCqneMy\n8MRq6AqMEx1HYvSw4FZtsjSTy9aPQFA+NuHTIeADCHFQUt/GXyBw7VWnaoYhSHHC\nAnhDcOA/6YC1n7HR4RaVtWijg9Mdlgj2ctMz/o/0oaFPtCMahaVVPbeO63lOrEh5\nllbeXNlD/Pdjh6iUTzomvLwApm/suzvozk7GtN2uqbMejWC+z610dvMKZQY7XW7x\nSVG1pSypAgMBAAECggEAM4ZzAnWBONbhHjq0rhz1/X855Tk4s8KXVPYp8ZE6cuTt\n1k6QpHZ2WZi3P4tsNzFci+1kr9jSQIzH6Eti6LNGncSzaErAX5VXiX1i+mF3Md35\nFZQsqk4FDLR8PiZkG/KX2DJVkp7fFTNmH1fafICK2fbp8aQDNfTZVGEPmmtB1XT3\n0NLOKrPtTj/R7L+vNEzWtA+9RvjGZyubaT1s27LmrQeuSiE8DiqsW/I4s2IxHLfn\nSH2cH9jOh0CfyPnkrdYfQ/Kl4eGk/vl5vtHa+lCaxMMFSTvgsD5dCRXQLobJ03Cw\nmpM8wTnAmeN/qxdX43rSFbg8UCMU+KAX1aBeDUI8gQKBgQD/KQgn/W44WFHRlV9O\n3kYLLgJDzQJPoAiM3pNz04zFup/CDRaP0gCP/oTMC7QmWSe+rN1fZTRdVRpBB20r\nl+gMoUckJVe2DVM3+CflZPJRGZzURn1tZiOT8IS/t1BEhjy5paywp7zuYDwSUWtT\nexKxrMULdOtewmrnRiqVdlY/EwKBgQDnqx+ebghhm1vfXsZDQKzG0jXUZYEvyKL/\n+NiA6pLWLjWpD1YMcXmMovp5NDCBpyTWUwVoFq+eLPzjwWK8jnhlRUuM5B+vo2fB\np+FjQcGM1USDP8AdR2UdZhBUt9liZgeuUaDt3ieEh36L0cWSHeEEdAxWWht0kljA\n/HthQqoQ0wKBgGIf8m4GjQOIG3bg3bUjz4XvHJncVh4u6fragZQSb9l+an+iruGC\nHgtCEumxOodg0+ME8WEFN30JBD6rz3TrRybMQuKIpdFyEGW+vgD+sB02H1SXAxc2\nJ0p2PWbI5Upk4Sd3qhCJgSOeyJs2ynJhKxA+48wDG5zmYVwtZKTzzDkXAoGBAOIh\n/FwmJZI5FuWjWj3dTIlKOXcYmZBt9QWM/rBfyHK+amyaZrEAttfbYkia89oqr99w\n7G8c7dGlMjiS1PEe1FBt4oAlUPSduTKjz3KWhfoVVqoSuVEbFo0qyjgXuV6+HzM9\nxKtLVSGdLJ4IZiTpe3JgYIaNsA0KqQ2/piNa8iw3AoGAVif9gU+zUkSrlMQNZ65X\nmty7h7Z8CI2OujpctN14M699T8jEZ6tEkV3gUC0JRmzEok7xoWnvGio171POvcOL\nchif1Uh6b6dK3G14TekXpiHcB0sVFnBREpfGIoY1wv1fyQIvBv99qXAq0AFiqtkb\nS1SquJtPjsYdXIXguijFPs0=\n-----END PRIVATE KEY-----\n",
-  "client_email": "ped-gmail-serv-acc@ped-apis-v2.iam.gserviceaccount.com",
-  "client_id": "102496462924257047481",
+  "private_key_id": "",
+  "private_key": "",
+  "client_email": "",
+  "client_id": "",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ped-gmail-serv-acc%40ped-apis-v2.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
+  "universe_domain": ""
 }
